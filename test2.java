@@ -3,7 +3,7 @@ public class test2 {
         for (int i = 0;i < 5;i++) {
             System.out.println("Hello");
 
-            // This is just a comment test.
+            // Comment Test
         }
     }
 }
