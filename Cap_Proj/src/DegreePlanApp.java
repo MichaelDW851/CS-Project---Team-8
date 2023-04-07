@@ -3,6 +3,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
@@ -11,13 +12,16 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import java.io.File;
 
 public class DegreePlanApp {
     private JFrame frame;
     private JComboBox<String> trackComboBox;
-   // private JList<String> prerequisitesList;
+    // private JList<String> prerequisitesList;
     private JCheckBox fastTrackCheckBox;
     private JCheckBox thesisMastersCheckBox;
 
@@ -46,9 +50,18 @@ public class DegreePlanApp {
 
         JPanel panel = new JPanel();
         frame.getContentPane().add(panel, BorderLayout.CENTER);
-        panel.setLayout(new GridLayout(4, 2));
+        panel.setLayout(new GridLayout(5, 2));
+
+        // Add a new panel for the transcript file selection
+        JPanel transcriptPanel = new JPanel(new GridLayout(1, 2));
+        panel.add(new JLabel("Transcript File:"));
+        JButton transcriptButton = new JButton("Select File");
+        transcriptButton.addActionListener(new TranscriptButtonListener());
+        transcriptPanel.add(transcriptButton);
+        panel.add(transcriptPanel);
 
         // Track (Specialization) selection
+        panel.add(new JLabel(""));
         panel.add(new JLabel("Track:"));
         trackComboBox = new JComboBox<>(new String[]{
                 "Cyber Security",
@@ -62,6 +75,7 @@ public class DegreePlanApp {
         panel.add(trackComboBox);
 
         // Leveling courses/pre-requisites selection
+        panel.add(new JLabel(""));
         panel.add(new JLabel("Leveling Courses/Pre-requisites:"));
         String[] prerequisitesArr = new String[]{
                 "CS 3341 Probability & Statistics in CS and SE",
@@ -86,11 +100,13 @@ public class DegreePlanApp {
         panel.add(prerequisitesScrollPane);
 
         // Fast Track to Masters selection
+        panel.add(new JLabel(""));
         panel.add(new JLabel("Fast Track to Masters:"));
         fastTrackCheckBox = new JCheckBox();
         panel.add(fastTrackCheckBox);
 
         // Thesis Masters selection
+        panel.add(new JLabel(""));
         panel.add(new JLabel("Thesis Masters:"));
         thesisMastersCheckBox = new JCheckBox();
         panel.add(thesisMastersCheckBox);
@@ -100,101 +116,123 @@ public class DegreePlanApp {
         submitButton.addActionListener(new SubmitButtonListener());
         frame.getContentPane().add(submitButton, BorderLayout.SOUTH);
     }
-    private void createOutputPDF(Student student, String track, List<String> prerequisites, boolean isFastTrack, boolean isThesisMasters) {
-        try (PDDocument document = new PDDocument()) {
-            PDPage page = new PDPage(PDRectangle.A4);
-            document.addPage(page);
 
-            try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
-                contentStream.beginText();
-                contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
-                contentStream.newLineAtOffset(50, 750);
-                contentStream.showText("User Inputs:");
-                contentStream.endText();
+    private void createOutputDOCX(Student student, String track, List<String> prerequisites, boolean isFastTrack, boolean isThesisMasters) {
+        try (XWPFDocument document = new XWPFDocument()) {
+            XWPFParagraph paragraph = document.createParagraph();
 
-                contentStream.beginText();
-                contentStream.setFont(PDType1Font.HELVETICA, 12);
-                contentStream.newLineAtOffset(50, 730);
-                contentStream.showText("Track: " + track);
-                contentStream.newLineAtOffset(0, -20);
-                contentStream.showText("Prerequisites:");
-                contentStream.newLineAtOffset(0, -20);
+            XWPFRun run = paragraph.createRun();
+            run.setBold(true);
+            run.setFontSize(12);
+            run.setText("User Inputs:");
+            run.addBreak();
 
-                for (String prerequisite : prerequisites) {
-                    contentStream.showText("- " + prerequisite);
-                    contentStream.newLineAtOffset(0, -20);
-                }
+            run = paragraph.createRun();
+            run.setFontSize(12);
+            run.setText("Track: " + track);
+            run.addBreak();
+            run.setText("Prerequisites:");
+            run.addBreak();
 
-                contentStream.showText("Fast Track to Masters: " + (isFastTrack ? "Yes" : "No"));
-                contentStream.newLineAtOffset(0, -20);
-                contentStream.showText("Thesis Masters: " + (isThesisMasters ? "Yes" : "No"));
-                contentStream.endText();
-
-                contentStream.beginText();
-                contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
-                contentStream.newLineAtOffset(50, 400);
-                contentStream.showText("Student Info:");
-                contentStream.endText();
-
-                contentStream.beginText();
-                contentStream.setFont(PDType1Font.HELVETICA, 12);
-                contentStream.newLineAtOffset(50, 380);
-                contentStream.showText("Name: " + student.getName());
-                contentStream.newLineAtOffset(0, -20);
-                contentStream.showText("ID: " + student.getStudentID());
-                contentStream.newLineAtOffset(0, -20);
-                contentStream.showText("Courses:");
-                contentStream.newLineAtOffset(0, -20);
-
-                for (Course course : student.getCourses()) {
-                    contentStream.showText("- " + course.getCourseCode() + " " + course.getCourseName() + " (" + course.getGrade() + ")");
-                    contentStream.newLineAtOffset(0, -20);
-                }
-
-                contentStream.endText();
-
-
+            for (String prerequisite : prerequisites) {
+                run.setText("- " + prerequisite);
+                run.addBreak();
             }
 
-            document.save(new File("output.pdf"));
+            run.setText("Fast Track to Masters: " + (isFastTrack ? "Yes" : "No"));
+            run.addBreak();
+            run.setText("Thesis Masters: " + (isThesisMasters ? "Yes" : "No"));
+            run.addBreak();
+
+            paragraph = document.createParagraph();
+
+            run = paragraph.createRun();
+            run.setBold(true);
+            run.setFontSize(12);
+            run.setText("Student Info:");
+            run.addBreak();
+
+            run = paragraph.createRun();
+            run.setFontSize(12);
+            run.setText("Name: " + student.getName());
+            run.addBreak();
+            run.setText("ID: " + student.getStudentID());
+            run.addBreak();
+
+
+            // Save the document
+            JFileChooser fileChooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Word Document (*.docx)", "docx");
+            fileChooser.setFileFilter(filter);
+
+            int userSelection = fileChooser.showSaveDialog(frame);
+
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File fileToSave = fileChooser.getSelectedFile();
+                if (!fileToSave.getAbsolutePath().endsWith(".docx")) {
+                    fileToSave = new File(fileToSave.getAbsolutePath() + ".docx");
+                }
+                document.write(new FileOutputStream(fileToSave));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
+
+    private class TranscriptButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showOpenDialog(frame);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                // TODO: Process the selected file
+            }
+        }
+    }
+
     // In the DegreePlanApp class, call the processTranscript method in the SubmitButtonListener
     private class SubmitButtonListener implements ActionListener {
+        @Override
         public void actionPerformed(ActionEvent e) {
+            String track = (String) trackComboBox.getSelectedItem();
+
+            // Get the selected prerequisites
+            List<String> prerequisites = new ArrayList<>();
+            for (Component component : prerequisitesPanel.getComponents()) {
+                if (component instanceof JCheckBox) {
+                    JCheckBox checkBox = (JCheckBox) component;
+                    if (checkBox.isSelected()) {
+                        prerequisites.add(checkBox.getActionCommand());
+                    }
+                }
+            }
+
+            boolean isFastTrack = fastTrackCheckBox.isSelected();
+            boolean isThesisMasters = thesisMastersCheckBox.isSelected();
+
             // Create a JFileChooser object to select the PDF file to process
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Select PDF Transcript");
             fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
             fileChooser.setFileFilter(new FileNameExtensionFilter("PDF files", "pdf"));
 
-            // Show the file chooser dialog and process the selected file
+            // Get the student info
             if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
-                try {
-                    Student student = PdfReader.processTranscript(selectedFile.getAbsolutePath(), trackComboBox.getSelectedItem().toString(),
-                            getSelectedPrerequisites(), fastTrackCheckBox.isSelected(), thesisMastersCheckBox.isSelected());
-                    createOutputPDF(student, trackComboBox.getSelectedItem().toString(),
-                            getSelectedPrerequisites(), fastTrackCheckBox.isSelected(), thesisMastersCheckBox.isSelected());
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(frame, "Error processing PDF file", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
 
-        private List<String> getSelectedPrerequisites() {
-            List<String> prerequisites = new ArrayList<String>();
-            for (Component c : prerequisitesPanel.getComponents()) {
-                if (c instanceof JCheckBox) {
-                    JCheckBox checkBox = (JCheckBox) c;
-                    if (checkBox.isSelected()) {
-                        prerequisites.add(checkBox.getActionCommand());
-                    }
+                Student student = null;
+                try {
+                    student = PdfReader.processTranscript(selectedFile.getAbsolutePath(), trackComboBox.getSelectedItem().toString(),
+                            prerequisites, fastTrackCheckBox.isSelected(), thesisMastersCheckBox.isSelected());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
+
+                // Generate the Word document
+                createOutputDOCX(student, track, prerequisites, isFastTrack, isThesisMasters);
+
             }
-            return prerequisites;
         }
     }
 }
