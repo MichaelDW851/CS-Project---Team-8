@@ -104,8 +104,7 @@ public class PdfReader {
         // Print the courses grouped by year and semester
         for (String semester : coursesBySemester.keySet()) {
             String year = semester.substring(0, 4);
-            String seasonCode = semester.substring(5);
-            String season = seasonCode.equals("01") ? "Spring" : seasonCode.equals("02") ? "Summer" : "Fall";
+            String season = semester.substring(5).equals("01") ? "Spring" : semester.substring(5).equals("02") ? "Summer" : "Fall";
             String[] courseLines = coursesBySemester.get(semester).toString().split("\\n");
             for (String courseLine : courseLines) {
                 Matcher courseMatcher = coursePattern.matcher(courseLine);
@@ -120,8 +119,9 @@ public class PdfReader {
                     } else {
                         grade = "N/A";
                     }
+                    String displaySeason = season.equals("01") ? "Spring" : season.equals("02") ? "Summer" : "Fall";
                     Course course = new Course(year, semester, courseCode, courseName, creditHours, earnedCreditHours, grade);
-                    System.out.printf("Course: %s - %s, Year: %s, Season: %s, Credit Hours: %.1f, Earned Credit Hours: %.1f, Grade: %s%n", courseCode, courseName, year, season, creditHours, earnedCreditHours, grade);
+                    System.out.printf("Course: %s - %s, Year: %s, Season: %s, Credit Hours: %.1f, Earned Credit Hours: %.1f, Grade: %s%n", courseCode, courseName, year, displaySeason, creditHours, earnedCreditHours, grade);
                     student.addCourse(course);
                 }
             }
@@ -130,6 +130,7 @@ public class PdfReader {
         // Close the PDF document
         document.close();
         student.applyAdditionalRules();
+        student.categorizeCoursesByTrack(track);
         return student;
     }
 }

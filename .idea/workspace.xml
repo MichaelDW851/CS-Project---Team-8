@@ -4,9 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac3ce726-3419-4b76-8bbd-040b38cc7449" name="Changes" comment="Adrian">
-      <change afterPath="$PROJECT_DIR$/Cap_Proj/src/DegreePlanApp.java" afterDir="false" />
+    <list default="true" id="ac3ce726-3419-4b76-8bbd-040b38cc7449" name="Changes" comment="Test Commit and Push">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/output.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/java/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/java/Course.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/java/DegreePlanApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/java/DegreePlanApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/java/PdfReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/java/PdfReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/java/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/java/Student.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/java/DegreePlanApp$SubmitButtonListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/java/DegreePlanApp$SubmitButtonListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/java/DegreePlanApp.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/java/DegreePlanApp.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,6 +26,9 @@
         <option value="Class" />
       </list>
     </option>
+  </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="CAP/Develop" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -69,7 +79,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "last_directory_selection": "C:/Users/adria/Desktop/Cap_Proj/src/main/java",
-    "last_opened_file_path": "C:/Users/adria/Desktop/Cap_Proj/Cap_Proj/src",
+    "last_opened_file_path": "C:/Users/adria/Desktop/Cap_Proj",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
@@ -111,7 +121,21 @@
       <option name="project" value="LOCAL" />
       <updated>1680635022408</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Test Commit and Push">
+      <created>1680904677563</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1680904677563</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Test Commit and Push">
+      <created>1680904735571</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1680904735571</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -140,7 +164,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="New Main" />
     <MESSAGE value="Adrian" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adrian" />
+    <MESSAGE value="Test Commit and Push" />
+    <option name="LAST_COMMIT_MESSAGE" value="Test Commit and Push" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

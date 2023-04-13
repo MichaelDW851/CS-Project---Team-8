@@ -1,6 +1,8 @@
 package main.java;
+import java.io.Serializable;
+import java.util.List;
 
-class Course {
+public class Course implements Serializable {
     String year;
     String semester;
     String courseCode;
@@ -75,10 +77,29 @@ class Course {
         this.grade = grade;
     }
 
-    @Override
+
+//    @Override
+//    public String toString() {
+//        return "Course: " + courseCode + " - " + courseName + ", " + "Year: " + year + ", " + "Semester: " + semester + ", " + "Credit Hours: " + creditHours + ", " + "Earned Credit Hours: " + earnedCreditHours + ", " + "Grade: " + grade;
+//    }
+
     public String toString() {
-        return "Course: " + courseCode + " - " + courseName + ", " + "Year: " + year + ", " + "Semester: " + semester + ", " + "Credit Hours: " + creditHours + ", " + "Earned Credit Hours: " + earnedCreditHours + ", " + "Grade: " + grade;
+        return courseCode + " - " + courseName;
     }
+    private String getSeasonString() {
+        if (semester != null && !semester.isEmpty()) {
+            int month = Integer.parseInt(semester.substring(5, 7));
+            if (month == 1) {
+                return "Spring";
+            } else if (month == 5) {
+                return "Summer";
+            } else if (month == 8) {
+                return "Fall";
+            }
+        }
+        return "";
+    }
+
     public double getGradeValue() {
         switch (grade) {
             case "A":

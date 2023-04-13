@@ -1,9 +1,11 @@
 package main.java;
-
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-class Student {
+
+public class Student implements Serializable {
     String name;
     String studentID;
     String major;
@@ -66,9 +68,46 @@ class Student {
         handleElectiveCourses();
     }
 
+    public void categorizeCoursesByTrack(String track) {
+        List<String> coreCourses = new ArrayList<>();
+        List<String> electiveCourses = new ArrayList<>();
+
+        switch (track) {
+            case "Data Science":
+                coreCourses = Arrays.asList("CS 6313", "CS 6350", "CS 6363","CS 6375", "CS 6360"); // Add core courses for this track
+                electiveCourses = Arrays.asList("CS 5343", "CS 6301", "CS 6314", "CS 6323", "CS 6334", "CS 6385");
+                //electiveCourses = Arrays.asList("CS 5343", "CS 6301", "CS 6301","6314","CS 6323", "CS 6334", "CS 6385"); // Add elective courses for this track
+                break;
+            // Add cases for other tracks and their respective core and elective courses
+        }
+
+        for (Course course : this.courses) {
+            String fullCourseCode = "CS " + course.getCourseCode(); // Add the "CS" prefix
+            if (coreCourses.contains(fullCourseCode)) {
+                this.coreCourses.add(course);
+            } else if (electiveCourses.contains(fullCourseCode)) {
+                this.electiveCourses.add(course);
+            }
+        }
+    }
+
+
+
+    private List<Course> coreCourses = new ArrayList<>();
+    private List<Course> electiveCourses = new ArrayList<>();
+
+    public List<Course> getCoreCourses() {
+        return coreCourses;
+    }
+
+    public List<Course> getElectiveCourses() {
+        return electiveCourses;
+    }
+
     private void removeCsIppAssignment() {
         courses.removeIf(course -> course.getCourseCode().equals("5177") && course.getCourseName().equals("CS IPP ASSIGNMENT"));
     }
+
 
     private void handleElectiveCourses() {
         Course electiveCourse = null;
@@ -99,5 +138,4 @@ class Student {
 
         courses.removeAll(coursesToRemove);
     }
-    // Add any other necessary methods
 }
