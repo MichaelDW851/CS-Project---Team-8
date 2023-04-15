@@ -11,7 +11,10 @@ public class Student implements Serializable {
     String major;
     String semesterAdmittedToProgram;
     List<Course> courses;
-
+    private List<Course> coreCourses = new ArrayList<>();
+    private List<Course> electiveCourses = new ArrayList<>();
+    private List<String> prerequisites = new ArrayList<>();
+    private List<Course> levelingCourses = new ArrayList<>();
     public Student(String name, String studentID, String major, String semesterAdmittedToProgram) {
         this.name = name;
         this.studentID = studentID;
@@ -68,33 +71,35 @@ public class Student implements Serializable {
         handleElectiveCourses();
     }
 
-    public void categorizeCoursesByTrack(String track) {
+    public void categorizeCoursesByTrack(String track,List<String> prerequisites) {
         List<String> coreCourses = new ArrayList<>();
         List<String> electiveCourses = new ArrayList<>();
-
+        List<String> levelingCourses = new ArrayList<>();
         switch (track) {
             case "Data Science":
-                coreCourses = Arrays.asList("CS 6313", "CS 6350", "CS 6363","CS 6375", "CS 6360"); // Add core courses for this track
-                electiveCourses = Arrays.asList("CS 5343", "CS 6301", "CS 6314", "CS 6323", "CS 6334", "CS 6385");
-                //electiveCourses = Arrays.asList("CS 5343", "CS 6301", "CS 6301","6314","CS 6323", "CS 6334", "CS 6385"); // Add elective courses for this track
+                coreCourses = Arrays.asList("CS6313", "CS6350", "CS6363", "CS6375", "CS6360"); // Add core courses for this track
+                electiveCourses = Arrays.asList("CS5343", "CS6301", "CS6314", "CS6323", "CS6334", "CS6385");
+                levelingCourses = Arrays.asList("CS3341","CS2340","CS5333","CS5343","CS5303","CS5348");
                 break;
             // Add cases for other tracks and their respective core and elective courses
         }
 
+
         for (Course course : this.courses) {
-            String fullCourseCode = "CS " + course.getCourseCode(); // Add the "CS" prefix
-            if (coreCourses.contains(fullCourseCode)) {
+            String fullCourseCode = "CS " + course.getCourseCode();
+            if (coreCourses.contains(course.getCourseCode())) {
                 this.coreCourses.add(course);
-            } else if (electiveCourses.contains(fullCourseCode)) {
+            } else if (electiveCourses.contains(course.getCourseCode())) {
                 this.electiveCourses.add(course);
+            } else if (levelingCourses.contains(course.getCourseCode()) || prerequisites.contains(course.getCourseCode())) {
+                if (!this.levelingCourses.contains(course)) {
+                    this.levelingCourses.add(course);
+                }
             }
         }
     }
+//may be final if not, idk just know I changed it to final
 
-
-
-    private List<Course> coreCourses = new ArrayList<>();
-    private List<Course> electiveCourses = new ArrayList<>();
 
     public List<Course> getCoreCourses() {
         return coreCourses;
@@ -103,12 +108,45 @@ public class Student implements Serializable {
     public List<Course> getElectiveCourses() {
         return electiveCourses;
     }
-
+    public List<Course> getLevelingCourses() {
+        return levelingCourses;
+    }
+    public void addLevelingCourse(Course course) {
+        levelingCourses.add(course);
+    }
     private void removeCsIppAssignment() {
         courses.removeIf(course -> course.getCourseCode().equals("5177") && course.getCourseName().equals("CS IPP ASSIGNMENT"));
     }
 
+    public double calculateCoreGPA() {
+        double totalGradePoints = 0;
+        double totalCreditHours = 0;
+        for (Course course : coreCourses) {
+            String grade = course.getGrade();
+            if (!grade.equals("N/A")) {
+                double gradeValue = course.getGradeValue();
+                double creditHours = course.getCreditHours();
+                totalGradePoints += gradeValue * creditHours;
+                totalCreditHours += creditHours;
+            }
+        }
+        return totalCreditHours > 0 ? totalGradePoints / totalCreditHours : 0;
+    }
 
+    public double calculateElectiveGPA() {
+        double totalGradePoints = 0;
+        double totalCreditHours = 0;
+        for (Course course : electiveCourses) {
+            String grade = course.getGrade();
+            if (!grade.equals("N/A")) {
+                double gradeValue = course.getGradeValue();
+                double creditHours = course.getCreditHours();
+                totalGradePoints += gradeValue * creditHours;
+                totalCreditHours += creditHours;
+            }
+        }
+        return totalCreditHours > 0 ? totalGradePoints / totalCreditHours : 0;
+    }
     private void handleElectiveCourses() {
         Course electiveCourse = null;
         List<Course> coursesToRemove = new ArrayList<>();
@@ -139,3 +177,4 @@ public class Student implements Serializable {
         courses.removeAll(coursesToRemove);
     }
 }
+
