@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac3ce726-3419-4b76-8bbd-040b38cc7449" name="Changes" comment="Double Printing?" />
+    <list default="true" id="ac3ce726-3419-4b76-8bbd-040b38cc7449" name="Changes" comment="Audit in progress">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/java/DegreePlanApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/java/DegreePlanApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/java/PdfReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/java/PdfReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/java/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/java/Student.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -69,7 +74,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "last_directory_selection": "C:/Users/adria/Desktop/Cap_Proj/src/main/java",
-    "last_opened_file_path": "C:/Users/adria/Desktop/Cap_Proj",
+    "last_opened_file_path": "C:/Users/adria/Desktop/SDLKFLKDS",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
@@ -146,7 +151,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681413035834</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Audit in progress">
+      <created>1681523460057</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1681523460057</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -177,7 +189,8 @@
     <MESSAGE value="Adrian" />
     <MESSAGE value="Test Commit and Push" />
     <MESSAGE value="Double Printing?" />
-    <option name="LAST_COMMIT_MESSAGE" value="Double Printing?" />
+    <MESSAGE value="Audit in progress" />
+    <option name="LAST_COMMIT_MESSAGE" value="Audit in progress" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
