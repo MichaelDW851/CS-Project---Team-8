@@ -1,5 +1,3 @@
-package cap_proj;
-
 public class Course {
     String year;
     String semester;
