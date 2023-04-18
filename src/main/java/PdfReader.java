@@ -71,7 +71,7 @@ public class PdfReader {
             System.out.println("Semester Admitted to Program for degree plan not found");
         }
 
-        Student student = new Student(name, id, major, record);
+        Student student = new Student(name, id, major, record, isFastTrack, isThesisMasters);
 
         Pattern yearPattern = Pattern.compile("(\\d{4})\\s+(Fall|Summer|Spring)");
         //Pattern coursePattern = Pattern.compile("([5-9]\\d{3})\\s+(.*?)\\s+(\\d+\\.\\d+)\\s+(\\d+\\.\\d+)\\s*([A-Z][+-]?\\s*)?");

@@ -9,17 +9,32 @@ public class Student implements Serializable {
     String studentID;
     String major;
     String semesterAdmittedToProgram;
+
+    boolean isFastTrack;
+    boolean isThesisMasters;
     List<Course> courses;
     private List<Course> coreCourses = new ArrayList<>();
     private List<Course> electiveCourses = new ArrayList<>();
     private List<String> prerequisites = new ArrayList<>();
     private List<Course> levelingCourses = new ArrayList<>();
-    public Student(String name, String studentID, String major, String semesterAdmittedToProgram) {
+    public Student(String name, String studentID, String major, String semesterAdmittedToProgram, boolean isFastTrack, boolean isThesisMasters) {
         this.name = name;
         this.studentID = studentID;
         this.major = major;
         this.semesterAdmittedToProgram = semesterAdmittedToProgram;
         this.courses = new ArrayList<>();
+        this.isFastTrack = isFastTrack;
+        this.isThesisMasters = isThesisMasters;
+
+    }
+
+    public boolean getFastTrackCheck(){
+        if (isFastTrack) return true;
+        return false;
+    }
+    public boolean getThesisMastersCheck(){
+        if (isThesisMasters) return true;
+        return false;
     }
 
     public String getName() {
