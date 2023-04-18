@@ -6,7 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="CS-Project---Team-8" />
+        <module name="Cap_Proj" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

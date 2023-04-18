@@ -1,12 +1,12 @@
-package cap_proj;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 
 import java.io.File;
 import java.io.IOException;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
+import java.util.List;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.*;
 
 public class PdfReader {
     public static Student processTranscript(String pdfFilePath, String track, List<String> prerequisites, boolean isFastTrack, boolean isThesisMasters) throws IOException {
@@ -74,8 +74,8 @@ public class PdfReader {
         Student student = new Student(name, id, major, record);
 
         Pattern yearPattern = Pattern.compile("(\\d{4})\\s+(Fall|Summer|Spring)");
-        Pattern coursePattern = Pattern.compile("([5-9]\\d{3})\\s+(.*?)\\s+(\\d+\\.\\d+)\\s+(\\d+\\.\\d+)\\s*([A-Z][+-]?\\s*)?");
-
+        //Pattern coursePattern = Pattern.compile("([5-9]\\d{3})\\s+(.*?)\\s+(\\d+\\.\\d+)\\s+(\\d+\\.\\d+)\\s*([A-Z][+-]?\\s*)?");
+        Pattern coursePattern = Pattern.compile("((CS|SE|CSC|SEC) )?([5-9]\\d{3})\\s+(.*?)\\s+(\\d+\\.\\d+)\\s+(\\d+\\.\\d+)\\s*([A-Z][+-]?\\s*)?");
         // Initialize a TreeMap to store the courses grouped by year and semester
         TreeMap<String, StringBuilder> coursesBySemester = new TreeMap<>();
 
@@ -108,12 +108,14 @@ public class PdfReader {
             String[] courseLines = coursesBySemester.get(semester).toString().split("\\n");
             for (String courseLine : courseLines) {
                 Matcher courseMatcher = coursePattern.matcher(courseLine);
+
                 if (courseMatcher.find()) {
-                    String courseCode = courseMatcher.group(1);
-                    String courseName = courseMatcher.group(2);
-                    double creditHours = Double.parseDouble(courseMatcher.group(3));
-                    double earnedCreditHours = Double.parseDouble(courseMatcher.group(4));
-                    String grade = courseMatcher.group(5);
+                    String coursePrefix = courseMatcher.group(2) != null ? courseMatcher.group(2) : ""; // Extract course prefix
+                    String courseCode = coursePrefix + courseMatcher.group(3); // Prepend course prefix to the course code
+                    String courseName = courseMatcher.group(4);
+                    double creditHours = Double.parseDouble(courseMatcher.group(5));
+                    double earnedCreditHours = Double.parseDouble(courseMatcher.group(6));
+                    String grade = courseMatcher.group(7);
                     if (grade != null && !grade.trim().isEmpty()) {
                         grade = grade.trim();
                     } else {
@@ -123,13 +125,16 @@ public class PdfReader {
                     Course course = new Course(year, semester, courseCode, courseName, creditHours, earnedCreditHours, grade);
                     System.out.printf("Course: %s - %s, Year: %s, Season: %s, Credit Hours: %.1f, Earned Credit Hours: %.1f, Grade: %s%n", courseCode, courseName, year, displaySeason, creditHours, earnedCreditHours, grade);
                     student.addCourse(course);
+
                 }
             }
         }
 
+
         // Close the PDF document
         document.close();
         student.applyAdditionalRules();
+        //student.categorizeCoursesByTrack(track);
         return student;
     }
 }
