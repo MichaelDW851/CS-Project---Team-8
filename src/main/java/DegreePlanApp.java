@@ -57,41 +57,36 @@ public class DegreePlanApp {
             e.printStackTrace();
         }
 
-
-        System.out.println("First student = " + selectedTranscriptFile);
-
         //OpenOptions();
         options();
 
 
     }
 
-
-    //Popup for options box
     private void options() {
         System.out.println("Opening options");
 
         frame = new JFrame("Degree Plan Application");
         frame.setVisible(true);
-        frame.setBounds(100, 100, 800, 600);
+        frame.setBounds(100, 100, 800, 800);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
         JPanel panel = new JPanel();
         frame.getContentPane().add(panel, BorderLayout.CENTER);
-        panel.setLayout(new GridLayout(5, 2));
+        panel.setLayout(new GridBagLayout()); // use GridBagLayout to customize component positions
 
-        // Add a new panel for the transcript file selection
-//        JPanel transcriptPanel = new JPanel(new GridLayout(1, 2));
-//        panel.add(new JLabel("Transcript File:"));
-//        JButton transcriptButton = new JButton("Select File");
-//        transcriptButton.addActionListener(new TranscriptButtonListener());
-//        transcriptPanel.add(transcriptButton);
-//        panel.add(transcriptPanel);
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.insets = new Insets(5, 5, 5, 5); // add some padding between components
 
         // Track (Specialization) selection
-        panel.add(new JLabel(""));
-        panel.add(new JLabel("Track:"));
+        c.gridx = 0;
+        c.gridy = 0;
+        panel.add(new JLabel("Track:"), c);
+
+        c.gridx = 1;
+        c.gridy = 0;
         trackComboBox = new JComboBox<>(new String[]{
                 "Cyber Security",
                 "Data Science",
@@ -101,11 +96,15 @@ public class DegreePlanApp {
                 "Systems",
                 "Traditional Computer Science"
         });
-        panel.add(trackComboBox);
+        panel.add(trackComboBox, c);
 
         // Leveling courses/pre-requisites selection
-        panel.add(new JLabel(""));
-        panel.add(new JLabel("Leveling Courses/Pre-requisites:"));
+        c.gridx = 0;
+        c.gridy = 1;
+        panel.add(new JLabel("Leveling Courses/Pre-requisites:"), c);
+
+        c.gridx = 1;
+        c.gridy = 1;
         String[] prerequisitesArr = new String[]{
                 "CS 3341 Probability & Statistics in CS and SE",
                 "CS 5303 Computer Science I",
@@ -126,97 +125,41 @@ public class DegreePlanApp {
         }
 
         JScrollPane prerequisitesScrollPane = new JScrollPane(prerequisitesPanel);
-        panel.add(prerequisitesScrollPane);
+        panel.add(prerequisitesScrollPane, c);
 
         // Fast Track to Masters selection
-        panel.add(new JLabel(""));
-        panel.add(new JLabel("Fast Track to Masters:"));
+        c.gridx = 0;
+        c.gridy = 2;
+        panel.add(new JLabel("Fast Track to Masters:"), c);
+
+        c.gridx = 1;
+        c.gridy = 2;
         fastTrackCheckBox = new JCheckBox();
-        panel.add(fastTrackCheckBox);
+        panel.add(fastTrackCheckBox, c);
 
         // Thesis Masters selection
-        panel.add(new JLabel(""));
-        panel.add(new JLabel("Thesis Masters:"));
+        c.gridx = 0;
+        c.gridy = 3;
+        panel.add(new JLabel("Thesis Masters:"), c);
+
+        c.gridx = 1;
+        c.gridy = 3;
         thesisMastersCheckBox = new JCheckBox();
-        panel.add(thesisMastersCheckBox);
+        panel.add(thesisMastersCheckBox, c);
 
         // Submit button
+        c.gridx = 1;
+        c.gridy = 4;
+        c.anchor = GridBagConstraints.LINE_END; // align the button to the right side of the window
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(new SubmitButtonListener());
-        frame.getContentPane().add(submitButton, BorderLayout.SOUTH);
+        panel.add(submitButton, c);
+
+        frame.pack();
     }
 
-    // Adams original selector
-    /*
-    private void OpenOptions(){
-        boolean loadFromFile = false;
-        int option = JOptionPane.showConfirmDialog(null, "Do you have a student object that you would like to load?");
-        if(option == JOptionPane.YES_OPTION) {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setFileFilter(new FileNameExtensionFilter("Serialized Files", "ser"));
-            int result = fileChooser.showOpenDialog(null);
-            if(result == JFileChooser.APPROVE_OPTION) {
-                String fileName = fileChooser.getSelectedFile().getName();
-                if(fileName.endsWith(".ser")) {
-                    loadFromFile = true;
-                    try {
-                        FileInputStream fileIn = new FileInputStream(fileChooser.getSelectedFile());
-                        ObjectInputStream in = new ObjectInputStream(fileIn);
-                        Student student = (Student) in.readObject();
-                        in.close();
-                        fileIn.close();
-                        //System.out.println(student.getName());
-                    } catch(IOException i) {
-                        i.printStackTrace();
-                    } catch(ClassNotFoundException c) {
-                        c.printStackTrace();
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Invalid file type. Please select a file with the extension of .ser.");
-                }
-            }
-        } //Else if the extension is not ser
-        else if(option == JOptionPane.NO_OPTION){
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setFileFilter(new FileNameExtensionFilter("Serialized Files", "pdf"));
-            int result = fileChooser.showOpenDialog(null);
-            if(result == JFileChooser.APPROVE_OPTION) {
-                String fileName = fileChooser.getSelectedFile().getName();
-
-                    loadFromFile = true;
-                    try {
-                        FileInputStream fileIn = new FileInputStream(fileChooser.getSelectedFile());
-                        ObjectInputStream in = new ObjectInputStream(fileIn);
-                        Student student = (Student) in.readObject();
-                        in.close();
-                        fileIn.close();
-                        //System.out.println(student.getName());
-                    } catch(IOException i) {
-                        i.printStackTrace();
-                    } catch(ClassNotFoundException c) {
-                        c.printStackTrace();
-                    }
-                }
-
-            }
-            else {
-            JOptionPane.showMessageDialog(null, "Invalid file type. Please select a file with the extension of .ser.");
-            }
 
 
-
-
-        if(!loadFromFile) {
-            EventQueue.invokeLater(() -> {
-                try {
-                    window.frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-    }
-*/
     private void createOutputDOCX(Student student, String track, List<String> prerequisites, boolean isFastTrack, boolean isThesisMasters) {
         try (XWPFDocument document = new XWPFDocument()) {
             // Add student info
@@ -315,7 +258,7 @@ public class DegreePlanApp {
                 run.setText("- " + courseCode);
                 run.addBreak();
             }
-            // Save the document
+            //Save the document
             JFileChooser fileChooser = new JFileChooser();
             FileNameExtensionFilter filter = new FileNameExtensionFilter("Word Document (*.docx)", "docx");
             fileChooser.setFileFilter(filter);
@@ -331,7 +274,9 @@ public class DegreePlanApp {
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }}
+        }
+        }
+
 
 
     // In the DegreePlanApp class, call the processTranscript method in the SubmitButtonListener
@@ -358,11 +303,7 @@ public class DegreePlanApp {
             boolean isFastTrack = fastTrackCheckBox.isSelected();
             boolean isThesisMasters = thesisMastersCheckBox.isSelected();
 
-            // Check if a transcript file has been selected before proceeding
-//            if (selectedTranscriptFile == null) {
-//                JOptionPane.showMessageDialog(frame, "Please select a transcript file first.", "Error", JOptionPane.ERROR_MESSAGE);
-//                return;
-//            }
+
 
             // Get the student info
             Student student;
@@ -377,7 +318,9 @@ public class DegreePlanApp {
             GenerateDegreePlan degreePlan = new GenerateDegreePlan(student);
 
             // Generate the Word document
-            createOutputDOCX(student, track, prerequisites, isFastTrack, isThesisMasters);
+            //createOutputDOCX(student, track, prerequisites, isFastTrack, isThesisMasters);
+
+            frame.setVisible(false);
         }
     }
 }
