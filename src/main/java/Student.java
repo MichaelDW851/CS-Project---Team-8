@@ -15,7 +15,7 @@ public class Student implements Serializable {
     List<Course> courses;
     private List<Course> coreCourses = new ArrayList<>();
     private List<Course> electiveCourses = new ArrayList<>();
-    private List<String> prerequisites = new ArrayList<>();
+    private List<Course> prerequisites = new ArrayList<>();
     private List<Course> levelingCourses = new ArrayList<>();
     public Student(String name, String studentID, String major, String semesterAdmittedToProgram, boolean isFastTrack, boolean isThesisMasters) {
         this.name = name;
@@ -77,8 +77,19 @@ public class Student implements Serializable {
         this.courses = courses;
     }
 
+
     public void addCourse(Course course) {
-        courses.add(course);
+        // Dont add course if its 5117
+        if (!course.getCourseCode().equals("CSC5177")) {
+            courses.add(course);
+        }
+    }
+
+    public void addPrereq(Course prereqs) {
+        // Dont add course if its 5117
+        if (!prereqs.getCourseCode().equals("CSC5177")) {
+            courses.add(prereqs);
+        }
     }
     public void applyAdditionalRules() {
         removeCsIppAssignment();
@@ -86,6 +97,10 @@ public class Student implements Serializable {
     }
     public List<Course> getCourseList() {
         return courses;
+    }
+
+    public List<Course> getPrerequisites(){
+        return prerequisites;
     }
 
 
@@ -132,7 +147,7 @@ public class Student implements Serializable {
     public void addLevelingCourse(Course course) {
         levelingCourses.add(course);
     }
-    private void removeCsIppAssignment() {
+    public void removeCsIppAssignment() {
         courses.removeIf(course -> course.getCourseCode().equals("5177") && course.getCourseName().equals("CS IPP ASSIGNMENT"));
     }
 

@@ -64,9 +64,9 @@ public class DegreePlanApp {
     }
 
     private void options() {
-        System.out.println("Opening options");
 
         frame = new JFrame("Degree Plan Application");
+        frame.setLocationRelativeTo(null); // Center the frame on the screen
         frame.setVisible(true);
         frame.setBounds(100, 100, 800, 800);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -288,7 +288,6 @@ public class DegreePlanApp {
         public void actionPerformed(ActionEvent e) {
             String track = (String) trackComboBox.getSelectedItem();
 
-
             List<String> prerequisites = new ArrayList<>();
             for (Component component : prerequisitesPanel.getComponents()) {
                 if (component instanceof JCheckBox) {
@@ -303,12 +302,9 @@ public class DegreePlanApp {
             boolean isFastTrack = fastTrackCheckBox.isSelected();
             boolean isThesisMasters = thesisMastersCheckBox.isSelected();
 
-
-
             // Get the student info
             Student student;
             try {
-                System.out.println("Filepath = " + selectedTranscriptFile);
                 student = PdfReader.processTranscript(selectedTranscriptFile, trackComboBox.getSelectedItem().toString(),
                         prerequisites, fastTrackCheckBox.isSelected(), thesisMastersCheckBox.isSelected());
             } catch (IOException ex) {
@@ -323,6 +319,8 @@ public class DegreePlanApp {
             frame.setVisible(false);
         }
     }
+
+
 }
 
 
