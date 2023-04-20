@@ -64,7 +64,6 @@ public class DegreePlanApp {
     }
 
     private void options() {
-        System.out.println("Opening options");
 
         frame = new JFrame("Degree Plan Application");
         frame.setVisible(true);
@@ -308,7 +307,6 @@ public class DegreePlanApp {
             // Get the student info
             Student student;
             try {
-                System.out.println("Filepath = " + selectedTranscriptFile);
                 student = PdfReader.processTranscript(selectedTranscriptFile, trackComboBox.getSelectedItem().toString(),
                         prerequisites, fastTrackCheckBox.isSelected(), thesisMastersCheckBox.isSelected());
             } catch (IOException ex) {
