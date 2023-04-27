@@ -23,6 +23,9 @@ public class GenerateDegreePlan {
         // Call get courses
         getCourses();
 
+        //Call get prerequisites
+        getPrerequisites();
+
 
         // Set the frame's look and feel to the system's default
         try {
@@ -71,42 +74,37 @@ public class GenerateDegreePlan {
         panel.add(coursePanel, BorderLayout.CENTER);
     }
 
-    //Try to create new colum that shows prerequisites
-//    private void getPrereqs(){
-//        // Create a panel for the course list
-//        JPanel coursePanel = new JPanel();
-//        coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
-//        coursePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add some padding
-//        JLabel coursesLabel = new JLabel("Prerequisites:");
-//        coursesLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // Align the label to the left
-//        coursesLabel.setFont(new Font("SansSerif", Font.BOLD, 14)); // Increase font size and bold the label
-//        JPanel labelPanel = new JPanel();
-//        labelPanel.setLayout(new BorderLayout());
-//        labelPanel.add(coursesLabel, BorderLayout.WEST); // Add the label to the left of the panel
-//        coursePanel.add(labelPanel);
-//        coursePanel.add(new JSeparator()); // Add a horizontal separator
-//        List<Course> prereqs = student.getPrerequisites();
-//        student.removeCsIppAssignment();
-//
-//
-//        for (Course course : prereqs) {
-//            JPanel courseRow = new JPanel(new BorderLayout());
-//            System.out.println("adding prereq");
-//            JLabel label = new JLabel(String.format("%s - %s", course.getCourseCode(), course.getCourseName()));
-//            label.setFont(new Font("SansSerif", Font.PLAIN, 12)); // Decrease font size
-//            JCheckBox checkBox = new JCheckBox("", true); // set checkbox checked by default
-//            courseRow.add(label, BorderLayout.WEST);
-//            courseRow.add(checkBox, BorderLayout.EAST);
-//            courseRow.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0)); // Add some padding
-//            coursePanel.add(courseRow);
-//        }
-//
-//        // Add the course panel to the center of the main panel
-//        panel.add(coursePanel, BorderLayout.CENTER);
-//    }
+    private void getPrerequisites() {
+        // Create a panel for the prerequisites list
+        JPanel prerequisitesPanel = new JPanel();
+        prerequisitesPanel.setLayout(new BoxLayout(prerequisitesPanel, BoxLayout.Y_AXIS));
+        prerequisitesPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add some padding
+        JLabel prerequisitesLabel = new JLabel("Prerequisites:");
+        prerequisitesLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // Align the label to the left
+        prerequisitesLabel.setFont(new Font("SansSerif", Font.BOLD, 14)); // Increase font size and bold the label
+        JPanel labelPanel = new JPanel();
+        labelPanel.setLayout(new BorderLayout());
+        labelPanel.add(prerequisitesLabel, BorderLayout.WEST); // Add the label to the left of the panel
+        prerequisitesPanel.add(labelPanel);
+        prerequisitesPanel.add(new JSeparator()); // Add a horizontal separator
 
+        // Add your prerequisites logic here
+        // Example:
+        List<Course> prerequisites = student.getPrerequisites();
+        for (Course prerequisite : prerequisites) {
+            JPanel prerequisiteRow = new JPanel(new BorderLayout());
+            JLabel label = new JLabel(String.format("%s - %s", prerequisite.getCourseCode(), prerequisite.getCourseName()));
+            label.setFont(new Font("SansSerif", Font.PLAIN, 12)); // Decrease font size
+            JCheckBox checkBox = new JCheckBox("", false); // set checkbox unchecked by default
+            prerequisiteRow.add(label, BorderLayout.WEST);
+            prerequisiteRow.add(checkBox, BorderLayout.EAST);
+            prerequisiteRow.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0)); // Add some padding
+            prerequisitesPanel.add(prerequisiteRow);
+        }
 
-
+        // Add the prerequisites panel to the right of the main panel
+        panel.add(prerequisitesPanel, BorderLayout.EAST);
+    }
 
 
     // Need to add action button listeners to this method

@@ -100,6 +100,7 @@ public class Student implements Serializable {
     }
 
     public List<Course> getPrerequisites(){
+        System.out.println("prereqs- " + prerequisites);
         return prerequisites;
     }
 

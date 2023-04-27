@@ -284,7 +284,6 @@ public class DegreePlanApp {
 
 
 
-        @Override
         public void actionPerformed(ActionEvent e) {
             String track = (String) trackComboBox.getSelectedItem();
 
@@ -295,6 +294,7 @@ public class DegreePlanApp {
                     if (checkBox.isSelected()) {
                         String courseCode = checkBox.getActionCommand();
                         prerequisites.add(courseCode);
+                        student.addPrereq(courseCode); // Call the addPrerequisite method on the student object
                     }
                 }
             }
