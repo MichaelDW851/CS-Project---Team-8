@@ -83,13 +83,28 @@ public class Student implements Serializable {
         if (!course.getCourseCode().equals("CSC5177")) {
             courses.add(course);
         }
+       // System.out.println(course.courseCode + " " + course.getSemester());
     }
 
     public void addPrereq(Course prereqs) {
         // Dont add course if its 5117
         if (!prereqs.getCourseCode().equals("CSC5177")) {
             courses.add(prereqs);
+            System.out.println("adding " + prereqs.courseName + " to prereqs");
         }
+        System.out.println(prerequisites);
+    }
+
+    public void addPrereq(String prereq) {
+        String[] courseInfo = prereq.split(" ");
+        String courseCode = courseInfo[0] + " " + courseInfo[1];
+        String courseName = "";
+        for (int i = 2;i < courseInfo.length;i++) {
+            courseName += courseInfo[i] + " ";
+        }
+        Course preReq = new Course(courseCode,courseName);
+        addPrereq(preReq);
+
     }
     public void applyAdditionalRules() {
         removeCsIppAssignment();
@@ -107,24 +122,58 @@ public class Student implements Serializable {
 
     public void categorizeCoursesByTrack(String track,List<String> prerequisites) {
         List<String> coreCourses = new ArrayList<>();
-        List<String> electiveCourses = new ArrayList<>();
+        List<String> trackElectives = new ArrayList<>();
         List<String> levelingCourses = new ArrayList<>();
         switch (track) {
+
             case "Data Science":
                 coreCourses = Arrays.asList("CS6313", "CS6350", "CS6363", "CS6375", "CS6360"); // Add core courses for this track
-                electiveCourses = Arrays.asList("CS5343", "CS6301", "CS6314", "CS6323", "CS6334", "CS6385");
-                levelingCourses = Arrays.asList("CS3341","CS2340","CS5333","CS5343","CS5303","CS5348");
+                trackElectives = Arrays.asList("CS6301", "CS6320", "CS6327", "CS6347", "CS6360");
+                levelingCourses = Arrays.asList("CS3341","CS5333","CS5343","CS5303","CS5348","CS5330");
                 break;
             // Add cases for other tracks and their respective core and elective courses
+            case "Systems":
+;               coreCourses = Arrays.asList("CS6304","CS6363","CS6378","CS6396");
+                trackElectives = Arrays.asList("CS6349","CS6376","CS6380","CS6397","CS6399");
+                levelingCourses = Arrays.asList("CS5303","CS5330","CS5333","CS5343","CS5348","CS5390");
+                break;
+            case "Interactive Computing":
+                coreCourses = Arrays.asList("CS6326","CS6363");
+                trackElectives = Arrays.asList("CS6323","CS6328","CS6331","CS6334","CS6366");
+                levelingCourses = Arrays.asList("CS5303","CS5330","CS5333","CS5343","CS5348");
+                break;
+            case "Cyber Security":
+                coreCourses = Arrays.asList("CS6324","CS6363","CS6378");
+                trackElectives = Arrays.asList("CS6332","CS6348","CS6349","CS6377");
+                levelingCourses = Arrays.asList("CS5303","CS5330","CS5333","CS5343","CS5348","CS5390");
+                break;
+            case "Intelligent Systems":
+                coreCourses = Arrays.asList("CS6320","CS6363","CS6364","CS6375");
+                trackElectives = Arrays.asList("CS6360","CS6378");
+                levelingCourses = Arrays.asList("CS5303","CS5330","CS5343","CS5333","CS5348");
+                break;
+
+            case "Networks and Telecommunications":
+                coreCourses = Arrays.asList("CS6352","CS6363","CS6378","CS6385","CS6390");
+                levelingCourses = Arrays.asList("CS5303","CS5330","CS5343","CS5348","CS5390","CS3341","CS5333");
+                break;
+            case "Traditional Computer Science":
+                coreCourses = Arrays.asList("CS6363","CS6378","CS6390");
+                trackElectives = Arrays.asList("CS6353","CS6360","CS6371");
+                levelingCourses = Arrays.asList("CS5303","CS5330","CS5333","CS5343","CS5348","CS5349","CS5390");
         }
 
 
         for (Course course : this.courses) {
-            String fullCourseCode = "CS " + course.getCourseCode();
+            System.out.println(course.getCourseCode());
+            int trackElectiveCounter = 0;
             if (coreCourses.contains(course.getCourseCode())) {
                 this.coreCourses.add(course);
-            } else if (electiveCourses.contains(course.getCourseCode())) {
-                this.electiveCourses.add(course);
+                System.out.println("Adding " + course.getCourseCode() + " to cores");
+            } else if (trackElectives.contains(course.getCourseCode())) {
+                //need to add in electives
+                this.coreCourses.add(course);
+                System.out.println("Adding " + course.getCourseCode() + " to cores");
             } else if (levelingCourses.contains(course.getCourseCode()) || prerequisites.contains(course.getCourseCode())) {
                 if (!this.levelingCourses.contains(course)) {
                     this.levelingCourses.add(course);
@@ -155,7 +204,11 @@ public class Student implements Serializable {
     public double calculateCoreGPA() {
         double totalGradePoints = 0;
         double totalCreditHours = 0;
+        int coreCounter = 0;
         for (Course course : coreCourses) {
+            if(coreCounter >= 5) {
+                break;
+            }
             String grade = course.getGrade();
             if (!grade.equals("N/A")) {
                 double gradeValue = course.getGradeValue();
@@ -163,6 +216,7 @@ public class Student implements Serializable {
                 totalGradePoints += gradeValue * creditHours;
                 totalCreditHours += creditHours;
             }
+            coreCounter++;
         }
         return totalCreditHours > 0 ? totalGradePoints / totalCreditHours : 0;
     }
