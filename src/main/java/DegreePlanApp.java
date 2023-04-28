@@ -31,7 +31,6 @@ public class DegreePlanApp {
     public static void main(String[] args) {
         DegreePlanApp degreePlanApp = new DegreePlanApp();
         degreePlanApp.initialize();
-
 //
     }
 
@@ -64,6 +63,10 @@ public class DegreePlanApp {
     }
 
     private void options() {
+
+
+
+
 
         frame = new JFrame("Degree Plan Application");
         frame.setLocationRelativeTo(null); // Center the frame on the screen
@@ -127,10 +130,16 @@ public class DegreePlanApp {
         JScrollPane prerequisitesScrollPane = new JScrollPane(prerequisitesPanel);
         panel.add(prerequisitesScrollPane, c);
 
+
+
+
         // Fast Track to Masters selection
         c.gridx = 0;
         c.gridy = 2;
         panel.add(new JLabel("Fast Track to Masters:"), c);
+
+
+
 
         c.gridx = 1;
         c.gridy = 2;
@@ -154,6 +163,31 @@ public class DegreePlanApp {
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(new SubmitButtonListener());
         panel.add(submitButton, c);
+
+
+        //get student info
+        Student student;
+        List<String> prerequisites = new ArrayList<>();
+        try {
+            student = PdfReader.processTranscript(selectedTranscriptFile, trackComboBox.getSelectedItem().toString(),
+                    prerequisites, fastTrackCheckBox.isSelected(), thesisMastersCheckBox.isSelected());
+
+            c.gridx = 4;
+            c.gridy = 6;
+            panel.add(new JLabel("Student name: " + student.name),c);
+
+            c.gridx = 4;
+            c.gridy = 8;
+            panel.add(new JLabel("Student id: " + student.getStudentID()),c);
+
+            this.student = student;
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        //add student name and id so user knows which student whose transcript they're doing audit for
+
+
 
         frame.pack();
     }
@@ -217,6 +251,7 @@ public class DegreePlanApp {
             run = paragraph.createRun();
             run.setFontSize(12);
             for (Course course : student.getCoreCourses()) {
+          //      System.out.println(course.getCourseCode());
                 String[] courseCodeParts = course.getCourseCode().split("(?<=\\D)(?=\\d)");
                 run.setText(courseCodeParts[0] + " " + courseCodeParts[1]);
                 run.addBreak();
@@ -286,7 +321,7 @@ public class DegreePlanApp {
 
         public void actionPerformed(ActionEvent e) {
             String track = (String) trackComboBox.getSelectedItem();
-
+            //getting prerequisites for chosen track
             List<String> prerequisites = new ArrayList<>();
             for (Component component : prerequisitesPanel.getComponents()) {
                 if (component instanceof JCheckBox) {
@@ -294,7 +329,9 @@ public class DegreePlanApp {
                     if (checkBox.isSelected()) {
                         String courseCode = checkBox.getActionCommand();
                         prerequisites.add(courseCode);
-                        student.addPrereq(courseCode); // Call the addPrerequisite method on the student object
+                     //   System.out.println(courseCode);
+//                        System.exit(0);
+                  //      student.addPrereq(courseCode); // Call the addPrerequisite method on the student object
                     }
                 }
             }
@@ -303,18 +340,24 @@ public class DegreePlanApp {
             boolean isThesisMasters = thesisMastersCheckBox.isSelected();
 
             // Get the student info
-            Student student;
-            try {
-                student = PdfReader.processTranscript(selectedTranscriptFile, trackComboBox.getSelectedItem().toString(),
-                        prerequisites, fastTrackCheckBox.isSelected(), thesisMastersCheckBox.isSelected());
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+//            Student student;
+//            try {
+//                student = PdfReader.processTranscript(selectedTranscriptFile, trackComboBox.getSelectedItem().toString(),
+//                        prerequisites, fastTrackCheckBox.isSelected(), thesisMastersCheckBox.isSelected());
+//
+//
+//            } catch (IOException ex) {
+//                throw new RuntimeException(ex);
+//            }
+//            for (String prereq : prerequisites) {
+//                student.addPrereq(prereq);
+//            }
+         //   System.out.println(student.getPrerequisites());
             student.categorizeCoursesByTrack(track,prerequisites);
             GenerateDegreePlan degreePlan = new GenerateDegreePlan(student);
 
             // Generate the Word document
-            //createOutputDOCX(student, track, prerequisites, isFastTrack, isThesisMasters);
+            createOutputDOCX(student, track, prerequisites, isFastTrack, isThesisMasters);
 
             frame.setVisible(false);
         }
