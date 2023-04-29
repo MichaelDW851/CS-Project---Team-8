@@ -1,8 +1,5 @@
 package main.java;
-import java.io.Serializable;
-import java.util.List;
-
-public class Course implements Serializable {
+public class Course {
     String year;
     String semester;
     String courseCode;
@@ -77,50 +74,67 @@ public class Course implements Serializable {
         this.grade = grade;
     }
 
-
-//    @Override
-//    public String toString() {
-//        return "Course: " + courseCode + " - " + courseName + ", " + "Year: " + year + ", " + "Semester: " + semester + ", " + "Credit Hours: " + creditHours + ", " + "Earned Credit Hours: " + earnedCreditHours + ", " + "Grade: " + grade;
-//    }
-
+    @Override
     public String toString() {
-        return courseCode + " - " + courseName;
+        return "Course: " + courseCode + " - " + courseName + ", " + "Year: " + year + ", " + "Semester: " + semester + ", " + "Credit Hours: " + creditHours + ", " + "Earned Credit Hours: " + earnedCreditHours + ", " + "Grade: " + grade;
     }
-    private String getSeasonString() {
-        if (semester != null && !semester.isEmpty()) {
-            int month = Integer.parseInt(semester.substring(5, 7));
-            if (month == 1) {
-                return "Spring";
-            } else if (month == 5) {
-                return "Summer";
-            } else if (month == 8) {
-                return "Fall";
-            }
+    public static String getLetterGradeFromValue(double gradeValue) {
+        if (gradeValue >= 4.0) {
+            return "A";
+        } else if (gradeValue >= 3.7) {
+            return "A-";
+        } else if (gradeValue >= 3.3) {
+            return "B+";
+        } else if (gradeValue >= 3.0) {
+            return "B";
+        } else if (gradeValue >= 2.7) {
+            return "B-";
+        } else if (gradeValue >= 2.3) {
+            return "C+";
+        } else if (gradeValue >= 2.0) {
+            return "C";
+        } else if (gradeValue >= 1.7) {
+            return "C-";
+        } else if (gradeValue >= 1.3) {
+            return "D+";
+        } else if (gradeValue >= 1.0) {
+            return "D";
+        } else if (gradeValue >= 0.7) {
+            return "D-";
+        } else {
+            return "F";
         }
-        return "";
     }
-
     public double getGradeValue() {
         switch (grade) {
             case "A":
                 return 4.0;
             case "A-":
-                return 3.670;
+                return 3.7;
             case "B+":
-                return 3.330;
+                return 3.3;
             case "B":
                 return 3.0;
             case "B-":
-                return 2.670;
+                return 2.7;
             case "C+":
-                return 2.330;
+                return 2.3;
             case "C":
                 return 2.0;
+            case "C-":
+                return 1.7;
+            case "D+":
+                return 1.3;
+            case "D":
+                return 1.0;
+            case "D-":
+                return 0.7;
             case "F":
-                return 0;
+                return 0.0;
             default:
-                return 0;
-
+                return 0.0;
         }
     }
+
+
 }

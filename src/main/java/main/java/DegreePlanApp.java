@@ -1,24 +1,23 @@
 package main.java;
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.io.IOException;
-
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.stream.Collectors;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class DegreePlanApp {
+    private Student student;
     private JFrame frame;
     private JComboBox<String> trackComboBox;
     // private JList<String> prerequisitesList;
@@ -26,44 +25,69 @@ public class DegreePlanApp {
     private JCheckBox thesisMastersCheckBox;
 
     private JPanel prerequisitesPanel;
-    private File selectedTranscriptFile;
+    private String selectedTranscriptFile;
+
+    private DegreePlanApp window;
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                DegreePlanApp window = new DegreePlanApp();
-                window.frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        DegreePlanApp degreePlanApp = new DegreePlanApp();
+        degreePlanApp.initialize();
+
+//
     }
+
 
     public DegreePlanApp() {
-        initialize();
+
     }
 
-    private void initialize() {
+    public DegreePlanApp(Student student) {
+        this.student = student;
+        options();
+    }
+
+    //On startup
+    public void initialize(){
+        window = new DegreePlanApp();
+        Startup start = new Startup();
+        // get filepath from startup
+        try {
+            selectedTranscriptFile = start.getFilePath(); // Store the selected file in the instance variable
+        } catch (InterruptedException e) {
+            // Handle the InterruptedException if necessary
+            e.printStackTrace();
+        }
+
+        //OpenOptions();
+        options();
+
+
+    }
+
+    private void options() {
+
         frame = new JFrame("Degree Plan Application");
-        frame.setBounds(100, 100, 800, 600);
+        frame.setLocationRelativeTo(null); // Center the frame on the screen
+        frame.setVisible(true);
+        frame.setBounds(100, 100, 800, 800);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
         JPanel panel = new JPanel();
         frame.getContentPane().add(panel, BorderLayout.CENTER);
-        panel.setLayout(new GridLayout(5, 2));
+        panel.setLayout(new GridBagLayout()); // use GridBagLayout to customize component positions
 
-        // Add a new panel for the transcript file selection
-        JPanel transcriptPanel = new JPanel(new GridLayout(1, 2));
-        panel.add(new JLabel("Transcript File:"));
-        JButton transcriptButton = new JButton("Select File");
-        transcriptButton.addActionListener(new TranscriptButtonListener());
-        transcriptPanel.add(transcriptButton);
-        panel.add(transcriptPanel);
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.insets = new Insets(5, 5, 5, 5); // add some padding between components
 
         // Track (Specialization) selection
-        panel.add(new JLabel(""));
-        panel.add(new JLabel("Track:"));
+        c.gridx = 0;
+        c.gridy = 0;
+        panel.add(new JLabel("Track:"), c);
+
+        c.gridx = 1;
+        c.gridy = 0;
         trackComboBox = new JComboBox<>(new String[]{
                 "Cyber Security",
                 "Data Science",
@@ -73,11 +97,15 @@ public class DegreePlanApp {
                 "Systems",
                 "Traditional Computer Science"
         });
-        panel.add(trackComboBox);
+        panel.add(trackComboBox, c);
 
         // Leveling courses/pre-requisites selection
-        panel.add(new JLabel(""));
-        panel.add(new JLabel("Leveling Courses/Pre-requisites:"));
+        c.gridx = 0;
+        c.gridy = 1;
+        panel.add(new JLabel("Leveling Courses/Pre-requisites:"), c);
+
+        c.gridx = 1;
+        c.gridy = 1;
         String[] prerequisitesArr = new String[]{
                 "CS 3341 Probability & Statistics in CS and SE",
                 "CS 5303 Computer Science I",
@@ -98,125 +126,245 @@ public class DegreePlanApp {
         }
 
         JScrollPane prerequisitesScrollPane = new JScrollPane(prerequisitesPanel);
-        panel.add(prerequisitesScrollPane);
+        panel.add(prerequisitesScrollPane, c);
 
         // Fast Track to Masters selection
-        panel.add(new JLabel(""));
-        panel.add(new JLabel("Fast Track to Masters:"));
+        c.gridx = 0;
+        c.gridy = 2;
+        panel.add(new JLabel("Fast Track to Masters:"), c);
+
+        c.gridx = 1;
+        c.gridy = 2;
         fastTrackCheckBox = new JCheckBox();
-        panel.add(fastTrackCheckBox);
+        panel.add(fastTrackCheckBox, c);
 
         // Thesis Masters selection
-        panel.add(new JLabel(""));
-        panel.add(new JLabel("Thesis Masters:"));
+        c.gridx = 0;
+        c.gridy = 3;
+        panel.add(new JLabel("Thesis Masters:"), c);
+
+        c.gridx = 1;
+        c.gridy = 3;
         thesisMastersCheckBox = new JCheckBox();
-        panel.add(thesisMastersCheckBox);
+        panel.add(thesisMastersCheckBox, c);
 
         // Submit button
+        c.gridx = 1;
+        c.gridy = 4;
+        c.anchor = GridBagConstraints.LINE_END; // align the button to the right side of the window
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(new SubmitButtonListener());
-        frame.getContentPane().add(submitButton, BorderLayout.SOUTH);
+        panel.add(submitButton, c);
+
+        frame.pack();
     }
 
     private void createOutputDOCX(Student student, String track, List<String> prerequisites, boolean isFastTrack, boolean isThesisMasters) {
+
         try (XWPFDocument document = new XWPFDocument()) {
-            // Add student info
-            XWPFParagraph paragraph = document.createParagraph();
-            XWPFRun run = paragraph.createRun();
-            run.setBold(true);
-            run.setFontSize(14);
-            run.setText("Student Info:");
-            run.addBreak();
+// Title
+            XWPFParagraph titleParagraph = document.createParagraph();
+            titleParagraph.setAlignment(ParagraphAlignment.CENTER);
+            XWPFRun titleRun = titleParagraph.createRun();
+            titleRun.setBold(true);
+            titleRun.setFontSize(16);
+            titleRun.setText("Audit Report");
+            titleRun.addBreak();
 
-            run = paragraph.createRun();
-            run.setFontSize(12);
-            run.setText("Name: " + student.getName());
-            run.addBreak();
-            run.setText("ID: " + student.getStudentID());
-            run.addBreak();
-            run.setText("Track: " + track);
-            run.addBreak();
-            run.setText("Plan: Master");
+// Name and ID
+            XWPFParagraph nameIdParagraph = document.createParagraph();
+            XWPFRun nameIdRun = nameIdParagraph.createRun();
+            nameIdRun.setFontSize(12);
+            nameIdRun.setText("Name: " + student.getName());
+            nameIdRun.addTab();
+            nameIdRun.addTab();
+            nameIdRun.addTab();
+            nameIdRun.addTab();
+            nameIdRun.addTab();
+            nameIdRun.addTab();
+            nameIdRun.setText("ID: " + student.getStudentID());
 
-            // Print core GPA
-            paragraph = document.createParagraph();
-            run = paragraph.createRun();
-            run.setBold(true);
-            run.setFontSize(14);
-            run.setText("Core GPA:");
-            run.addBreak();
 
-            run = paragraph.createRun();
-            run.setFontSize(12);
-            run.setText(Double.toString(student.calculateCoreGPA()));
-            run.addBreak();
+// Plan and Major
+            XWPFParagraph planMajorParagraph = document.createParagraph();
+            XWPFRun planMajorRun = planMajorParagraph.createRun();
+            planMajorRun.setFontSize(12);
+            planMajorRun.setText("Plan: Master");
+            planMajorRun.addTab();
+            planMajorRun.addTab();
+            planMajorRun.addTab();
+            planMajorRun.addTab();
+            planMajorRun.addTab();
+            planMajorRun.addTab();
+            planMajorRun.addTab();
+            planMajorRun.setText("Major: " + student.getMajor());
 
-            // Print elective GPA
-            paragraph = document.createParagraph();
-            run = paragraph.createRun();
-            run.setBold(true);
-            run.setFontSize(14);
-            run.setText("Elective GPA:");
-            run.addBreak();
 
-            run = paragraph.createRun();
-            run.setFontSize(12);
-            run.setText(Double.toString(student.calculateElectiveGPA()));
-            run.addBreak();
+            XWPFParagraph trackParagraph = document.createParagraph();
+            //   trackParagraph.setAlignment(ParagraphAlignment.RIGHT);
+            XWPFRun trackRun = trackParagraph.createRun();
+            trackRun.setFontSize(12);
+            trackRun.addTab();
+            trackRun.addTab();
+            trackRun.addTab();
+            trackRun.addTab();
+            trackRun.addTab();
+            trackRun.addTab();
+            trackRun.addTab();
+            trackRun.addTab();
+            trackRun.setText("Track: " + track);
+            trackRun.addBreak();
 
-            // Add core courses
-            paragraph = document.createParagraph();
-            run = paragraph.createRun();
-            run.setBold(true);
-            run.setFontSize(14);
-            run.setText("Core Courses:");
-            run.addBreak();
+            // Core GPA
+            XWPFParagraph coreGPAParagraph = document.createParagraph();
+            XWPFRun coreGPARun = coreGPAParagraph.createRun();
+            coreGPARun.setFontSize(12);
+            coreGPARun.setText("Core GPA: ");
+            coreGPARun.setText(String.format("%.3f", student.calculateCoreGPA()));
 
-            run = paragraph.createRun();
-            run.setFontSize(12);
+
+
+            // Elective GPA
+            XWPFParagraph electiveGPAParagraph = document.createParagraph();
+            XWPFRun electiveGPARun = electiveGPAParagraph.createRun();
+            electiveGPARun.setFontSize(12);
+            electiveGPARun.setText("Elective GPA: ");
+            electiveGPARun.setText(String.format("%.3f", student.calculateElectiveGPA()));
+
+
+
+            // Combined GPA
+            XWPFParagraph combinedGPAParagraph = document.createParagraph();
+            XWPFRun combinedGPARun = combinedGPAParagraph.createRun();
+            combinedGPARun.setFontSize(12);
+            combinedGPARun.setText("Combined GPA: ");
+            combinedGPARun.setText(String.format("%.3f", student.calculateOverallGPA()));
+            // Core Courses
+            XWPFParagraph coreCoursesParagraph = document.createParagraph();
+            XWPFRun coreCoursesRun = coreCoursesParagraph.createRun();
+            coreCoursesRun.setFontSize(12);
+            coreCoursesRun.setText("Core Courses: ");
             for (Course course : student.getCoreCourses()) {
                 String[] courseCodeParts = course.getCourseCode().split("(?<=\\D)(?=\\d)");
-                run.setText(courseCodeParts[0] + " " + courseCodeParts[1]);
-                run.addBreak();
+                coreCoursesRun.setText(courseCodeParts[0] + " " + courseCodeParts[1] + " ");
             }
+            // coreCoursesRun.addBreak();
 
-            // Add elective courses
-            paragraph = document.createParagraph();
-            run = paragraph.createRun();
-            run.setBold(true);
-            run.setFontSize(14);
-            run.setText("Elective Courses:");
-            run.addBreak();
-
-            run = paragraph.createRun();
-            run.setFontSize(12);
-            for (Course course : student.getElectiveCourses()) {
+            // Elective Courses
+            XWPFParagraph electiveCoursesParagraph = document.createParagraph();
+            XWPFRun electiveCoursesRun = electiveCoursesParagraph.createRun();
+            electiveCoursesRun.setFontSize(12);
+            electiveCoursesRun.setText("Elective Courses: ");
+            List<Course> electiveCourses = student.getElectiveCourses();
+            for (int i = 0; i < electiveCourses.size(); i++) {
+                Course course = electiveCourses.get(i);
                 String[] courseCodeParts = course.getCourseCode().split("(?<=\\D)(?=\\d)");
-                run.setText(courseCodeParts[0] + " " + courseCodeParts[1]);
-                run.addBreak();
+                electiveCoursesRun.setText(courseCodeParts[0] + " " + courseCodeParts[1]);
+                if (i < electiveCourses.size() - 1) {
+                    electiveCoursesRun.setText(", ");
+                }
             }
+            electiveCoursesRun.addBreak();
 
-            paragraph = document.createParagraph();
-            run = paragraph.createRun();
-            run.setBold(true);
-            run.setFontSize(14);
-            run.setText("Pre-requisites and Leveling Courses:");
-            run.addBreak();
 
-            //  HashSet<String> uniqueCourses = new HashSet<>(prerequisites);
-            // student.getLevelingCourses().stream().map(Course::getCourseCode).forEach(uniqueCourses::add);
-            //  HashSet<String> uniqueCourses = new HashSet<>();
+// Leveling Courses and Pre-requisites
+            XWPFParagraph levelingCoursesParagraph = document.createParagraph();
+            XWPFRun levelingCoursesRun = levelingCoursesParagraph.createRun();
+            levelingCoursesRun.setFontSize(12);
+            levelingCoursesRun.setText("Leveling Courses and Pre-requisites from Admissions Letter:");
+            levelingCoursesRun.addBreak();
+
             HashSet<String> uniqueCourses = new HashSet<>();
-            prerequisites.stream().map(courseCode -> courseCode.startsWith("CS ") ? courseCode.substring(3) : courseCode).map(courseCode -> "CS " + courseCode).forEach(uniqueCourses::add);
-            student.getLevelingCourses().stream().map(Course::getCourseCode).map(courseCode -> courseCode.startsWith("CS ") ? courseCode.substring(3) : courseCode).map(courseCode -> "CS " + courseCode).forEach(uniqueCourses::add);
-
-            for (String courseCode : uniqueCourses) {
-                run = paragraph.createRun();
-                run.setFontSize(12);
-                run.setText("- " + courseCode);
-                run.addBreak();
+            for (String courseCode : prerequisites) {
+                if (!courseCode.startsWith("CS")) {
+                    courseCode = "CS" + courseCode;
+                }
+                uniqueCourses.add(courseCode);
             }
-            // Save the document
+            for (Course course : student.getLevelingCourses()) {
+                String courseCode = course.getCourseCode();
+                if (!courseCode.startsWith("CS")) {
+                    courseCode = "CS" + courseCode;
+                }
+                uniqueCourses.add(courseCode);
+            }
+            for (String courseCode : uniqueCourses) {
+                levelingCoursesRun = levelingCoursesParagraph.createRun();
+                levelingCoursesRun.setFontSize(12);
+                levelingCoursesRun.setText("- " + courseCode);
+                levelingCoursesRun.addBreak();
+            }
+
+
+// Outstanding Requirements
+            XWPFParagraph outstandingRequirementsParagraph = document.createParagraph();
+            XWPFRun outstandingRequirementsRun = outstandingRequirementsParagraph.createRun();
+            outstandingRequirementsRun.setFontSize(12);
+            outstandingRequirementsRun.setText("Outstanding Requirements:");
+            outstandingRequirementsRun.addBreak();
+
+
+// Display the getRemainingCoursesMessage
+//            XWPFParagraph remainingCoursesParagraph = document.createParagraph();
+//            XWPFRun remainingCoursesRun = remainingCoursesParagraph.createRun();
+//            remainingCoursesRun.setFontSize(12);
+//            remainingCoursesRun.setBold(false);
+//
+//            String[] remainingMessageParts = student.getRemainingCoursesMessage().split(":");
+//            remainingCoursesRun.setText(remainingMessageParts[0] + ":");
+//            remainingCoursesRun.addBreak();
+//            remainingCoursesRun = remainingCoursesParagraph.createRun();
+//            remainingCoursesRun.setFontSize(12);
+//            remainingCoursesRun.setBold(false);
+//            remainingCoursesRun.setText(remainingMessageParts[1].trim());
+//            remainingCoursesRun.addBreak();
+            String[] remainingMessageParts = student.getRemainingCoursesMessage().split("(?<=:)");
+            XWPFParagraph remainingCoursesParagraph = document.createParagraph();
+            XWPFRun remainingCoursesRun = remainingCoursesParagraph.createRun();
+            remainingCoursesRun.setText(remainingMessageParts[0] + ":");
+            remainingCoursesRun.setFontSize(12);
+            remainingCoursesRun.setBold(false);
+
+            XWPFParagraph remainingCoursesListParagraph = document.createParagraph();
+            XWPFRun remainingCoursesListRun = remainingCoursesListParagraph.createRun();
+            remainingCoursesListRun.setText(remainingMessageParts[1]);
+            remainingCoursesListRun.setFontSize(12);
+            remainingCoursesListRun.setBold(false);
+            remainingCoursesListRun.addBreak();
+
+
+//            double desiredOverallGPA = 3.0;
+//            String overallGPAMessage = student.getRemainingOverallGPAMessage(desiredOverallGPA);
+//            XWPFParagraph overallGPAParagraph = document.createParagraph();
+//            XWPFRun overallGPARun = overallGPAParagraph.createRun();
+//            overallGPARun.setFontSize(12);
+//            overallGPARun.setBold(false);
+//
+//            String[] overallMessageParts = overallGPAMessage.split(":");
+//            overallGPARun.setText(overallMessageParts[0] + ":");
+//            overallGPARun.addBreak();
+//            overallGPARun = overallGPAParagraph.createRun();
+//            overallGPARun.setFontSize(12);
+//            overallGPARun.setBold(false);
+//            overallGPARun.setText(overallMessageParts[1].trim());
+//            overallGPARun.addBreak();
+            double desiredOverallGPA = 3.0;
+            String overallGPAMessage = student.getRemainingOverallGPAMessage(desiredOverallGPA);
+            String[] overallGPAMessageParts = overallGPAMessage.split("(?<=:)");
+            XWPFParagraph overallGPAParagraph = document.createParagraph();
+            XWPFRun overallGPARun = overallGPAParagraph.createRun();
+            overallGPARun.setText(overallGPAMessageParts[0] + ":");
+            overallGPARun.setFontSize(12);
+            overallGPARun.setBold(false);
+
+            XWPFParagraph overallGPAListParagraph = document.createParagraph();
+            XWPFRun overallGPAListRun = overallGPAListParagraph.createRun();
+            overallGPAListRun.setText(overallGPAMessageParts[1]);
+            overallGPAListRun.setFontSize(12);
+            overallGPAListRun.setBold(false);
+            overallGPAListRun.addBreak();
+
+            //Save the document
             JFileChooser fileChooser = new JFileChooser();
             FileNameExtensionFilter filter = new FileNameExtensionFilter("Word Document (*.docx)", "docx");
             fileChooser.setFileFilter(filter);
@@ -232,24 +380,16 @@ public class DegreePlanApp {
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }}
-
-    private class TranscriptButtonListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            JFileChooser fileChooser = new JFileChooser();
-            int result = fileChooser.showOpenDialog(frame);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                selectedTranscriptFile = fileChooser.getSelectedFile(); // Store the selected file in the instance variable
-            }
         }
     }
-
     // In the DegreePlanApp class, call the processTranscript method in the SubmitButtonListener
     private class SubmitButtonListener implements ActionListener {
+
+
+
         @Override
         public void actionPerformed(ActionEvent e) {
             String track = (String) trackComboBox.getSelectedItem();
-
 
             List<String> prerequisites = new ArrayList<>();
             for (Component component : prerequisitesPanel.getComponents()) {
@@ -265,26 +405,25 @@ public class DegreePlanApp {
             boolean isFastTrack = fastTrackCheckBox.isSelected();
             boolean isThesisMasters = thesisMastersCheckBox.isSelected();
 
-            // Check if a transcript file has been selected before proceeding
-            if (selectedTranscriptFile == null) {
-                JOptionPane.showMessageDialog(frame, "Please select a transcript file first.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
             // Get the student info
             Student student;
             try {
-                student = PdfReader.processTranscript(selectedTranscriptFile.getAbsolutePath(), trackComboBox.getSelectedItem().toString(),
+                student = PdfReader.processTranscript(selectedTranscriptFile, trackComboBox.getSelectedItem().toString(),
                         prerequisites, fastTrackCheckBox.isSelected(), thesisMastersCheckBox.isSelected());
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
             student.categorizeCoursesByTrack(track,prerequisites);
+            GenerateDegreePlan degreePlan = new GenerateDegreePlan(student);
 
             // Generate the Word document
             createOutputDOCX(student, track, prerequisites, isFastTrack, isThesisMasters);
+
+            frame.setVisible(false);
         }
     }
+
+
 }
 
 
