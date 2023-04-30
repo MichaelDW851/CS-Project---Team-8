@@ -338,7 +338,13 @@ public class DegreePlanApp {
 
             boolean isFastTrack = fastTrackCheckBox.isSelected();
             boolean isThesisMasters = thesisMastersCheckBox.isSelected();
+            if (isFastTrack) {
+                student.setFastTrack();
+            }
 
+            if (isThesisMasters) {
+                student.setThesisMasters();
+            }
             // Get the student info
 //            Student student;
 //            try {

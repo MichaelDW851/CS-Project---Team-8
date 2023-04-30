@@ -10,8 +10,8 @@ public class Student implements Serializable {
     String major;
     String semesterAdmittedToProgram;
 
-    boolean isFastTrack;
-    boolean isThesisMasters;
+    private boolean isFastTrack;
+    private boolean isThesisMasters;
     List<Course> courses;
     private List<Course> coreCourses = new ArrayList<>();
     private List<Course> electiveCourses = new ArrayList<>();
@@ -28,6 +28,13 @@ public class Student implements Serializable {
 
     }
 
+    void setFastTrack() {
+        isFastTrack = true;
+    }
+
+    void setThesisMasters() {
+        isThesisMasters = true;
+    }
     public boolean getFastTrackCheck(){
         if (isFastTrack) return true;
         return false;

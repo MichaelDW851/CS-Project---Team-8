@@ -10,7 +10,7 @@ public class Course {
     String season;
     public Course(String year, String semester, String courseCode, String courseName, double creditHours, double earnedCreditHours, String grade) {
         this.year = year;
-        this.semester = semester;
+        setSemester(semester);
         this.courseCode = courseCode;
         this.courseName = courseName;
         this.creditHours = creditHours;
@@ -36,7 +36,27 @@ public class Course {
     }
 
     public void setSemester(String semester) {
-        this.semester = semester;
+     //   this.semester = semester;
+        System.out.println(semester);
+
+        String[] semesterParse = semester.split("-");
+        String semesterYear = semesterParse[0].substring(semesterParse[0].length()-2);
+        String semesterCode = semesterParse[1];
+        System.out.println(semesterYear);
+        System.out.println(semesterCode);
+        if(semesterCode.equals("01")) {
+            this.semester = semesterYear + "S";
+            System.out.println("Spring");
+        }
+        else if(semesterCode.equals("02")) {
+            this.semester = semesterYear + "U";
+            System.out.println("Summer");
+        }
+        else if(semesterCode.equals("03")) {
+            this.semester = semesterYear + "F";
+            System.out.println("Fall");
+        }
+        System.out.println(this.semester);
     }
 
     public String getCourseCode() {
