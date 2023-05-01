@@ -154,7 +154,7 @@ class SpreadsheetUI extends JFrame {
 
     public SpreadsheetUI(String studentName, String studentID, String semesterAdmitted,boolean isFastTrack, boolean isThesis,String track) {
         this();
-        setupByTrack(track);
+      //  setupByTrack(track);
         addFields(studentName,studentID,semesterAdmitted,isFastTrack,isThesis);
 
     }
@@ -298,18 +298,23 @@ class SpreadsheetUI extends JFrame {
 //      1 = semester
 //      3 = grade
 
-        if(courseMappings.containsKey(course.getCourseCode())) {
-            model.setValueAt(course.courseName, courseMappings.get(course.getCourseCode()), 0);
-            model.setValueAt(course.getCourseCode(),courseMappings.get(course.getCourseCode()),1);
-            model.setValueAt(course.getSemester(), courseMappings.get(course.getCourseCode()), 2);
-            //     model.setValueAt("Course Transfer", rowCounter, 3);
-            model.setValueAt(course.getGrade(), courseMappings.get(course.getCourseCode()), 4);
-            rowCounter++;
-        }
+//        if(courseMappings.containsKey(course.getCourseCode())) {
+//            model.setValueAt(course.courseName, courseMappings.get(course.getCourseCode()), 0);
+//            model.setValueAt(course.getCourseCode(),courseMappings.get(course.getCourseCode()),1);
+//            model.setValueAt(course.getSemester(), courseMappings.get(course.getCourseCode()), 2);
+//            //     model.setValueAt("Course Transfer", rowCounter, 3);
+//            model.setValueAt(course.getGrade(), courseMappings.get(course.getCourseCode()), 4);
+//            rowCounter++;
+//        }
 
-//        Object[] row = new Object[]{"", "", "", "", "", ""};
-//        model.addRow(row);
-
+        Object[] row = new Object[]{"", "", "", "", "", ""};
+        model.addRow(row);
+        model.setValueAt(course.getCourseName(),rowCounter,0);
+        model.setValueAt(course.getCourseCode(),rowCounter,1);
+        model.setValueAt(course.getSemester(), rowCounter, 2);
+        //     model.setValueAt("Course Transfer", rowCounter, 3);
+        model.setValueAt(course.getGrade(), rowCounter, 4);
+        rowCounter++;
 
     }
     public void addCourse(String courseName,String courseCode,String semester, String grade) {
