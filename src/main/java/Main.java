@@ -9,10 +9,10 @@ import javax.swing.DefaultCellEditor;
 public class Main {
     public static void main(String[] args) {
         SpreadsheetUI sheet = new SpreadsheetUI("Michael","20293","Fall 2020",true,true);
-        sheet.addCourse("CS 4485","F21","A");
+      //  sheet.addCourse("CS 4485","F21","A");
 
-        for (int i = 0;i < 10;i++) {
-            sheet.addCourse("CS 4485","F21","A");
+        for (int i = 0;i < 31;i++) {
+            sheet.addCourse("CS PROJECT","CS 4485","F21","A");
         }
 
     }

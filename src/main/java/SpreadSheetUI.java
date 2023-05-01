@@ -1,7 +1,4 @@
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.PdfPTable;
 //import com.itextpdf.text.Font;
@@ -12,9 +9,11 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 
 class SpreadsheetUI extends JFrame {
     private JTable table;
@@ -23,6 +22,14 @@ class SpreadsheetUI extends JFrame {
     private JLabel titleLabel;
     private JPanel topPanel;
 
+
+    private String studentName;
+    private String studentID;
+    private String semesterAdmitted;
+    private boolean fastTrack = false;
+    private boolean thesis = false;
+
+    private String anticipatedGrad;
     private int rowCounter = 0;
 
     private int defaultRowHeight = 16;
@@ -33,7 +40,86 @@ class SpreadsheetUI extends JFrame {
         this();
         addFields(studentName,studentID,semesterAdmitted,isFastTrack,isThesis);
     }
-    public void addCourse(String courseName,String semester, String grade) {
+
+    public void addCores(ArrayList<Course> cores) {
+        Object[] row = new Object[]{"","",""};
+        model.addRow(row);
+        model.setValueAt("Core Courses",rowCounter,0);
+        model.setValueAt("(15 Credit Hours)",rowCounter,1);
+        model.setValueAt("3.19 Grade Point Average Required",rowCounter,2);
+        rowCounter++;
+        for (Course course: cores) {
+            addCourse(course);
+        }
+
+    }
+
+    public void addTrackElectives(ArrayList<Course> trackElectives) {
+        Object[] row = new Object[]{""};
+        model.addRow(row);
+        model.setValueAt("of The Following Required",rowCounter,0);
+        rowCounter++;
+        for (Course course: trackElectives) {
+            addCourse(course);
+        }
+
+    }
+
+    public void addApprovedElectives(ArrayList<Course> approvedElectives) {
+        Object[] row = new Object[]{ "", "", ""};
+
+        model.addRow(row);
+        model.setValueAt("FIVE APPROVED 6000 LEVEL ELECTIVES",rowCounter,0);
+        model.setValueAt("(15* Credit Hours)",rowCounter,1);
+        model.setValueAt("3.0 Grade Point Average",rowCounter,2);
+        rowCounter++;
+        for (Course course: approvedElectives) {
+            addCourse(course);
+        }
+    }
+
+    public void addAdditionalElectives(ArrayList<Course> additionalElectives) {
+        Object[] row = new Object[]{""};
+        model.addRow(row);
+        model.setValueAt("Additional Electives (3 Credit Hours Minimum)",rowCounter,0);
+        rowCounter++;
+        for (Course course: additionalElectives) {
+            addCourse(course);
+        }
+    }
+    public void addPreReqs(ArrayList<Course> preReqs) {
+        Object[] row = new Object[]{"", "", "", "", "", ""};
+        model.addRow(row);
+        model.setValueAt("Admission Prerequisites",rowCounter,0);
+        model.setValueAt("Course",rowCounter,1);
+        model.setValueAt("UTD Semester",rowCounter,2);
+        model.setValueAt("Waiver",rowCounter,3);
+        model.setValueAt("Grade",rowCounter,4);
+        rowCounter++;
+        for (Course course: preReqs) {
+            addCourse(course);
+        }
+    }
+
+    public void addCourse(Course course) {
+
+
+//      Columns:
+//      0 = course name
+//      1 = semester
+//      3 = grade
+
+        Object[] row = new Object[]{"", "", "", "", "", ""};
+        model.addRow(row);
+        model.setValueAt(course.courseName, rowCounter, 0);
+        model.setValueAt(course.getCourseCode(),rowCounter,1);
+        model.setValueAt(course.getSemester(), rowCounter, 2);
+     //     model.setValueAt("Course Transfer", rowCounter, 3);
+        model.setValueAt(course.getGrade(), rowCounter, 4);
+        rowCounter++;
+
+    }
+    public void addCourse(String courseName,String courseCode,String semester, String grade) {
 
 
 //      Columns:
@@ -44,9 +130,10 @@ class SpreadsheetUI extends JFrame {
         Object[] row = new Object[]{"", "", "", "", "", ""};
         model.addRow(row);
         model.setValueAt(courseName, rowCounter, 0);
-        model.setValueAt(semester, rowCounter, 1);
+        model.setValueAt(courseCode,rowCounter,1);
+        model.setValueAt(semester, rowCounter, 2);
         //  model.setValueAt("Course Transfer", rowCounter, 2);
-        model.setValueAt(grade, rowCounter, 3);
+        model.setValueAt(grade, rowCounter, 4);
         rowCounter++;
 
     }
@@ -116,7 +203,7 @@ class SpreadsheetUI extends JFrame {
         add(scrollPane, BorderLayout.CENTER);
 
         // Add columns
-        String[] columnHeaders = new String[]{ "Course Title", "UTD Semester", "Transfer", "Grade"};
+        String[] columnHeaders = new String[]{ "Course Title", "Course Number" ,"UTD Semester", "Transfer", "Grade"};
         model.setColumnIdentifiers(columnHeaders);
 
 
@@ -178,12 +265,42 @@ class SpreadsheetUI extends JFrame {
                     PdfPTable pdfTable = new PdfPTable(table.getColumnCount());
                     pdfTable.setWidthPercentage(100);
 
-                    Paragraph paragraph = new Paragraph("This text will be centered.");
+                    Paragraph paragraph = new Paragraph("Degree Plan");
                     paragraph.add("\n");
-                    paragraph.add("Hello World");
-
+                    paragraph.add("University of Texas at Dallas");
+                    paragraph.add("\nMaster of Computer Science");
                     paragraph.setAlignment(Element.ALIGN_CENTER);
                     document.add(paragraph);
+
+                    paragraph.clear();
+
+                    paragraph.setAlignment(Element.ALIGN_LEFT);
+                    paragraph.add("\n\nStudent Name: " + studentName);
+                    paragraph.add("\nStudent ID: " + studentID);
+                    paragraph.add("\nSemester Admitted: " + semesterAdmitted);
+                    paragraph.add("\nAnticipated Graduation: " + anticipatedGrad);
+
+                    paragraph.add("\n\nIs Fast Track: ");
+                    if (fastTrack) {
+                        paragraph.add("Yes");
+                    }
+                    else {
+                        paragraph.add("No");
+
+                    }
+                    paragraph.add("\nIs Thesis Masters: ");
+                    if (thesis) {
+                        paragraph.add("Yes");
+                    }
+                    else {
+                        paragraph.add("No");
+
+                    }
+
+                //    paragraph.setAlignment(Element.ALIGN_TOP);
+                    document.add(paragraph);
+
+                    document.add(Chunk.NEWLINE);
 
 
 
@@ -193,19 +310,6 @@ class SpreadsheetUI extends JFrame {
                     for (int i = 0; i < table.getRowCount(); i++) {
                         for (int j = 0; j < table.getColumnCount(); j++) {
                             pdfTable.addCell(new Phrase(table.getValueAt(i, j).toString()));
-                        }
-                    }
-
-
-                    // Add fields to bottom
-                    document.add(new Phrase("\n"));
-                    for (int i = 0; i < bottomPanel.getComponentCount(); i++) {
-                        Component component = bottomPanel.getComponent(i);
-                        if (component instanceof JTextField) {
-                            String text = ((JTextField) component).getText();
-                            System.out.println(text);
-                            document.add(new Phrase(text));
-                            document.add(new Phrase("\n"));
                         }
                     }
 
@@ -232,6 +336,12 @@ class SpreadsheetUI extends JFrame {
     void addFields(String studentName, String studentID, String semesterAdmitted, boolean isFastTrack, boolean isThesis) {
         //   System.out.println("ADDING FIELDS");
 
+
+        this.studentID = studentID;
+        this.studentName = studentName;
+        this.semesterAdmitted = semesterAdmitted;
+        this.fastTrack = isFastTrack;
+        this.thesis = isThesis;
         JPanel bottomPanelTwo = new JPanel(new GridBagLayout());
         add(bottomPanelTwo, BorderLayout.SOUTH);
         GridBagConstraints c = new GridBagConstraints();
