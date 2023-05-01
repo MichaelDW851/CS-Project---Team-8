@@ -1,18 +1,16 @@
 package main.java;
 import java.io.*;
 import java.util.*;
-
-
 public class Student implements Serializable {
     String name;
     String studentID;
     String major;
     String semesterAdmittedToProgram;
-
     boolean isFastTrack;
     boolean isThesisMasters;
     List<Course> courses;
     private List<Course> coreCourses = new ArrayList<>();
+
     private List<Course> electiveCourses = new ArrayList<>();
     private List<Course> prerequisites = new ArrayList<>();
     private List<Course> levelingCourses = new ArrayList<>();
@@ -25,8 +23,14 @@ public class Student implements Serializable {
         this.isFastTrack = isFastTrack;
         this.isThesisMasters = isThesisMasters;
 
-    }
 
+    }
+    void setFastTrack() {
+        isFastTrack = true;
+    }
+    public void setThesisMasters() {
+        isThesisMasters = true;
+    }
     public boolean getFastTrackCheck(){
         if (isFastTrack) return true;
         return false;
@@ -108,11 +112,11 @@ public class Student implements Serializable {
             double requiredRemainingGPA = (desiredOverallGPA * (totalCourses + remainingCoursesCount) - currentOverallGPA * totalCourses) / remainingCoursesCount;
 
             if (requiredRemainingGPA >= 2.00) {
-                message.append(String.format("To maintain an overall GPA of %.2f, the student needs a GPA >= %.2f in the remaining courses:\n", desiredOverallGPA, requiredRemainingGPA));
+                message.append(String.format("To maintain an overall GPA of %.2f, the student needs a GPA >= %.2f in the remaining courses\n", desiredOverallGPA, requiredRemainingGPA));
 
                 appendCourseList(remainingCourses, message);
             } else {
-                message.append(String.format("To maintain an overall GPA of %.2f, the student must pass the remaining courses:\n", desiredOverallGPA));
+                message.append(String.format("To maintain an overall GPA of %.2f, the student must pass\n", desiredOverallGPA));
                 appendCourseList(remainingCourses, message);
             }
         } else {
@@ -122,6 +126,7 @@ public class Student implements Serializable {
         return message.toString();
     }
 
+
     public String getRemainingCoursesMessage() {
         List<Course> remainingCoreCourses = getRemainingCoreCourses();
         List<Course> remainingElectiveCourses = getRemainingElectiveCourses();
@@ -130,14 +135,13 @@ public class Student implements Serializable {
 
         if (!remainingCoreCourses.isEmpty()) {
             double remainingCoreGPA = getRemainingGPA(remainingCoreCourses, 3.19);
-            // Rest of the code for core courses remains the same
             if (remainingCoreGPA >= 2.00) {
                 if (remainingCoreCourses.size() == 1) {
                     Course course = remainingCoreCourses.get(0);
                     String requiredGrade = getRequiredGrade(remainingCoreGPA, course);
                     message.append(String.format("The student needs >= %s in %s\n", requiredGrade, course.getCourseCode()));
                 } else {
-                    message.append(String.format("The student needs a GPA >= %.2f in:", remainingCoreGPA));
+                    message.append(String.format("The student needs a GPA >= %.2f in\n", remainingCoreGPA));
                     appendCourseList(remainingCoreCourses, message);
                 }
             } else {
@@ -149,50 +153,32 @@ public class Student implements Serializable {
         }
 
         if (!remainingElectiveCourses.isEmpty()) {
-            message.append("\nTo maintain a 3.0 elective GPA:");
             double remainingElectiveGPA = getRemainingGPA(remainingElectiveCourses, 3.00);
-            double requiredGPA = (3.0 * (electiveCourses.size() + remainingElectiveCourses.size()) - calculateElectiveGPA() * electiveCourses.size()) / remainingElectiveCourses.size();
-
-            if (requiredGPA >= 2.00) {
+            if (remainingElectiveGPA >= 2.00) {
                 if (remainingElectiveCourses.size() == 1) {
                     Course course = remainingElectiveCourses.get(0);
-                    String requiredGrade = getRequiredGrade(requiredGPA, course);
-                    message.append(String.format("The student needs >= %s in %s\n", requiredGrade, course.getCourseCode()));
+                    String requiredGrade = getRequiredGrade(remainingElectiveGPA, course);
+                    message.append(String.format("To maintain a 3.0 elective GPA, the student needs >= %s in %s\n", requiredGrade, course.getCourseCode()));
                 } else {
-                    message.append(String.format("The student needs a GPA >= %.2f in:", requiredGPA));
+                    message.append(String.format("To maintain a 3.0 elective GPA, the student needs a GPA >= %.2f in:", remainingElectiveGPA));
                     appendCourseList(remainingElectiveCourses, message);
                 }
-            } else {
-                message.append("The student must pass");
-                appendCourseList(remainingElectiveCourses, message);
             }
+        } else {
+            message.append("Electives complete.\n");
         }
 
         return message.toString();
     }
 
-//    private void generateCourseMessage(List<Course> remainingCourses, double remainingGPA, StringBuilder message) {
-//        if (remainingGPA >= 2.00) {
-//            if (remainingCourses.size() == 1) {
-//                Course course = remainingCourses.get(0);
-//                String requiredGrade = getRequiredGrade(remainingGPA, course);
-//                message.append(String.format("The student needs >= %s in %s\n", requiredGrade, course.getCourseCode()));
-//            } else {
-//                message.append(String.format("The student needs a GPA >= %.3f in:", remainingGPA));
-//                appendCourseList(remainingCourses, message);
-//            }
-//        } else {
-//            message.append("The student must pass");
-//            appendCourseList(remainingCourses, message);
-//        }
-//    }
-
-
     private void appendCourseList(List<Course> courses, StringBuilder message) {
         for (int i = 0; i < courses.size(); i++) {
             Course course = courses.get(i);
-            message.append(String.format(" %s%s", course.getCourseCode(), (i == courses.size() - 1) ? ".\n" : ","));
+            // Remove the colon from this line:
+            message.append(String.format(" %s%s", course.getCourseCode(), (i == courses.size() - 1) ? "." : ","));
         }
+        // Add a newline character after the course list
+        message.append("\n");
     }
 
     private String getRequiredGrade(double remainingGPA, Course course) {
@@ -215,9 +201,36 @@ public class Student implements Serializable {
         double remainingGPA = (totalCreditHours * targetGPA - totalEarnedCreditHours) / totalCreditHours;
         return remainingGPA;
     }
+    //    public void addCourse(Course course) {
+//        // Dont add course if its 5117
+//        if (!course.getCourseCode().equals("CSC5177")) {
+//            courses.add(course);
+//        }
+//    }
     public void addCourse(Course course) {
-        // Dont add course if its 5117
-        if (!course.getCourseCode().equals("CSC5177")) {
+        String courseCode = course.getCourseCode();
+
+        // Ignore the course if it is CSC5177
+        if (courseCode.equals("CSC5177")) {
+            return;
+        }
+
+        // Find if the course already exists in the list
+        boolean courseFound = false;
+        for (int i = 0; i < courses.size(); i++) {
+            Course existingCourse = courses.get(i);
+            if (existingCourse.getCourseCode().equals(courseCode)) {
+                // If the new course has a higher grade, replace the existing course
+                if (course.getGradeValue() > existingCourse.getGradeValue()) {
+                    courses.set(i, course);
+                }
+                courseFound = true;
+                break;
+            }
+        }
+
+        // If the course is not in the list, add it
+        if (!courseFound) {
             courses.add(course);
         }
     }
@@ -275,6 +288,30 @@ public class Student implements Serializable {
                 levelingCourses = Arrays.asList("CS3341", "CS2340",  "CS5303","CS5333","CS5343","CS5348");
                 break;
             // Add cases for other tracks and their respective core and elective courses
+            case "Cyber Security":
+                coreCourses = Arrays.asList("CS6324", "CS6363", "CS6378", "CS6332", "CS6348", "CS6349", "CS6377");
+                levelingCourses = Arrays.asList( "CS2340",  "CS5303","CS5333","CS5343","CS5348", "CS5390");
+                break;
+            case "Interactive Computing":
+                coreCourses = Arrays.asList("CS6326", "CS6363", "CS6323", "CS6328", "CS6331", "CS6334", "CS6366");
+                levelingCourses = Arrays.asList( "CS2340",  "CS5303","CS5333","CS5343","CS5348", "CS5390");
+                break;
+            case "Networks and Telecommunications":
+                coreCourses = Arrays.asList("CS6320", "CS6363", "CS6364", "CS6375", "CS6360", "CS6378");
+                levelingCourses = Arrays.asList( "CS2340",  "CS5303","CS5333","CS5343","CS5348", "CS5390", "CS3341");
+                break;
+            case "Systems":
+                coreCourses = Arrays.asList("CS6304", "CS6363", "CS6396", "CS6349", "CS6376", "CS6378", "CS6380", "CS6397");
+                levelingCourses = Arrays.asList( "CS2340",  "CS5303","CS5333","CS5343","CS5348");
+                break;
+            case "Traditional Computer Science":
+                coreCourses = Arrays.asList("CS6390", "CS6363", "CS6353", "CS6371", "CS6360", "CS6378");
+                levelingCourses = Arrays.asList( "CS2340",  "CS5303","CS5333","CS5343","CS5348", "CS5349", "CS5390");
+                break;
+            case "Intelligent Systems":
+                coreCourses = Arrays.asList("CS6320", "CS6363", "CS6364", "CS6375", "CS6360", "CS6378");
+                levelingCourses = Arrays.asList( "CS2340",  "CS5303","CS5333","CS5343","CS5348");
+                break;
         }
 
         for (Course course : this.courses) {
@@ -413,7 +450,7 @@ public class Student implements Serializable {
         fileIn.close();
         return student;
     }
-
 }
+
 
 
