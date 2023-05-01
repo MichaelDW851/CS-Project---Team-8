@@ -10,6 +10,7 @@ public class Student implements Serializable {
     String major;
     String semesterAdmittedToProgram;
 
+    private String track;
     private boolean isFastTrack;
     private boolean isThesisMasters;
     List<Course> courses;
@@ -131,6 +132,7 @@ public class Student implements Serializable {
         List<String> coreCourses = new ArrayList<>();
         List<String> trackElectives = new ArrayList<>();
         List<String> levelingCourses = new ArrayList<>();
+        this.track = track;
         switch (track) {
 
             case "Data Science":
@@ -189,6 +191,10 @@ public class Student implements Serializable {
         }
     }
 //may be final if not, idk just know I changed it to final
+
+    public String getTrack() {
+        return track;
+    }
 
 
     public List<Course> getCoreCourses() {

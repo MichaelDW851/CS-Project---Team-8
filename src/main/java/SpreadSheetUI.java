@@ -14,6 +14,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 class SpreadsheetUI extends JFrame {
     private JTable table;
@@ -22,6 +25,11 @@ class SpreadsheetUI extends JFrame {
     private JLabel titleLabel;
     private JPanel topPanel;
 
+    int additionalElectivesRow;
+
+    int approvedElectivesRow;
+
+    Map<String, Integer> courseMappings;
 
     private String studentName;
     private String studentID;
@@ -34,25 +42,164 @@ class SpreadsheetUI extends JFrame {
 
     private int defaultRowHeight = 16;
 
+    public void setupByTrack(String track) {
+        //Going to use a map to determine where each course listing is
+        //First int is the row
+        String[] coreCoursesCodes;
+        String[] levelingCoursesCodes;
+        String[] trackElectivesCodes;
+
+        courseMappings = new HashMap<>();
+        ArrayList<String> approvedElectives = new ArrayList<>();
+        ArrayList<String> additionalElectives = new ArrayList<>();
+        System.out.println("JIOGW$REIJOW$TIJOIKOJW#");
+        switch (track) {
+
+            case "Data Science":
+                coreCoursesCodes = new String[]{"CS6313", "CS6350", "CS6363", "CS6375", "CS6360"}; // Add core courses for this track
+                setupCores(coreCoursesCodes);
+
+                trackElectivesCodes =new String[]{"CS6301", "CS6320", "CS6327", "CS6347", "CS6360"};
+                setupTrackElectives(trackElectivesCodes);
+
+                setupApprovedElectives();
+                setupAdditionalElectives();
+
+                levelingCoursesCodes =new String[]{"CS3341", "CS5333", "CS5343", "CS5303", "CS5348", "CS5330"};
+                setupLeveling(levelingCoursesCodes);
+                break;
+            // Add cases for other tracks and their respective core and elective courses
+            case "Systems":
+
+                coreCoursesCodes = new String[]{"CS6304", "CS6363", "CS6378", "CS6396"};
+                setupCores(coreCoursesCodes);
+
+                trackElectivesCodes = new String[]{"CS6349","CS6376","CS6380","CS6397","CS6399"};
+                setupTrackElectives(trackElectivesCodes);
+
+                setupApprovedElectives();
+                setupAdditionalElectives();
+
+                levelingCoursesCodes = new String[]{"CS5303","CS5330","CS5333","CS5343","CS5348","CS5390"};
+                setupLeveling(levelingCoursesCodes);
+                break;
+            case "Interactive Computing":
+                coreCoursesCodes = new String[]{"CS6326", "CS6363"};
+                setupCores(coreCoursesCodes);
+
+                trackElectivesCodes = new String[]{"CS6323", "CS6328", "CS6331", "CS6334", "CS6366"};
+                setupTrackElectives(trackElectivesCodes);
+
+                setupApprovedElectives();
+                setupAdditionalElectives();
+
+                levelingCoursesCodes = new String[]{"CS5303", "CS5330", "CS5333", "CS5343", "CS5348"};
+                setupLeveling(levelingCoursesCodes);
+                break;
+            case "Cyber Security":
+                coreCoursesCodes = new String[]{"CS6324", "CS6363", "CS6378"};
+                setupCores(coreCoursesCodes);
+
+                trackElectivesCodes = new String[]{"CS6332", "CS6348", "CS6349", "CS6377"};
+                setupTrackElectives(trackElectivesCodes);
+
+                setupApprovedElectives();
+                setupAdditionalElectives();
+
+                levelingCoursesCodes =new String[]{"CS5303", "CS5330", "CS5333", "CS5343", "CS5348", "CS5390"};
+                setupLeveling(levelingCoursesCodes);
+                break;
+            case "Intelligent Systems":
+                coreCoursesCodes = new String[]{"CS6320", "CS6363", "CS6364", "CS6375"};
+                setupCores(coreCoursesCodes);
+
+                trackElectivesCodes = new String[]{"CS6360", "CS6378"};
+                setupTrackElectives(trackElectivesCodes);
+
+                setupApprovedElectives();
+                setupAdditionalElectives();
+
+                levelingCoursesCodes =new String[]{"CS5303", "CS5330", "CS5343", "CS5333", "CS5348"};
+                setupLeveling(levelingCoursesCodes);
+                break;
+
+            case "Networks and Telecommunications":
+                coreCoursesCodes = new String[]{"CS6352", "CS6363", "CS6378", "CS6385", "CS6390"};
+                setupCores(coreCoursesCodes);
+
+                setupApprovedElectives();
+                setupAdditionalElectives();
+
+                levelingCoursesCodes =new String[]{"CS5303", "CS5330", "CS5343", "CS5348", "CS5390", "CS3341", "CS5333"};
+                setupLeveling(levelingCoursesCodes);
+                break;
+            case "Traditional Computer Science":
+                coreCoursesCodes = new String[]{"CS6363", "CS6378", "CS6390"};
+                setupCores(coreCoursesCodes);
+
+                trackElectivesCodes = new String[]{"CS6353", "CS6360", "CS6371"};
+                setupTrackElectives(trackElectivesCodes);
+
+                setupApprovedElectives();
+                setupAdditionalElectives();
+
+                levelingCoursesCodes =new String[]{"CS5303", "CS5330", "CS5333", "CS5343", "CS5348", "CS5349", "CS5390"};
+                setupLeveling(levelingCoursesCodes);
+        }
 
 
-    public SpreadsheetUI(String studentName, String studentID, String semesterAdmitted,boolean isFastTrack, boolean isThesis) {
-        this();
-        addFields(studentName,studentID,semesterAdmitted,isFastTrack,isThesis);
     }
 
-    public void addCores(ArrayList<Course> cores) {
+
+
+    public SpreadsheetUI(String studentName, String studentID, String semesterAdmitted,boolean isFastTrack, boolean isThesis,String track) {
+        this();
+        setupByTrack(track);
+        addFields(studentName,studentID,semesterAdmitted,isFastTrack,isThesis);
+
+    }
+
+
+    private void setupCores(String[] cores) {
         Object[] row = new Object[]{"","",""};
         model.addRow(row);
         model.setValueAt("Core Courses",rowCounter,0);
         model.setValueAt("(15 Credit Hours)",rowCounter,1);
         model.setValueAt("3.19 Grade Point Average Required",rowCounter,2);
         rowCounter++;
-        for (Course course: cores) {
-            addCourse(course);
-        }
+        for (String course: cores) {
+            courseMappings.put(course,rowCounter);
 
+            row = new Object[]{"","","","",""};
+            model.addRow(row);
+            model.setValueAt(course,rowCounter,1);
+            rowCounter++;
+        }
     }
+
+
+
+
+
+
+
+
+
+    private void setupTrackElectives(String[] trackElectives) {
+        Object[] row = new Object[]{""};
+        model.addRow(row);
+        model.setValueAt("of The Following Required",rowCounter,0);
+        rowCounter++;
+        for (String course: trackElectives) {
+            courseMappings.put(course,rowCounter);
+
+            row = new Object[]{"","","","",""};
+            model.addRow(row);
+            model.setValueAt(course,rowCounter,1);
+            rowCounter++;
+        }
+    }
+
 
     public void addTrackElectives(ArrayList<Course> trackElectives) {
         Object[] row = new Object[]{""};
@@ -60,12 +207,12 @@ class SpreadsheetUI extends JFrame {
         model.setValueAt("of The Following Required",rowCounter,0);
         rowCounter++;
         for (Course course: trackElectives) {
-            addCourse(course);
+
         }
 
     }
 
-    public void addApprovedElectives(ArrayList<Course> approvedElectives) {
+    private void setupApprovedElectives() {
         Object[] row = new Object[]{ "", "", ""};
 
         model.addRow(row);
@@ -73,21 +220,56 @@ class SpreadsheetUI extends JFrame {
         model.setValueAt("(15* Credit Hours)",rowCounter,1);
         model.setValueAt("3.0 Grade Point Average",rowCounter,2);
         rowCounter++;
+        for(int i = 0;i < 5;i++) {
+
+
+            row = new Object[]{"","","","",""};
+            model.addRow(row);
+            rowCounter++;
+        }
+
+
+    }
+
+
+    public void addApprovedElectives(ArrayList<Course> approvedElectives) {
+//        Object[] row = new Object[]{ "", "", ""};
+//
+//        model.addRow(row);
+//        model.setValueAt("FIVE APPROVED 6000 LEVEL ELECTIVES",rowCounter,0);
+//        model.setValueAt("(15* Credit Hours)",rowCounter,1);
+//        model.setValueAt("3.0 Grade Point Average",rowCounter,2);
+//        rowCounter++;
         for (Course course: approvedElectives) {
             addCourse(course);
         }
     }
 
-    public void addAdditionalElectives(ArrayList<Course> additionalElectives) {
+
+    private void setupAdditionalElectives() {
         Object[] row = new Object[]{""};
         model.addRow(row);
         model.setValueAt("Additional Electives (3 Credit Hours Minimum)",rowCounter,0);
         rowCounter++;
+        for (int i = 0;i < 3;i++) {
+            row = new Object[]{"","","","",""};
+            model.addRow(row);
+            rowCounter++;
+        }
+    }
+
+
+    public void addAdditionalElectives(ArrayList<Course> additionalElectives) {
+//        Object[] row = new Object[]{""};
+//        model.addRow(row);
+//        model.setValueAt("Additional Electives (3 Credit Hours Minimum)",rowCounter,0);
+//        rowCounter++;
         for (Course course: additionalElectives) {
             addCourse(course);
         }
     }
-    public void addPreReqs(ArrayList<Course> preReqs) {
+
+    private void setupLeveling(String[] levelingCourses) {
         Object[] row = new Object[]{"", "", "", "", "", ""};
         model.addRow(row);
         model.setValueAt("Admission Prerequisites",rowCounter,0);
@@ -96,10 +278,17 @@ class SpreadsheetUI extends JFrame {
         model.setValueAt("Waiver",rowCounter,3);
         model.setValueAt("Grade",rowCounter,4);
         rowCounter++;
-        for (Course course: preReqs) {
-            addCourse(course);
+        for (String course: levelingCourses) {
+            courseMappings.put(course,rowCounter);
+
+            row = new Object[]{"","","","",""};
+            model.addRow(row);
+            model.setValueAt(course,rowCounter,1);
+            rowCounter++;
         }
     }
+
+
 
     public void addCourse(Course course) {
 
@@ -109,14 +298,18 @@ class SpreadsheetUI extends JFrame {
 //      1 = semester
 //      3 = grade
 
-        Object[] row = new Object[]{"", "", "", "", "", ""};
-        model.addRow(row);
-        model.setValueAt(course.courseName, rowCounter, 0);
-        model.setValueAt(course.getCourseCode(),rowCounter,1);
-        model.setValueAt(course.getSemester(), rowCounter, 2);
-     //     model.setValueAt("Course Transfer", rowCounter, 3);
-        model.setValueAt(course.getGrade(), rowCounter, 4);
-        rowCounter++;
+        if(courseMappings.containsKey(course.getCourseCode())) {
+            model.setValueAt(course.courseName, courseMappings.get(course.getCourseCode()), 0);
+            model.setValueAt(course.getCourseCode(),courseMappings.get(course.getCourseCode()),1);
+            model.setValueAt(course.getSemester(), courseMappings.get(course.getCourseCode()), 2);
+            //     model.setValueAt("Course Transfer", rowCounter, 3);
+            model.setValueAt(course.getGrade(), courseMappings.get(course.getCourseCode()), 4);
+            rowCounter++;
+        }
+
+//        Object[] row = new Object[]{"", "", "", "", "", ""};
+//        model.addRow(row);
+
 
     }
     public void addCourse(String courseName,String courseCode,String semester, String grade) {
@@ -443,19 +636,19 @@ class SpreadsheetUI extends JFrame {
         }
     }
 
-    private class HeaderEditor extends DefaultCellEditor {
-        public HeaderEditor() {
-            super(new JTextField());
-            setClickCountToStart(1);
-        }
-
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            JTextField editor = (JTextField) super.getTableCellEditorComponent(table, value, isSelected, row, column);
-            editor.setFont(editor.getFont().deriveFont(Font.BOLD));
-            editor.setBorder(BorderFactory.createLineBorder(Color.black));
-            return editor;
-        }
-    }
+//    private class HeaderEditor extends DefaultCellEditor {
+//        public HeaderEditor() {
+//            super(new JTextField());
+//            setClickCountToStart(1);
+//        }
+//
+//        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+//            JTextField editor = (JTextField) super.getTableCellEditorComponent(table, value, isSelected, row, column);
+//            editor.setFont(editor.getFont().deriveFont(Font.BOLD));
+//            editor.setBorder(BorderFactory.createLineBorder(Color.black));
+//            return editor;
+//        }
+//    }
 }
 
 
