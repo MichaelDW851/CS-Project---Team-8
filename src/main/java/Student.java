@@ -6,6 +6,8 @@ public class Student implements Serializable {
     String studentID;
     String major;
     String semesterAdmittedToProgram;
+
+    private String track;
     boolean isFastTrack;
     boolean isThesisMasters;
     List<Course> courses;
@@ -281,6 +283,7 @@ public class Student implements Serializable {
         List<Course> specialElectiveCourses = new ArrayList<>();
         Course highestGradeSpecialElective = null;
         Set<String> uniqueLevelingCourses = new HashSet<>();
+        this.track = track;
 
         switch (track) {
             case "Data Science":
@@ -342,6 +345,9 @@ public class Student implements Serializable {
         }
     }
 
+    public String getTrack() {
+        return track;
+    }
     public List<Course> getCoreCourses() {
         return coreCourses;
     }

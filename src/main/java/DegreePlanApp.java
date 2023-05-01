@@ -156,6 +156,29 @@ public class DegreePlanApp {
         submitButton.addActionListener(new SubmitButtonListener());
         panel.add(submitButton, c);
 
+//get student info
+        Student student;
+        List<String> prerequisites = new ArrayList<>();
+        try {
+            student = PdfReader.processTranscript(selectedTranscriptFile, trackComboBox.getSelectedItem().toString(),
+                    prerequisites, fastTrackCheckBox.isSelected(), thesisMastersCheckBox.isSelected());
+
+            c.gridx = 4;
+            c.gridy = 6;
+            panel.add(new JLabel("Student name: " + student.name),c);
+
+            c.gridx = 4;
+            c.gridy = 8;
+            panel.add(new JLabel("Student id: " + student.getStudentID()),c);
+
+            this.student = student;
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        //add student name and id so user knows which student whose transcript they're doing audit for
+
+
         frame.pack();
     }
 
@@ -309,21 +332,6 @@ public class DegreePlanApp {
             outstandingRequirementsRun.setText("Outstanding Requirements:");
             // outstandingRequirementsRun.addBreak();
 
-
-// Display the getRemainingCoursesMessage
-//            XWPFParagraph remainingCoursesParagraph = document.createParagraph();
-//            XWPFRun remainingCoursesRun = remainingCoursesParagraph.createRun();
-//            remainingCoursesRun.setFontSize(12);
-//            remainingCoursesRun.setBold(false);
-//
-//            String[] remainingMessageParts = student.getRemainingCoursesMessage().split(":");
-//            remainingCoursesRun.setText(remainingMessageParts[0] + ":");
-//            remainingCoursesRun.addBreak();
-//            remainingCoursesRun = remainingCoursesParagraph.createRun();
-//            remainingCoursesRun.setFontSize(12);
-//            remainingCoursesRun.setBold(false);
-//            remainingCoursesRun.setText(remainingMessageParts[1].trim());
-//            remainingCoursesRun.addBreak();
             String[] remainingMessageParts = student.getRemainingCoursesMessage().split("(?<=:)");
             XWPFParagraph remainingCoursesParagraph = document.createParagraph();
             XWPFRun remainingCoursesRun = remainingCoursesParagraph.createRun();
@@ -331,12 +339,6 @@ public class DegreePlanApp {
             remainingCoursesRun.setFontSize(12);
             remainingCoursesRun.setBold(false);
 
-//            XWPFParagraph remainingCoursesListParagraph = document.createParagraph();
-//            XWPFRun remainingCoursesListRun = remainingCoursesListParagraph.createRun();
-//            remainingCoursesListRun.setText(remainingMessageParts[1]);
-//            remainingCoursesListRun.setFontSize(12);
-//            remainingCoursesListRun.setBold(false);
-//            remainingCoursesListRun.addBreak();
             XWPFParagraph remainingCoursesListParagraph = document.createParagraph();
             XWPFRun remainingCoursesListRun = remainingCoursesListParagraph.createRun();
             if (remainingMessageParts.length > 1) {
@@ -346,21 +348,7 @@ public class DegreePlanApp {
             remainingCoursesListRun.setBold(false);
             remainingCoursesListRun.addBreak();
 
-            //    double desiredOverallGPA = 3.0;
-//            String overallGPAMessage = student.getRemainingOverallGPAMessage(desiredOverallGPA);
-//            XWPFParagraph overallGPAParagraph = document.createParagraph();
-//            XWPFRun overallGPARun = overallGPAParagraph.createRun();
-//            overallGPARun.setFontSize(12);
-//            overallGPARun.setBold(false);
-//
-//            String[] overallMessageParts = overallGPAMessage.split(":");
-//            overallGPARun.setText(overallMessageParts[0] + ":");
-//            overallGPARun.addBreak();
-//            overallGPARun = overallGPAParagraph.createRun();
-//            overallGPARun.setFontSize(12);
-//            overallGPARun.setBold(false);
-//            overallGPARun.setText(overallMessageParts[1].trim());
-//            overallGPARun.addBreak();
+
             double desiredOverallGPA = 3.0;
             String overallGPAMessage = student.getRemainingOverallGPAMessage(desiredOverallGPA);
             String[] overallGPAMessageParts = overallGPAMessage.split("(?<=:)");
@@ -370,13 +358,6 @@ public class DegreePlanApp {
             overallGPARun.setFontSize(12);
             overallGPARun.setBold(false);
 
-
-//            XWPFParagraph overallGPAListParagraph = document.createParagraph();
-//            XWPFRun overallGPAListRun = overallGPAListParagraph.createRun();
-//            overallGPAListRun.setText(overallGPAMessageParts[1]);
-//            overallGPAListRun.setFontSize(12);
-//            overallGPAListRun.setBold(false);
-//            overallGPAListRun.addBreak();
 
             XWPFParagraph overallGPAListParagraph = document.createParagraph();
             XWPFRun overallGPAListRun = overallGPAListParagraph.createRun();
@@ -447,7 +428,7 @@ public class DegreePlanApp {
                 throw new RuntimeException(ex);
             }
             student.categorizeCoursesByTrack(track,prerequisites);
-            SpreadsheetUI degreePlan = new SpreadsheetUI(student);
+            GenerateDegreePlan degreePlan = new GenerateDegreePlan(student);
 
             // Generate the Word document
             createOutputDOCX(student, track, prerequisites, isFastTrack, isThesisMasters);
