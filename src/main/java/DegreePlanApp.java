@@ -1,4 +1,5 @@
 
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -158,106 +159,238 @@ public class DegreePlanApp {
         frame.pack();
     }
 
-
-
     private void createOutputDOCX(Student student, String track, List<String> prerequisites, boolean isFastTrack, boolean isThesisMasters) {
+
         try (XWPFDocument document = new XWPFDocument()) {
-            // Add student info
-            XWPFParagraph paragraph = document.createParagraph();
-            XWPFRun run = paragraph.createRun();
-            run.setBold(true);
-            run.setFontSize(14);
-            run.setText("Student Info:");
-            run.addBreak();
+// Title
+            XWPFParagraph titleParagraph = document.createParagraph();
+            titleParagraph.setAlignment(ParagraphAlignment.CENTER);
+            XWPFRun titleRun = titleParagraph.createRun();
+            titleRun.setBold(true);
+            titleRun.setFontSize(16);
+            titleRun.setText("Audit Report");
+            titleRun.addBreak();
 
-            run = paragraph.createRun();
-            run.setFontSize(12);
-            run.setText("Name: " + student.getName());
-            run.addBreak();
-            run.setText("ID: " + student.getStudentID());
-            run.addBreak();
-            run.setText("Track: " + track);
-            run.addBreak();
-            run.setText("Plan: Master");
+// Name and ID
+            XWPFParagraph nameIdParagraph = document.createParagraph();
+            XWPFRun nameIdRun = nameIdParagraph.createRun();
+            nameIdRun.setFontSize(12);
+            nameIdRun.setText("Name: " + student.getName());
+            nameIdRun.addTab();
+            nameIdRun.addTab();
+            nameIdRun.addTab();
+            nameIdRun.addTab();
+            nameIdRun.addTab();
+            nameIdRun.addTab();
+            nameIdRun.setText("ID: " + student.getStudentID());
 
-            // Print core GPA
-            paragraph = document.createParagraph();
-            run = paragraph.createRun();
-            run.setBold(true);
-            run.setFontSize(14);
-            run.setText("Core GPA:");
-            run.addBreak();
 
-            run = paragraph.createRun();
-            run.setFontSize(12);
-            run.setText(Double.toString(student.calculateCoreGPA()));
-            run.addBreak();
+// Plan and Major
+            XWPFParagraph planMajorParagraph = document.createParagraph();
+            XWPFRun planMajorRun = planMajorParagraph.createRun();
+            planMajorRun.setFontSize(12);
+            planMajorRun.setText("Plan: Master");
+            planMajorRun.addTab();
+            planMajorRun.addTab();
+            planMajorRun.addTab();
+            planMajorRun.addTab();
+            planMajorRun.addTab();
+            planMajorRun.addTab();
+            planMajorRun.addTab();
+            planMajorRun.setText("Major: " + student.getMajor());
 
-            // Print elective GPA
-            paragraph = document.createParagraph();
-            run = paragraph.createRun();
-            run.setBold(true);
-            run.setFontSize(14);
-            run.setText("Elective GPA:");
-            run.addBreak();
 
-            run = paragraph.createRun();
-            run.setFontSize(12);
-            run.setText(Double.toString(student.calculateElectiveGPA()));
-            run.addBreak();
+            XWPFParagraph trackParagraph = document.createParagraph();
+            //   trackParagraph.setAlignment(ParagraphAlignment.RIGHT);
+            XWPFRun trackRun = trackParagraph.createRun();
+            trackRun.setFontSize(12);
+            trackRun.addTab();
+            trackRun.addTab();
+            trackRun.addTab();
+            trackRun.addTab();
+            trackRun.addTab();
+            trackRun.addTab();
+            trackRun.addTab();
+            trackRun.addTab();
+            trackRun.setText("Track: " + track);
+            trackRun.addBreak();
 
-            // Add core courses
-            paragraph = document.createParagraph();
-            run = paragraph.createRun();
-            run.setBold(true);
-            run.setFontSize(14);
-            run.setText("Core Courses:");
-            run.addBreak();
+            // Core GPA
+            XWPFParagraph coreGPAParagraph = document.createParagraph();
+            XWPFRun coreGPARun = coreGPAParagraph.createRun();
+            coreGPARun.setFontSize(12);
+            coreGPARun.setText("Core GPA: ");
+            coreGPARun.setText(String.format("%.3f", student.calculateCoreGPA()));
 
-            run = paragraph.createRun();
-            run.setFontSize(12);
-            for (Course course : student.getCoreCourses()) {
+
+
+            // Elective GPA
+            XWPFParagraph electiveGPAParagraph = document.createParagraph();
+            XWPFRun electiveGPARun = electiveGPAParagraph.createRun();
+            electiveGPARun.setFontSize(12);
+            electiveGPARun.setText("Elective GPA: ");
+            electiveGPARun.setText(String.format("%.3f", student.calculateElectiveGPA()));
+
+
+
+            // Combined GPA
+            XWPFParagraph combinedGPAParagraph = document.createParagraph();
+            XWPFRun combinedGPARun = combinedGPAParagraph.createRun();
+            combinedGPARun.setFontSize(12);
+            combinedGPARun.setText("Combined GPA: ");
+            combinedGPARun.setText(String.format("%.3f", student.calculateOverallGPA()));
+
+            // Core Courses
+            XWPFParagraph coreCoursesParagraph = document.createParagraph();
+            XWPFRun coreCoursesRun = coreCoursesParagraph.createRun();
+            coreCoursesRun.setFontSize(12);
+            coreCoursesRun.setText("Core Courses: ");
+            List<Course> coreCourses = student.getCoreCourses();
+            for (int i = 0; i < coreCourses.size(); i++) {
+                Course course = coreCourses.get(i);
                 String[] courseCodeParts = course.getCourseCode().split("(?<=\\D)(?=\\d)");
-                run.setText(courseCodeParts[0] + " " + courseCodeParts[1]);
-                run.addBreak();
+                coreCoursesRun.setText(courseCodeParts[0] + " " + courseCodeParts[1]);
+                if (i < coreCourses.size() - 1) {
+                    coreCoursesRun.setText(", ");
+                }
             }
+            // coreCoursesRun.addBreak();
 
-            // Add elective courses
-            paragraph = document.createParagraph();
-            run = paragraph.createRun();
-            run.setBold(true);
-            run.setFontSize(14);
-            run.setText("Elective Courses:");
-            run.addBreak();
-
-            run = paragraph.createRun();
-            run.setFontSize(12);
-            for (Course course : student.getElectiveCourses()) {
+            // Elective Courses
+            XWPFParagraph electiveCoursesParagraph = document.createParagraph();
+            XWPFRun electiveCoursesRun = electiveCoursesParagraph.createRun();
+            electiveCoursesRun.setFontSize(12);
+            electiveCoursesRun.setText("Elective Courses: ");
+            List<Course> electiveCourses = student.getElectiveCourses();
+            for (int i = 0; i < electiveCourses.size(); i++) {
+                Course course = electiveCourses.get(i);
                 String[] courseCodeParts = course.getCourseCode().split("(?<=\\D)(?=\\d)");
-                run.setText(courseCodeParts[0] + " " + courseCodeParts[1]);
-                run.addBreak();
+                electiveCoursesRun.setText(courseCodeParts[0] + " " + courseCodeParts[1]);
+                if (i < electiveCourses.size() - 1) {
+                    electiveCoursesRun.setText(", ");
+                }
             }
+            electiveCoursesRun.addBreak();
 
-            paragraph = document.createParagraph();
-            run = paragraph.createRun();
-            run.setBold(true);
-            run.setFontSize(14);
-            run.setText("Pre-requisites and Leveling Courses:");
-            run.addBreak();
 
-            //  HashSet<String> uniqueCourses = new HashSet<>(prerequisites);
-            // student.getLevelingCourses().stream().map(Course::getCourseCode).forEach(uniqueCourses::add);
-            //  HashSet<String> uniqueCourses = new HashSet<>();
+// Leveling Courses and Pre-requisites
+            XWPFParagraph levelingCoursesParagraph = document.createParagraph();
+            XWPFRun levelingCoursesRun = levelingCoursesParagraph.createRun();
+            levelingCoursesRun.setFontSize(12);
+            levelingCoursesRun.setText("Leveling Courses and Pre-requisites from Admissions Letter:");
+            levelingCoursesRun.addBreak();
+
             HashSet<String> uniqueCourses = new HashSet<>();
-            prerequisites.stream().map(courseCode -> courseCode.startsWith("CS ") ? courseCode.substring(3) : courseCode).map(courseCode -> "CS " + courseCode).forEach(uniqueCourses::add);
-            student.getLevelingCourses().stream().map(Course::getCourseCode).map(courseCode -> courseCode.startsWith("CS ") ? courseCode.substring(3) : courseCode).map(courseCode -> "CS " + courseCode).forEach(uniqueCourses::add);
-
-            for (String courseCode : uniqueCourses) {
-                run = paragraph.createRun();
-                run.setFontSize(12);
-                run.setText("- " + courseCode);
-                run.addBreak();
+            for (String courseCode : prerequisites) {
+                if (!courseCode.startsWith("CS")) {
+                    courseCode = "CS" + courseCode;
+                }
+                uniqueCourses.add(courseCode);
             }
+            for (Course course : student.getLevelingCourses()) {
+                String courseCode = course.getCourseCode();
+                if (!courseCode.startsWith("CS")) {
+                    courseCode = "CS" + courseCode;
+                }
+                uniqueCourses.add(courseCode);
+            }
+            for (String courseCode : uniqueCourses) {
+                levelingCoursesRun = levelingCoursesParagraph.createRun();
+                levelingCoursesRun.setFontSize(12);
+                levelingCoursesRun.setText("- " + courseCode);
+                levelingCoursesRun.addBreak();
+            }
+
+
+// Outstanding Requirements
+            XWPFParagraph outstandingRequirementsParagraph = document.createParagraph();
+            XWPFRun outstandingRequirementsRun = outstandingRequirementsParagraph.createRun();
+            outstandingRequirementsRun.setFontSize(12);
+            outstandingRequirementsRun.setText("Outstanding Requirements:");
+            // outstandingRequirementsRun.addBreak();
+
+
+// Display the getRemainingCoursesMessage
+//            XWPFParagraph remainingCoursesParagraph = document.createParagraph();
+//            XWPFRun remainingCoursesRun = remainingCoursesParagraph.createRun();
+//            remainingCoursesRun.setFontSize(12);
+//            remainingCoursesRun.setBold(false);
+//
+//            String[] remainingMessageParts = student.getRemainingCoursesMessage().split(":");
+//            remainingCoursesRun.setText(remainingMessageParts[0] + ":");
+//            remainingCoursesRun.addBreak();
+//            remainingCoursesRun = remainingCoursesParagraph.createRun();
+//            remainingCoursesRun.setFontSize(12);
+//            remainingCoursesRun.setBold(false);
+//            remainingCoursesRun.setText(remainingMessageParts[1].trim());
+//            remainingCoursesRun.addBreak();
+            String[] remainingMessageParts = student.getRemainingCoursesMessage().split("(?<=:)");
+            XWPFParagraph remainingCoursesParagraph = document.createParagraph();
+            XWPFRun remainingCoursesRun = remainingCoursesParagraph.createRun();
+            remainingCoursesRun.setText(remainingMessageParts[0]);
+            remainingCoursesRun.setFontSize(12);
+            remainingCoursesRun.setBold(false);
+
+//            XWPFParagraph remainingCoursesListParagraph = document.createParagraph();
+//            XWPFRun remainingCoursesListRun = remainingCoursesListParagraph.createRun();
+//            remainingCoursesListRun.setText(remainingMessageParts[1]);
+//            remainingCoursesListRun.setFontSize(12);
+//            remainingCoursesListRun.setBold(false);
+//            remainingCoursesListRun.addBreak();
+            XWPFParagraph remainingCoursesListParagraph = document.createParagraph();
+            XWPFRun remainingCoursesListRun = remainingCoursesListParagraph.createRun();
+            if (remainingMessageParts.length > 1) {
+                remainingCoursesListRun.setText(remainingMessageParts[1]);
+            }
+            remainingCoursesListRun.setFontSize(12);
+            remainingCoursesListRun.setBold(false);
+            remainingCoursesListRun.addBreak();
+
+            //    double desiredOverallGPA = 3.0;
+//            String overallGPAMessage = student.getRemainingOverallGPAMessage(desiredOverallGPA);
+//            XWPFParagraph overallGPAParagraph = document.createParagraph();
+//            XWPFRun overallGPARun = overallGPAParagraph.createRun();
+//            overallGPARun.setFontSize(12);
+//            overallGPARun.setBold(false);
+//
+//            String[] overallMessageParts = overallGPAMessage.split(":");
+//            overallGPARun.setText(overallMessageParts[0] + ":");
+//            overallGPARun.addBreak();
+//            overallGPARun = overallGPAParagraph.createRun();
+//            overallGPARun.setFontSize(12);
+//            overallGPARun.setBold(false);
+//            overallGPARun.setText(overallMessageParts[1].trim());
+//            overallGPARun.addBreak();
+            double desiredOverallGPA = 3.0;
+            String overallGPAMessage = student.getRemainingOverallGPAMessage(desiredOverallGPA);
+            String[] overallGPAMessageParts = overallGPAMessage.split("(?<=:)");
+            XWPFParagraph overallGPAParagraph = document.createParagraph();
+            XWPFRun overallGPARun = overallGPAParagraph.createRun();
+            overallGPARun.setText(overallGPAMessageParts[0]);
+            overallGPARun.setFontSize(12);
+            overallGPARun.setBold(false);
+
+
+//            XWPFParagraph overallGPAListParagraph = document.createParagraph();
+//            XWPFRun overallGPAListRun = overallGPAListParagraph.createRun();
+//            overallGPAListRun.setText(overallGPAMessageParts[1]);
+//            overallGPAListRun.setFontSize(12);
+//            overallGPAListRun.setBold(false);
+//            overallGPAListRun.addBreak();
+
+            XWPFParagraph overallGPAListParagraph = document.createParagraph();
+            XWPFRun overallGPAListRun = overallGPAListParagraph.createRun();
+
+            if (overallGPAMessageParts.length > 1) {
+                overallGPAListRun.setText(overallGPAMessageParts[1]);
+            } else {
+                overallGPAListRun.setText(""); // Set an empty string or any other default text
+            }
+
+            overallGPAListRun.setFontSize(12);
+            overallGPAListRun.setBold(false);
+            overallGPAListRun.addBreak();
+
             //Save the document
             JFileChooser fileChooser = new JFileChooser();
             FileNameExtensionFilter filter = new FileNameExtensionFilter("Word Document (*.docx)", "docx");
@@ -275,10 +408,7 @@ public class DegreePlanApp {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        }
-
-
-
+    }
     // In the DegreePlanApp class, call the processTranscript method in the SubmitButtonListener
     private class SubmitButtonListener implements ActionListener {
 
@@ -301,7 +431,13 @@ public class DegreePlanApp {
 
             boolean isFastTrack = fastTrackCheckBox.isSelected();
             boolean isThesisMasters = thesisMastersCheckBox.isSelected();
+            if (isFastTrack) {
+                student.setFastTrack();
+            }
 
+            if (isThesisMasters) {
+                student.setThesisMasters();
+            }
             // Get the student info
             Student student;
             try {
@@ -311,10 +447,10 @@ public class DegreePlanApp {
                 throw new RuntimeException(ex);
             }
             student.categorizeCoursesByTrack(track,prerequisites);
-            GenerateDegreePlan degreePlan = new GenerateDegreePlan(student);
+            SpreadsheetUI degreePlan = new SpreadsheetUI(student);
 
             // Generate the Word document
-            //createOutputDOCX(student, track, prerequisites, isFastTrack, isThesisMasters);
+            createOutputDOCX(student, track, prerequisites, isFastTrack, isThesisMasters);
 
             frame.setVisible(false);
         }
@@ -322,6 +458,8 @@ public class DegreePlanApp {
 
 
 }
+
+
 
 
 

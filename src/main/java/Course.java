@@ -1,3 +1,4 @@
+
 public class Course {
     String year;
     String semester;
@@ -76,6 +77,33 @@ public class Course {
     @Override
     public String toString() {
         return "Course: " + courseCode + " - " + courseName + ", " + "Year: " + year + ", " + "Semester: " + semester + ", " + "Credit Hours: " + creditHours + ", " + "Earned Credit Hours: " + earnedCreditHours + ", " + "Grade: " + grade;
+    }
+    public static String getLetterGradeFromValue(double gradeValue) {
+        if (gradeValue >= 4.0) {
+            return "A";
+        } else if (gradeValue >= 3.7) {
+            return "A-";
+        } else if (gradeValue >= 3.3) {
+            return "B+";
+        } else if (gradeValue >= 3.0) {
+            return "B";
+        } else if (gradeValue >= 2.7) {
+            return "B-";
+        } else if (gradeValue >= 2.3) {
+            return "C+";
+        } else if (gradeValue >= 2.0) {
+            return "C";
+        } else if (gradeValue >= 1.7) {
+            return "C-";
+        } else if (gradeValue >= 1.3) {
+            return "D+";
+        } else if (gradeValue >= 1.0) {
+            return "D";
+        } else if (gradeValue >= 0.7) {
+            return "D-";
+        } else {
+            return "F";
+        }
     }
     public double getGradeValue() {
         switch (grade) {
