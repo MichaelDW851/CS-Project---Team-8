@@ -15,7 +15,7 @@ public class GenerateDegreePlan {
         System.out.println(student.name + "\n" + student.getCoreCourses());
         System.out.println( "\n" + student.getElectiveCourses());
         System.out.println("\n" + student.getLevelingCourses());
-      //  System.out.println("\n" + student.getCoreCourses());
+        //  System.out.println("\n" + student.getCoreCourses());
 
 
         for (Course course: student.getCourses()) {
