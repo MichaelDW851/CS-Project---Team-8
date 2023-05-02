@@ -152,12 +152,6 @@ class SpreadsheetUI extends JFrame {
 
 
 
-    public SpreadsheetUI(String studentName, String studentID, String semesterAdmitted,boolean isFastTrack, boolean isThesis,String track) {
-        this();
-      //  setupByTrack(track);
-        addFields(studentName,studentID,semesterAdmitted,isFastTrack,isThesis);
-
-    }
 
 
     private void setupCores(String[] cores) {
@@ -360,7 +354,7 @@ class SpreadsheetUI extends JFrame {
 
 
 
-    public SpreadsheetUI() {
+    public SpreadsheetUI(String studentName,String studentID,String semesterAdmitted,boolean isFastTrack, boolean isThesis,String track) {
 
         // Add a button to clear the selection
 
@@ -441,8 +435,16 @@ class SpreadsheetUI extends JFrame {
 
 
 
-        //adding separate fields for name, fast track, thesis, etc.
-        addFields();
+        this.studentName =studentName;
+        this.studentID = studentID;
+        this.semesterAdmitted = semesterAdmitted;
+        this.fastTrack = isFastTrack;
+        this.thesis = isThesis;
+        setupByTrack(track);
+        addFields(studentName,studentID,semesterAdmitted,fastTrack,thesis);
+
+
+        //adding separate fields for name, fast track, thesis, etc
 
 
         JPanel buttonPanel = new JPanel(new BorderLayout());
@@ -451,6 +453,8 @@ class SpreadsheetUI extends JFrame {
 
         //  buttonPanel.add(closeButton, BorderLayout.NORTH);
         add(buttonPanel, BorderLayout.EAST);
+
+
 
         saveAsPdfButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
@@ -520,6 +524,7 @@ class SpreadsheetUI extends JFrame {
                 }
             }
         });
+
 
 
         pack();
