@@ -10,7 +10,7 @@ public class Student implements Serializable {
     boolean isThesisMasters;
     List<Course> courses;
     private List<Course> coreCourses = new ArrayList<>();
-
+    private String track;
     private List<Course> electiveCourses = new ArrayList<>();
     private List<Course> prerequisites = new ArrayList<>();
     private List<Course> levelingCourses = new ArrayList<>();
@@ -345,7 +345,9 @@ public class Student implements Serializable {
     public List<Course> getCoreCourses() {
         return coreCourses;
     }
-
+    public String getTrack() {
+        return track;
+    }
     public List<Course> getElectiveCourses() {
         return electiveCourses;
     }
@@ -464,8 +466,9 @@ public class Student implements Serializable {
         in.close();
         fileIn.close();
         return student;
-    }
+  }
 }
+
 
 
 

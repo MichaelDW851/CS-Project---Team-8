@@ -81,15 +81,15 @@ public class Course {
     public static String getLetterGradeFromValue(double gradeValue) {
         if (gradeValue >= 4.0) {
             return "A";
-        } else if (gradeValue >= 3.7) {
+        } else if (gradeValue >= 3.67) {
             return "A-";
-        } else if (gradeValue >= 3.3) {
+        } else if (gradeValue >= 3.33) {
             return "B+";
         } else if (gradeValue >= 3.0) {
             return "B";
-        } else if (gradeValue >= 2.7) {
+        } else if (gradeValue >= 2.67) {
             return "B-";
-        } else if (gradeValue >= 2.3) {
+        } else if (gradeValue >= 2.33) {
             return "C+";
         } else if (gradeValue >= 2.0) {
             return "C";
@@ -105,20 +105,21 @@ public class Course {
             return "F";
         }
     }
+
     public double getGradeValue() {
         switch (grade) {
             case "A":
                 return 4.0;
             case "A-":
-                return 3.7;
+                return 3.67;
             case "B+":
-                return 3.3;
+                return 3.33;
             case "B":
                 return 3.0;
             case "B-":
-                return 2.7;
+                return 2.67;
             case "C+":
-                return 2.3;
+                return 2.33;
             case "C":
                 return 2.0;
             case "C-":
@@ -135,6 +136,4 @@ public class Course {
                 return 0.0;
         }
     }
-
-
 }
