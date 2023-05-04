@@ -14,7 +14,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +48,10 @@ class SpreadsheetUI extends JFrame {
         String[] levelingCoursesCodes;
         String[] trackElectivesCodes;
 
+        String[] coreCoursesNames;
+        String[] levelingCoursesNames;
+        String[] trackElectivesNames;
+
         courseMappings = new HashMap<>();
         ArrayList<String> approvedElectives = new ArrayList<>();
         ArrayList<String> additionalElectives = new ArrayList<>();
@@ -56,95 +59,117 @@ class SpreadsheetUI extends JFrame {
         switch (track) {
 
             case "Data Science":
-                coreCoursesCodes = new String[]{"CS6313", "CS6350", "CS6363", "CS6375", "CS6360"}; // Add core courses for this track
-                setupCores(coreCoursesCodes);
+                coreCoursesCodes = new String[]{"CS6313", "CS6350", "CS6363", "CS6375"}; // Add core courses for this track
+                coreCoursesNames = new String[]{"Statistical Methods for Data Sciences","Big Data Management and Analytics","Design and Analysis of Computer Algorithms","Machine Learning"};
+                setupCores(coreCoursesCodes,coreCoursesNames);
 
                 trackElectivesCodes =new String[]{"CS6301", "CS6320", "CS6327", "CS6347", "CS6360"};
-                setupTrackElectives(trackElectivesCodes);
+                trackElectivesNames = new String[]{"Social Network Analytics","Natural Language Processing","Video Analytics","Statistics for Machine Learning","Database Design"};
+                setupTrackElectives(trackElectivesCodes,trackElectivesNames);
 
                 setupApprovedElectives();
                 setupAdditionalElectives();
 
-                levelingCoursesCodes =new String[]{"CS3341", "CS5333", "CS5343", "CS5303", "CS5348", "CS5330"};
-                setupLeveling(levelingCoursesCodes);
+                levelingCoursesCodes =new String[]{"CS5303", "CS5330", "CS5333", "CS5343", "CS5348", "CS3341"};
+                levelingCoursesNames = new String[]{"Computer Science I","Computer Science II","Discrete Structures","Algorithm Analysis & Data Structures","Operating System Concepts","Probability & Statistics in CS"};
+                setupLeveling(levelingCoursesCodes,levelingCoursesNames);
                 break;
             // Add cases for other tracks and their respective core and elective courses
             case "Systems":
 
                 coreCoursesCodes = new String[]{"CS6304", "CS6363", "CS6378", "CS6396"};
-                setupCores(coreCoursesCodes);
+                coreCoursesNames = new String[]{"Computer Architecture","Design and Analysis of Computer Algorithms","Advanced Operating Systems","Real-Time Systems"};
+                setupCores(coreCoursesCodes, coreCoursesNames);
 
                 trackElectivesCodes = new String[]{"CS6349","CS6376","CS6380","CS6397","CS6399"};
-                setupTrackElectives(trackElectivesCodes);
+                trackElectivesNames = new String[]{"Network Security","Parallel Processing","Parallel Processing","Synthesis and Opt. of High-Perf. Systems","Parallel Architectures and Systems"};
+                setupTrackElectives(trackElectivesCodes, trackElectivesNames);
 
                 setupApprovedElectives();
                 setupAdditionalElectives();
 
                 levelingCoursesCodes = new String[]{"CS5303","CS5330","CS5333","CS5343","CS5348","CS5390"};
-                setupLeveling(levelingCoursesCodes);
+                levelingCoursesNames = new String[]{"Computer Science I","Computer Science II","Discrete Structures","Algorithm Analysis & Data Structures","Operating System Concepts","Computer Networks **"};
+                setupLeveling(levelingCoursesCodes, levelingCoursesCodes);
                 break;
             case "Interactive Computing":
                 coreCoursesCodes = new String[]{"CS6326", "CS6363"};
-                setupCores(coreCoursesCodes);
+                coreCoursesNames = new String[]{"Human Computer Interaction","Design and Analysis of Computer Algorithms"};
+
+                setupCores(coreCoursesCodes, coreCoursesNames);
 
                 trackElectivesCodes = new String[]{"CS6323", "CS6328", "CS6331", "CS6334", "CS6366"};
-                setupTrackElectives(trackElectivesCodes);
+                trackElectivesNames = new String[]{"Computer Animation and Gaming","Modeling and Simulation","Multimedia Systems","Virtual Reality","Computer Graphics"};
+                setupTrackElectives(trackElectivesCodes, trackElectivesNames);
 
                 setupApprovedElectives();
                 setupAdditionalElectives();
 
                 levelingCoursesCodes = new String[]{"CS5303", "CS5330", "CS5333", "CS5343", "CS5348"};
-                setupLeveling(levelingCoursesCodes);
+                levelingCoursesNames = new String[]{};
+                setupLeveling(levelingCoursesCodes, levelingCoursesCodes);
                 break;
             case "Cyber Security":
                 coreCoursesCodes = new String[]{"CS6324", "CS6363", "CS6378"};
-                setupCores(coreCoursesCodes);
+                coreCoursesNames = new String[]{"Information Security","Design and Analysis of Computer Algorithms","Advanced Operating Systems"};
+
+                setupCores(coreCoursesCodes, coreCoursesNames);
 
                 trackElectivesCodes = new String[]{"CS6332", "CS6348", "CS6349", "CS6377"};
-                setupTrackElectives(trackElectivesCodes);
+                trackElectivesNames = new String[]{"System Security & Malicious Code Analysis","Data and Applications Security","Network Security","Introduction To Cryptography"};
+                setupTrackElectives(trackElectivesCodes, trackElectivesNames);
 
                 setupApprovedElectives();
                 setupAdditionalElectives();
 
                 levelingCoursesCodes =new String[]{"CS5303", "CS5330", "CS5333", "CS5343", "CS5348", "CS5390"};
-                setupLeveling(levelingCoursesCodes);
+                levelingCoursesNames = new String[]{};
+                setupLeveling(levelingCoursesCodes, levelingCoursesCodes);
                 break;
             case "Intelligent Systems":
                 coreCoursesCodes = new String[]{"CS6320", "CS6363", "CS6364", "CS6375"};
-                setupCores(coreCoursesCodes);
+                coreCoursesNames = new String[]{"Natural Language Processing","Design and Analysis of Computer Algorithms","Artificial Intelligence","Machine Learning"};
+                setupCores(coreCoursesCodes, coreCoursesNames);
 
                 trackElectivesCodes = new String[]{"CS6360", "CS6378"};
-                setupTrackElectives(trackElectivesCodes);
+                trackElectivesNames = new String[]{"Database Design","Advanced Operating Systems"};
+                setupTrackElectives(trackElectivesCodes, trackElectivesNames);
 
                 setupApprovedElectives();
                 setupAdditionalElectives();
 
                 levelingCoursesCodes =new String[]{"CS5303", "CS5330", "CS5343", "CS5333", "CS5348"};
-                setupLeveling(levelingCoursesCodes);
+                levelingCoursesNames = new String[]{};
+                setupLeveling(levelingCoursesCodes, levelingCoursesCodes);
                 break;
 
             case "Networks and Telecommunications":
                 coreCoursesCodes = new String[]{"CS6352", "CS6363", "CS6378", "CS6385", "CS6390"};
-                setupCores(coreCoursesCodes);
+                coreCoursesNames = new String[]{};
+                setupCores(coreCoursesCodes, coreCoursesNames);
 
                 setupApprovedElectives();
                 setupAdditionalElectives();
 
                 levelingCoursesCodes =new String[]{"CS5303", "CS5330", "CS5343", "CS5348", "CS5390", "CS3341", "CS5333"};
-                setupLeveling(levelingCoursesCodes);
+                levelingCoursesNames = new String[]{};
+                setupLeveling(levelingCoursesCodes, levelingCoursesCodes);
                 break;
             case "Traditional Computer Science":
                 coreCoursesCodes = new String[]{"CS6363", "CS6378", "CS6390"};
-                setupCores(coreCoursesCodes);
+                coreCoursesNames = new String[]{};
+                setupCores(coreCoursesCodes, coreCoursesCodes);
 
                 trackElectivesCodes = new String[]{"CS6353", "CS6360", "CS6371"};
-                setupTrackElectives(trackElectivesCodes);
+                trackElectivesNames = new String[]{};
+                setupTrackElectives(trackElectivesCodes, trackElectivesCodes);
 
                 setupApprovedElectives();
                 setupAdditionalElectives();
 
                 levelingCoursesCodes =new String[]{"CS5303", "CS5330", "CS5333", "CS5343", "CS5348", "CS5349", "CS5390"};
-                setupLeveling(levelingCoursesCodes);
+                levelingCoursesNames = new String[]{};
+                setupLeveling(levelingCoursesCodes, levelingCoursesCodes);
         }
 
 
@@ -154,7 +179,7 @@ class SpreadsheetUI extends JFrame {
 
 
 
-    private void setupCores(String[] cores) {
+    private void setupCores(String[] coreCoursesCodes, String[] cores) {
         Object[] row = new Object[]{"","",""};
         model.addRow(row);
         model.setValueAt("Core Courses",rowCounter,0);
@@ -179,7 +204,7 @@ class SpreadsheetUI extends JFrame {
 
 
 
-    private void setupTrackElectives(String[] trackElectives) {
+    private void setupTrackElectives(String[] trackElectivesCodes, String[] trackElectives) {
         Object[] row = new Object[]{""};
         model.addRow(row);
         model.setValueAt("of The Following Required",rowCounter,0);
@@ -263,7 +288,7 @@ class SpreadsheetUI extends JFrame {
         }
     }
 
-    private void setupLeveling(String[] levelingCourses) {
+    private void setupLeveling(String[] levelingCoursesCodes, String[] levelingCourses) {
         Object[] row = new Object[]{"", "", "", "", "", ""};
         model.addRow(row);
         model.setValueAt("Admission Prerequisites",rowCounter,0);
