@@ -273,7 +273,7 @@ public class DegreePlanApp {
             electiveCoursesRun.addBreak();
 
 
-// Leveling Courses and Pre-requisites
+            //Leveling Courses and Pre-requisites
             XWPFParagraph levelingCoursesParagraph = document.createParagraph();
             XWPFRun levelingCoursesRun = levelingCoursesParagraph.createRun();
             levelingCoursesRun.setFontSize(12);
@@ -301,7 +301,6 @@ public class DegreePlanApp {
                 levelingCoursesRun.addBreak();
             }
 
-
 // Outstanding Requirements
             XWPFParagraph outstandingRequirementsParagraph = document.createParagraph();
             XWPFRun outstandingRequirementsRun = outstandingRequirementsParagraph.createRun();
@@ -311,19 +310,7 @@ public class DegreePlanApp {
 
 
 // Display the getRemainingCoursesMessage
-//            XWPFParagraph remainingCoursesParagraph = document.createParagraph();
-//            XWPFRun remainingCoursesRun = remainingCoursesParagraph.createRun();
-//            remainingCoursesRun.setFontSize(12);
-//            remainingCoursesRun.setBold(false);
-//
-//            String[] remainingMessageParts = student.getRemainingCoursesMessage().split(":");
-//            remainingCoursesRun.setText(remainingMessageParts[0] + ":");
-//            remainingCoursesRun.addBreak();
-//            remainingCoursesRun = remainingCoursesParagraph.createRun();
-//            remainingCoursesRun.setFontSize(12);
-//            remainingCoursesRun.setBold(false);
-//            remainingCoursesRun.setText(remainingMessageParts[1].trim());
-//            remainingCoursesRun.addBreak();
+
             String[] remainingMessageParts = student.getRemainingCoursesMessage().split("(?<=:)");
             XWPFParagraph remainingCoursesParagraph = document.createParagraph();
             XWPFRun remainingCoursesRun = remainingCoursesParagraph.createRun();
@@ -331,12 +318,6 @@ public class DegreePlanApp {
             remainingCoursesRun.setFontSize(12);
             remainingCoursesRun.setBold(false);
 
-//            XWPFParagraph remainingCoursesListParagraph = document.createParagraph();
-//            XWPFRun remainingCoursesListRun = remainingCoursesListParagraph.createRun();
-//            remainingCoursesListRun.setText(remainingMessageParts[1]);
-//            remainingCoursesListRun.setFontSize(12);
-//            remainingCoursesListRun.setBold(false);
-//            remainingCoursesListRun.addBreak();
             XWPFParagraph remainingCoursesListParagraph = document.createParagraph();
             XWPFRun remainingCoursesListRun = remainingCoursesListParagraph.createRun();
             if (remainingMessageParts.length > 1) {
@@ -346,21 +327,6 @@ public class DegreePlanApp {
             remainingCoursesListRun.setBold(false);
             remainingCoursesListRun.addBreak();
 
-            //    double desiredOverallGPA = 3.0;
-//            String overallGPAMessage = student.getRemainingOverallGPAMessage(desiredOverallGPA);
-//            XWPFParagraph overallGPAParagraph = document.createParagraph();
-//            XWPFRun overallGPARun = overallGPAParagraph.createRun();
-//            overallGPARun.setFontSize(12);
-//            overallGPARun.setBold(false);
-//
-//            String[] overallMessageParts = overallGPAMessage.split(":");
-//            overallGPARun.setText(overallMessageParts[0] + ":");
-//            overallGPARun.addBreak();
-//            overallGPARun = overallGPAParagraph.createRun();
-//            overallGPARun.setFontSize(12);
-//            overallGPARun.setBold(false);
-//            overallGPARun.setText(overallMessageParts[1].trim());
-//            overallGPARun.addBreak();
             double desiredOverallGPA = 3.0;
             String overallGPAMessage = student.getRemainingOverallGPAMessage(desiredOverallGPA);
             String[] overallGPAMessageParts = overallGPAMessage.split("(?<=:)");
@@ -371,12 +337,6 @@ public class DegreePlanApp {
             overallGPARun.setBold(false);
 
 
-//            XWPFParagraph overallGPAListParagraph = document.createParagraph();
-//            XWPFRun overallGPAListRun = overallGPAListParagraph.createRun();
-//            overallGPAListRun.setText(overallGPAMessageParts[1]);
-//            overallGPAListRun.setFontSize(12);
-//            overallGPAListRun.setBold(false);
-//            overallGPAListRun.addBreak();
 
             XWPFParagraph overallGPAListParagraph = document.createParagraph();
             XWPFRun overallGPAListRun = overallGPAListParagraph.createRun();
@@ -386,6 +346,7 @@ public class DegreePlanApp {
             } else {
                 overallGPAListRun.setText(""); // Set an empty string or any other default text
             }
+
 
             overallGPAListRun.setFontSize(12);
             overallGPAListRun.setBold(false);
@@ -458,7 +419,6 @@ public class DegreePlanApp {
 
 
 }
-
 
 
 

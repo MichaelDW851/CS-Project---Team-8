@@ -325,7 +325,7 @@ public class Student implements Serializable {
                 } else if (uniqueLevelingCourses.add(fullCourseCode)) {
                     this.levelingCourses.add(course);
                 }
-            } else if (course.getCourseCode().startsWith("CS6") || course.getCourseCode().startsWith("CS7")) {
+            } else if (course.getCourseCode().startsWith("CS6") || course.getCourseCode().startsWith("CS7")|| course.getCourseCode().startsWith("SE7")|| course.getCourseCode().startsWith("SE6")) {
                 this.electiveCourses.add(course);
             }
         }
@@ -433,7 +433,22 @@ public class Student implements Serializable {
 
         courses.removeAll(coursesToRemove);
     }
-
+    public String getCourseStatus(Course course) {
+        String courseCode = course.getCourseCode();
+        if (course.getEarnedCreditHours() > 0) {
+            return courseCode + ": Completed " + course.getSemester() + " " + course.getYear();
+        } else {
+            return courseCode + ": Not required for plan or electives";
+        }
+    }
+    public Course findCourseByCode(String courseCode) {
+        for (Course course : levelingCourses) {
+            if (course.getCourseCode().equals(courseCode)) {
+                return course;
+            }
+        }
+        return null;
+    }
     public void saveToFile(String filename) throws IOException {
         FileOutputStream fileOut = new FileOutputStream(filename + ".ser");
         ObjectOutputStream out = new ObjectOutputStream(fileOut);
