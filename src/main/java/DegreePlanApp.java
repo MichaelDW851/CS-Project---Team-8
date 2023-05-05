@@ -156,6 +156,15 @@ public class DegreePlanApp {
         submitButton.addActionListener(new SubmitButtonListener());
         panel.add(submitButton, c);
 
+
+        // Save Student button
+        c.gridx = 1;
+        c.gridy = 5;
+        c.anchor = GridBagConstraints.LINE_END;
+        JButton saveStudentButton = new JButton("Save Student");
+        saveStudentButton.addActionListener(new SaveStudentButtonListener());
+        panel.add(saveStudentButton, c);
+
 //get student info
         Student student;
         List<String> prerequisites = new ArrayList<>();
@@ -441,6 +450,16 @@ public class DegreePlanApp {
         }
     }
 
+    private class SaveStudentButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            StudentSaving saveStudent = new StudentSaving();
+
+            saveStudent.saveStudent(student); // Call the saveStudent() method from SavingStudent class
+            // Perform any additional operations after saving the student
+        }
+    }
 
 }
 
