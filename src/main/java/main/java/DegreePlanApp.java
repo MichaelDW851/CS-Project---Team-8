@@ -156,6 +156,38 @@ public class DegreePlanApp {
         submitButton.addActionListener(new SubmitButtonListener());
         panel.add(submitButton, c);
 
+
+        // Save Student button
+        c.gridx = 1;
+        c.gridy = 5;
+        c.anchor = GridBagConstraints.LINE_END;
+        JButton saveStudentButton = new JButton("Save Student");
+        saveStudentButton.addActionListener(new SaveStudentButtonListener());
+        panel.add(saveStudentButton, c);
+
+//get student info
+        Student student;
+        List<String> prerequisites = new ArrayList<>();
+        try {
+            student = PdfReader.processTranscript(selectedTranscriptFile, trackComboBox.getSelectedItem().toString(),
+                    prerequisites, fastTrackCheckBox.isSelected(), thesisMastersCheckBox.isSelected());
+
+            c.gridx = 4;
+            c.gridy = 6;
+            panel.add(new JLabel("Student name: " + student.name),c);
+
+            c.gridx = 4;
+            c.gridy = 8;
+            panel.add(new JLabel("Student id: " + student.getStudentID()),c);
+
+            this.student = student;
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        //add student name and id so user knows which student whose transcript they're doing audit for
+
+
         frame.pack();
     }
 
@@ -273,7 +305,7 @@ public class DegreePlanApp {
             electiveCoursesRun.addBreak();
 
 
-            //Leveling Courses and Pre-requisites
+// Leveling Courses and Pre-requisites
             XWPFParagraph levelingCoursesParagraph = document.createParagraph();
             XWPFRun levelingCoursesRun = levelingCoursesParagraph.createRun();
             levelingCoursesRun.setFontSize(12);
@@ -301,15 +333,13 @@ public class DegreePlanApp {
                 levelingCoursesRun.addBreak();
             }
 
+
 // Outstanding Requirements
             XWPFParagraph outstandingRequirementsParagraph = document.createParagraph();
             XWPFRun outstandingRequirementsRun = outstandingRequirementsParagraph.createRun();
             outstandingRequirementsRun.setFontSize(12);
             outstandingRequirementsRun.setText("Outstanding Requirements:");
             // outstandingRequirementsRun.addBreak();
-
-
-// Display the getRemainingCoursesMessage
 
             String[] remainingMessageParts = student.getRemainingCoursesMessage().split("(?<=:)");
             XWPFParagraph remainingCoursesParagraph = document.createParagraph();
@@ -327,6 +357,7 @@ public class DegreePlanApp {
             remainingCoursesListRun.setBold(false);
             remainingCoursesListRun.addBreak();
 
+
             double desiredOverallGPA = 3.0;
             String overallGPAMessage = student.getRemainingOverallGPAMessage(desiredOverallGPA);
             String[] overallGPAMessageParts = overallGPAMessage.split("(?<=:)");
@@ -337,7 +368,6 @@ public class DegreePlanApp {
             overallGPARun.setBold(false);
 
 
-
             XWPFParagraph overallGPAListParagraph = document.createParagraph();
             XWPFRun overallGPAListRun = overallGPAListParagraph.createRun();
 
@@ -346,7 +376,6 @@ public class DegreePlanApp {
             } else {
                 overallGPAListRun.setText(""); // Set an empty string or any other default text
             }
-
 
             overallGPAListRun.setFontSize(12);
             overallGPAListRun.setBold(false);
@@ -372,7 +401,6 @@ public class DegreePlanApp {
     }
     // In the DegreePlanApp class, call the processTranscript method in the SubmitButtonListener
     private class SubmitButtonListener implements ActionListener {
-
 
 
         @Override
@@ -411,12 +439,27 @@ public class DegreePlanApp {
             GenerateDegreePlan degreePlan = new GenerateDegreePlan(student);
 
             // Generate the Word document
-            createOutputDOCX(student, track, prerequisites, isFastTrack, isThesisMasters);
+            int dialogResult = JOptionPane.showConfirmDialog(null, "Save Audit Report?", "Confirmation", JOptionPane.YES_NO_OPTION);
+            boolean generateWordDocument = (dialogResult == JOptionPane.YES_OPTION);
+
+            if (generateWordDocument) {
+                createOutputDOCX(student, track, prerequisites, isFastTrack, isThesisMasters);
+            }
 
             frame.setVisible(false);
         }
     }
 
+    private class SaveStudentButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            StudentSaving saveStudent = new StudentSaving();
+
+            saveStudent.saveStudent(student); // Call the saveStudent() method from SavingStudent class
+            // Perform any additional operations after saving the student
+        }
+    }
 
 }
 

@@ -8,6 +8,11 @@ public class Course {
     double earnedCreditHours;
     String grade;
 
+    //temporary way to add pre-reqs via strings
+    public Course(String courseCode, String courseName) {
+        this.courseCode = courseCode;
+        this.courseName = courseName;
+    }
     public Course(String year, String semester, String courseCode, String courseName, double creditHours, double earnedCreditHours, String grade) {
         this.year = year;
         this.semester = semester;
