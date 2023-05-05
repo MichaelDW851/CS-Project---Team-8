@@ -9,8 +9,5 @@
         <module name="Cap_Proj" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="CS-Project---Team-8" target="19" />
-    </bytecodeTargetLevel>
   </component>
 </project>
