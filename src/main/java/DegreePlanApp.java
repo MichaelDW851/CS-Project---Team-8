@@ -394,7 +394,6 @@ public class DegreePlanApp {
     private class SubmitButtonListener implements ActionListener {
 
 
-
         @Override
         public void actionPerformed(ActionEvent e) {
             String track = (String) trackComboBox.getSelectedItem();
@@ -431,7 +430,12 @@ public class DegreePlanApp {
             GenerateDegreePlan degreePlan = new GenerateDegreePlan(student);
 
             // Generate the Word document
-            createOutputDOCX(student, track, prerequisites, isFastTrack, isThesisMasters);
+            int dialogResult = JOptionPane.showConfirmDialog(null, "Save Audit Report?", "Confirmation", JOptionPane.YES_NO_OPTION);
+            boolean generateWordDocument = (dialogResult == JOptionPane.YES_OPTION);
+
+            if (generateWordDocument) {
+                createOutputDOCX(student, track, prerequisites, isFastTrack, isThesisMasters);
+            }
 
             frame.setVisible(false);
         }
