@@ -88,6 +88,7 @@ public class PdfReader {
                 // Found a new semester
                 String year = yearMatcher.group(1);
                 String season = yearMatcher.group(2);
+             //   System.out.println(year + " " + season);
                 String semesterKey = year + "-" + (season.equals("Spring") ? "01" : season.equals("Summer") ? "02" : "03");
                 currentSemester = semesterKey;
                 coursesBySemester.put(currentSemester, new StringBuilder());
