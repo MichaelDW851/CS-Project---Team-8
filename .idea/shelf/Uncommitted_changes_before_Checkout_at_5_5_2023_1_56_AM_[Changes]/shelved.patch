@@ -1,0 +1,1088 @@
+Index: src/main/java/GenerateDegreePlan.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import java.util.ArrayList;\r\n\r\n\r\npublic class GenerateDegreePlan {\r\n\r\n\r\n    Student student;\r\n    public GenerateDegreePlan(Student student) {\r\n        this.student = student;\r\n        generateDegree();\r\n    }\r\n\r\n    private void generateDegree() {\r\n        SpreadsheetUI degreePlan = new SpreadsheetUI(student.name,student.studentID,student.semesterAdmittedToProgram,student.getFastTrackCheck(),student.getThesisMastersCheck(),student.getTrack());\r\n        System.out.println(student.name + \"\\n\" + student.getCoreCourses());\r\n        System.out.println( \"\\n\" + student.getElectiveCourses());\r\n        System.out.println(\"\\n\" + student.getLevelingCourses());\r\n        //  System.out.println(\"\\n\" + student.getCoreCourses());\r\n\r\n\r\n        for (Course course: student.getCourses()) {\r\n            degreePlan.addCourse(course);\r\n        }\r\n    }\r\n\r\n\r\n\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/GenerateDegreePlan.java b/src/main/java/GenerateDegreePlan.java
+--- a/src/main/java/GenerateDegreePlan.java	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ b/src/main/java/GenerateDegreePlan.java	(date 1683269724878)
+@@ -13,14 +13,12 @@
+     private void generateDegree() {
+         SpreadsheetUI degreePlan = new SpreadsheetUI(student.name,student.studentID,student.semesterAdmittedToProgram,student.getFastTrackCheck(),student.getThesisMastersCheck(),student.getTrack());
+         System.out.println(student.name + "\n" + student.getCoreCourses());
+-        System.out.println( "\n" + student.getElectiveCourses());
+-        System.out.println("\n" + student.getLevelingCourses());
++        System.out.println( "\nElectives: " + student.getElectiveCourses());
+         //  System.out.println("\n" + student.getCoreCourses());
+ 
+ 
+-        for (Course course: student.getCourses()) {
+-            degreePlan.addCourse(course);
+-        }
++        degreePlan.addCores((ArrayList<Course>) student.getCoreCourses());
++        degreePlan.addApprovedElectives((ArrayList<Course>) student.getElectiveCourses());
+     }
+ 
+ 
+Index: src/main/java/SpreadSheetUI.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import com.itextpdf.text.*;\r\nimport com.itextpdf.text.pdf.PdfWriter;\r\nimport com.itextpdf.text.pdf.PdfPTable;\r\n//import com.itextpdf.text.Font;\r\n\r\n\r\n\r\nimport javax.swing.*;\r\nimport javax.swing.table.DefaultTableCellRenderer;\r\nimport javax.swing.table.DefaultTableModel;\r\nimport java.awt.*;\r\nimport java.awt.Font;\r\nimport java.awt.event.KeyAdapter;\r\nimport java.awt.event.KeyEvent;\r\nimport java.io.FileOutputStream;\r\nimport java.util.ArrayList;\r\nimport java.util.Arrays;\r\nimport java.util.HashMap;\r\nimport java.util.Map;\r\n\r\nclass SpreadsheetUI extends JFrame {\r\n    private JTable table;\r\n    private DefaultTableModel model;\r\n    private JScrollPane scrollPane;\r\n    private JLabel titleLabel;\r\n    private JPanel topPanel;\r\n\r\n    int additionalElectivesRow;\r\n\r\n    int approvedElectivesRow;\r\n\r\n    Map<String, Integer> courseMappings;\r\n\r\n    private String studentName;\r\n    private String studentID;\r\n    private String semesterAdmitted;\r\n    private boolean fastTrack = false;\r\n    private boolean thesis = false;\r\n\r\n    private String anticipatedGrad;\r\n    private int rowCounter = 0;\r\n\r\n    private int defaultRowHeight = 16;\r\n\r\n    public void setupByTrack(String track) {\r\n        //Going to use a map to determine where each course listing is\r\n        //First int is the row\r\n        String[] coreCoursesCodes;\r\n        String[] levelingCoursesCodes;\r\n        String[] trackElectivesCodes;\r\n\r\n        courseMappings = new HashMap<>();\r\n        ArrayList<String> approvedElectives = new ArrayList<>();\r\n        ArrayList<String> additionalElectives = new ArrayList<>();\r\n        System.out.println(\"JIOGW$REIJOW$TIJOIKOJW#\");\r\n        switch (track) {\r\n\r\n            case \"Data Science\":\r\n                coreCoursesCodes = new String[]{\"CS6313\", \"CS6350\", \"CS6363\", \"CS6375\", \"CS6360\"}; // Add core courses for this track\r\n                setupCores(coreCoursesCodes);\r\n\r\n                trackElectivesCodes =new String[]{\"CS6301\", \"CS6320\", \"CS6327\", \"CS6347\", \"CS6360\"};\r\n                setupTrackElectives(trackElectivesCodes);\r\n\r\n                setupApprovedElectives();\r\n                setupAdditionalElectives();\r\n\r\n                levelingCoursesCodes =new String[]{\"CS3341\", \"CS5333\", \"CS5343\", \"CS5303\", \"CS5348\", \"CS5330\"};\r\n                setupLeveling(levelingCoursesCodes);\r\n                break;\r\n            // Add cases for other tracks and their respective core and elective courses\r\n            case \"Systems\":\r\n\r\n                coreCoursesCodes = new String[]{\"CS6304\", \"CS6363\", \"CS6378\", \"CS6396\"};\r\n                setupCores(coreCoursesCodes);\r\n\r\n                trackElectivesCodes = new String[]{\"CS6349\",\"CS6376\",\"CS6380\",\"CS6397\",\"CS6399\"};\r\n                setupTrackElectives(trackElectivesCodes);\r\n\r\n                setupApprovedElectives();\r\n                setupAdditionalElectives();\r\n\r\n                levelingCoursesCodes = new String[]{\"CS5303\",\"CS5330\",\"CS5333\",\"CS5343\",\"CS5348\",\"CS5390\"};\r\n                setupLeveling(levelingCoursesCodes);\r\n                break;\r\n            case \"Interactive Computing\":\r\n                coreCoursesCodes = new String[]{\"CS6326\", \"CS6363\"};\r\n                setupCores(coreCoursesCodes);\r\n\r\n                trackElectivesCodes = new String[]{\"CS6323\", \"CS6328\", \"CS6331\", \"CS6334\", \"CS6366\"};\r\n                setupTrackElectives(trackElectivesCodes);\r\n\r\n                setupApprovedElectives();\r\n                setupAdditionalElectives();\r\n\r\n                levelingCoursesCodes = new String[]{\"CS5303\", \"CS5330\", \"CS5333\", \"CS5343\", \"CS5348\"};\r\n                setupLeveling(levelingCoursesCodes);\r\n                break;\r\n            case \"Cyber Security\":\r\n                coreCoursesCodes = new String[]{\"CS6324\", \"CS6363\", \"CS6378\"};\r\n                setupCores(coreCoursesCodes);\r\n\r\n                trackElectivesCodes = new String[]{\"CS6332\", \"CS6348\", \"CS6349\", \"CS6377\"};\r\n                setupTrackElectives(trackElectivesCodes);\r\n\r\n                setupApprovedElectives();\r\n                setupAdditionalElectives();\r\n\r\n                levelingCoursesCodes =new String[]{\"CS5303\", \"CS5330\", \"CS5333\", \"CS5343\", \"CS5348\", \"CS5390\"};\r\n                setupLeveling(levelingCoursesCodes);\r\n                break;\r\n            case \"Intelligent Systems\":\r\n                coreCoursesCodes = new String[]{\"CS6320\", \"CS6363\", \"CS6364\", \"CS6375\"};\r\n                setupCores(coreCoursesCodes);\r\n\r\n                trackElectivesCodes = new String[]{\"CS6360\", \"CS6378\"};\r\n                setupTrackElectives(trackElectivesCodes);\r\n\r\n                setupApprovedElectives();\r\n                setupAdditionalElectives();\r\n\r\n                levelingCoursesCodes =new String[]{\"CS5303\", \"CS5330\", \"CS5343\", \"CS5333\", \"CS5348\"};\r\n                setupLeveling(levelingCoursesCodes);\r\n                break;\r\n\r\n            case \"Networks and Telecommunications\":\r\n                coreCoursesCodes = new String[]{\"CS6352\", \"CS6363\", \"CS6378\", \"CS6385\", \"CS6390\"};\r\n                setupCores(coreCoursesCodes);\r\n\r\n                setupApprovedElectives();\r\n                setupAdditionalElectives();\r\n\r\n                levelingCoursesCodes =new String[]{\"CS5303\", \"CS5330\", \"CS5343\", \"CS5348\", \"CS5390\", \"CS3341\", \"CS5333\"};\r\n                setupLeveling(levelingCoursesCodes);\r\n                break;\r\n            case \"Traditional Computer Science\":\r\n                coreCoursesCodes = new String[]{\"CS6363\", \"CS6378\", \"CS6390\"};\r\n                setupCores(coreCoursesCodes);\r\n\r\n                trackElectivesCodes = new String[]{\"CS6353\", \"CS6360\", \"CS6371\"};\r\n                setupTrackElectives(trackElectivesCodes);\r\n\r\n                setupApprovedElectives();\r\n                setupAdditionalElectives();\r\n\r\n                levelingCoursesCodes =new String[]{\"CS5303\", \"CS5330\", \"CS5333\", \"CS5343\", \"CS5348\", \"CS5349\", \"CS5390\"};\r\n                setupLeveling(levelingCoursesCodes);\r\n        }\r\n\r\n\r\n    }\r\n\r\n\r\n\r\n\r\n\r\n    private void setupCores(String[] cores) {\r\n        Object[] row = new Object[]{\"\",\"\",\"\"};\r\n        model.addRow(row);\r\n        model.setValueAt(\"Core Courses\",rowCounter,0);\r\n        model.setValueAt(\"(15 Credit Hours)\",rowCounter,1);\r\n        model.setValueAt(\"3.19 Grade Point Average Required\",rowCounter,2);\r\n        rowCounter++;\r\n        for (String course: cores) {\r\n            courseMappings.put(course,rowCounter);\r\n\r\n            row = new Object[]{\"\",\"\",\"\",\"\",\"\"};\r\n            model.addRow(row);\r\n            model.setValueAt(course,rowCounter,1);\r\n            rowCounter++;\r\n        }\r\n    }\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n    private void setupTrackElectives(String[] trackElectives) {\r\n        Object[] row = new Object[]{\"\"};\r\n        model.addRow(row);\r\n        model.setValueAt(\"of The Following Required\",rowCounter,0);\r\n        rowCounter++;\r\n        for (String course: trackElectives) {\r\n            courseMappings.put(course,rowCounter);\r\n\r\n            row = new Object[]{\"\",\"\",\"\",\"\",\"\"};\r\n            model.addRow(row);\r\n            model.setValueAt(course,rowCounter,1);\r\n            rowCounter++;\r\n        }\r\n    }\r\n\r\n\r\n    public void addTrackElectives(ArrayList<Course> trackElectives) {\r\n        Object[] row = new Object[]{\"\"};\r\n        model.addRow(row);\r\n        model.setValueAt(\"of The Following Required\",rowCounter,0);\r\n        rowCounter++;\r\n        for (Course course: trackElectives) {\r\n\r\n        }\r\n\r\n    }\r\n\r\n    private void setupApprovedElectives() {\r\n        Object[] row = new Object[]{ \"\", \"\", \"\"};\r\n\r\n        model.addRow(row);\r\n        model.setValueAt(\"FIVE APPROVED 6000 LEVEL ELECTIVES\",rowCounter,0);\r\n        model.setValueAt(\"(15* Credit Hours)\",rowCounter,1);\r\n        model.setValueAt(\"3.0 Grade Point Average\",rowCounter,2);\r\n        rowCounter++;\r\n        for(int i = 0;i < 5;i++) {\r\n\r\n\r\n            row = new Object[]{\"\",\"\",\"\",\"\",\"\"};\r\n            model.addRow(row);\r\n            rowCounter++;\r\n        }\r\n\r\n\r\n    }\r\n\r\n\r\n    public void addApprovedElectives(ArrayList<Course> approvedElectives) {\r\n//        Object[] row = new Object[]{ \"\", \"\", \"\"};\r\n//\r\n//        model.addRow(row);\r\n//        model.setValueAt(\"FIVE APPROVED 6000 LEVEL ELECTIVES\",rowCounter,0);\r\n//        model.setValueAt(\"(15* Credit Hours)\",rowCounter,1);\r\n//        model.setValueAt(\"3.0 Grade Point Average\",rowCounter,2);\r\n//        rowCounter++;\r\n        for (Course course: approvedElectives) {\r\n            addCourse(course);\r\n        }\r\n    }\r\n\r\n\r\n    private void setupAdditionalElectives() {\r\n        Object[] row = new Object[]{\"\"};\r\n        model.addRow(row);\r\n        model.setValueAt(\"Additional Electives (3 Credit Hours Minimum)\",rowCounter,0);\r\n        rowCounter++;\r\n        for (int i = 0;i < 3;i++) {\r\n            row = new Object[]{\"\",\"\",\"\",\"\",\"\"};\r\n            model.addRow(row);\r\n            rowCounter++;\r\n        }\r\n    }\r\n\r\n\r\n    public void addAdditionalElectives(ArrayList<Course> additionalElectives) {\r\n//        Object[] row = new Object[]{\"\"};\r\n//        model.addRow(row);\r\n//        model.setValueAt(\"Additional Electives (3 Credit Hours Minimum)\",rowCounter,0);\r\n//        rowCounter++;\r\n        for (Course course: additionalElectives) {\r\n            addCourse(course);\r\n        }\r\n    }\r\n\r\n    private void setupLeveling(String[] levelingCourses) {\r\n        Object[] row = new Object[]{\"\", \"\", \"\", \"\", \"\", \"\"};\r\n        model.addRow(row);\r\n        model.setValueAt(\"Admission Prerequisites\",rowCounter,0);\r\n        model.setValueAt(\"Course\",rowCounter,1);\r\n        model.setValueAt(\"UTD Semester\",rowCounter,2);\r\n        model.setValueAt(\"Waiver\",rowCounter,3);\r\n        model.setValueAt(\"Grade\",rowCounter,4);\r\n        rowCounter++;\r\n        for (String course: levelingCourses) {\r\n            courseMappings.put(course,rowCounter);\r\n\r\n            row = new Object[]{\"\",\"\",\"\",\"\",\"\"};\r\n            model.addRow(row);\r\n            model.setValueAt(course,rowCounter,1);\r\n            rowCounter++;\r\n        }\r\n    }\r\n\r\n\r\n\r\n    public void addCourse(Course course) {\r\n\r\n\r\n//      Columns:\r\n//      0 = course name\r\n//      1 = semester\r\n//      3 = grade\r\n\r\n//        if(courseMappings.containsKey(course.getCourseCode())) {\r\n//            model.setValueAt(course.courseName, courseMappings.get(course.getCourseCode()), 0);\r\n//            model.setValueAt(course.getCourseCode(),courseMappings.get(course.getCourseCode()),1);\r\n//            model.setValueAt(course.getSemester(), courseMappings.get(course.getCourseCode()), 2);\r\n//            //     model.setValueAt(\"Course Transfer\", rowCounter, 3);\r\n//            model.setValueAt(course.getGrade(), courseMappings.get(course.getCourseCode()), 4);\r\n//            rowCounter++;\r\n//        }\r\n\r\n        Object[] row = new Object[]{\"\", \"\", \"\", \"\", \"\", \"\"};\r\n        model.addRow(row);\r\n        model.setValueAt(course.getCourseName(),rowCounter,0);\r\n        model.setValueAt(course.getCourseCode(),rowCounter,1);\r\n        model.setValueAt(course.getSemester(), rowCounter, 2);\r\n        //     model.setValueAt(\"Course Transfer\", rowCounter, 3);\r\n        model.setValueAt(course.getGrade(), rowCounter, 4);\r\n        rowCounter++;\r\n\r\n    }\r\n    public void addCourse(String courseName,String courseCode,String semester, String grade) {\r\n\r\n\r\n//      Columns:\r\n//      0 = course name\r\n//      1 = semester\r\n//      3 = grade\r\n\r\n        Object[] row = new Object[]{\"\", \"\", \"\", \"\", \"\", \"\"};\r\n        model.addRow(row);\r\n        model.setValueAt(courseName, rowCounter, 0);\r\n        model.setValueAt(courseCode,rowCounter,1);\r\n        model.setValueAt(semester, rowCounter, 2);\r\n        //  model.setValueAt(\"Course Transfer\", rowCounter, 2);\r\n        model.setValueAt(grade, rowCounter, 4);\r\n        rowCounter++;\r\n\r\n    }\r\n\r\n    public void addSpanningRow(String value) {\r\n        Object[] rowData = new Object[model.getColumnCount()];\r\n        for (int i = 0; i < rowData.length; i++) {\r\n            if (i == 0) {\r\n                // First column should span all columns\r\n                rowData[i] = value;\r\n            } else {\r\n                rowData[i] = \"\";\r\n            }\r\n        }\r\n        model.addRow(rowData);\r\n        int lastRow = model.getRowCount() - 1;\r\n        int lastCol = model.getColumnCount() - 1;\r\n        table.setRowHeight(lastRow,16 );\r\n        table.getCellRenderer(lastRow, 0).getTableCellRendererComponent(table, value, false, false, lastRow, 0);\r\n        for (int i = 1; i < rowData.length; i++) {\r\n            table.setValueAt(\"\", lastRow, i);\r\n        }\r\n        table.setValueAt(value, lastRow, 0);\r\n    }\r\n\r\n\r\n\r\n\r\n    public SpreadsheetUI(String studentName,String studentID,String semesterAdmitted,boolean isFastTrack, boolean isThesis,String track) {\r\n\r\n        // Add a button to clear the selection\r\n\r\n\r\n        super(\"Degree Plan Editor\");\r\n        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);\r\n        setLayout(new BorderLayout());\r\n\r\n\r\n        JLabel titleLabel1 = new JLabel(\"Degree Plan\", SwingConstants.CENTER);\r\n        titleLabel1.setFont(new Font(\"Arial\", Font.BOLD, 24));\r\n        JLabel titleLabel2 = new JLabel(\"University of Texas at Dallas\", SwingConstants.CENTER);\r\n        titleLabel2.setFont(new Font(\"Arial\", Font.BOLD, 24));\r\n        JLabel titleLabel3 = new JLabel(\"Master of Computer Science\",SwingConstants.CENTER);\r\n        titleLabel3.setFont(new Font(\"Arial\", Font.BOLD,24));\r\n\r\n        JPanel titlePanel = new JPanel(new GridLayout(3, 1));\r\n        titlePanel.add(titleLabel1);\r\n        titlePanel.add(titleLabel2);\r\n        titlePanel.add(titleLabel3);\r\n\r\n        add(titlePanel, BorderLayout.NORTH);\r\n\r\n\r\n\r\n     //   JButton closeButton = new JButton(\"Finish Editing and Save\");\r\n\r\n\r\n\r\n\r\n\r\n        // Set up the table\r\n        model = new DefaultTableModel();\r\n        table = new JTable(model);\r\n        table.setRowHeight(20);\r\n        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);\r\n        scrollPane = new JScrollPane(table);\r\n        add(scrollPane, BorderLayout.CENTER);\r\n\r\n        // Add columns\r\n        String[] columnHeaders = new String[]{ \"Course Title\", \"Course Number\" ,\"UTD Semester\", \"Transfer\", \"Grade\"};\r\n        model.setColumnIdentifiers(columnHeaders);\r\n\r\n\r\n\r\n        // Set up header renderer and editor\r\n        table.getTableHeader().setDefaultRenderer(new HeaderRenderer());\r\n        table.setDefaultEditor(Object.class, new DefaultCellEditor(new JTextField()));\r\n\r\n\r\n        table.addKeyListener(new KeyAdapter() {\r\n            public void keyPressed(KeyEvent e) {\r\n                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {\r\n                    table.clearSelection();\r\n                }\r\n            }\r\n        });\r\n\r\n        // Set up the bottom panel with editable text fields for selected cells\r\n        JPanel bottomPanel = new JPanel(new GridLayout(1, 0));\r\n        add(bottomPanel, BorderLayout.SOUTH);\r\n        table.getSelectionModel().addListSelectionListener(e -> {\r\n            int[] selectedRows = table.getSelectedRows();\r\n            int[] selectedCols = table.getSelectedColumns();\r\n            bottomPanel.removeAll();\r\n            if (selectedRows.length == 1 && selectedCols.length == 1) {\r\n                JTextField field = new JTextField((String) table.getValueAt(selectedRows[0], selectedCols[0]));\r\n                field.addActionListener(e2 -> {\r\n                    table.setValueAt(field.getText(), selectedRows[0], selectedCols[0]);\r\n                });\r\n                bottomPanel.add(field);\r\n            } else {\r\n                bottomPanel.revalidate();\r\n                bottomPanel.repaint();\r\n            }\r\n        });\r\n        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);\r\n\r\n\r\n\r\n        this.studentName =studentName;\r\n        this.studentID = studentID;\r\n        this.semesterAdmitted = semesterAdmitted;\r\n        this.fastTrack = isFastTrack;\r\n        this.thesis = isThesis;\r\n        setupByTrack(track);\r\n        addFields(studentName,studentID,semesterAdmitted,fastTrack,thesis);\r\n\r\n\r\n        //adding separate fields for name, fast track, thesis, etc\r\n\r\n\r\n        JPanel buttonPanel = new JPanel(new BorderLayout());\r\n        JButton saveAsPdfButton = new JButton(\"Save as PDF\");\r\n        buttonPanel.add(saveAsPdfButton, BorderLayout.CENTER);\r\n\r\n        //  buttonPanel.add(closeButton, BorderLayout.NORTH);\r\n        add(buttonPanel, BorderLayout.EAST);\r\n\r\n\r\n\r\n        saveAsPdfButton.addActionListener(e -> {\r\n            JFileChooser fileChooser = new JFileChooser();\r\n            int result = fileChooser.showSaveDialog(SpreadsheetUI.this);\r\n            if (result == JFileChooser.APPROVE_OPTION) {\r\n                try {\r\n                    Document document = new Document();\r\n                    PdfWriter.getInstance(document, new FileOutputStream(fileChooser.getSelectedFile() + \".pdf\"));\r\n                    document.open();\r\n                    PdfPTable pdfTable = new PdfPTable(table.getColumnCount());\r\n                    pdfTable.setWidthPercentage(100);\r\n\r\n                    Paragraph paragraph = new Paragraph(\"Degree Plan\");\r\n                    paragraph.add(\"\\n\");\r\n                    paragraph.add(\"University of Texas at Dallas\");\r\n                    paragraph.add(\"\\nMaster of Computer Science\");\r\n                    paragraph.setAlignment(Element.ALIGN_CENTER);\r\n                    document.add(paragraph);\r\n\r\n                    paragraph.clear();\r\n\r\n                    paragraph.setAlignment(Element.ALIGN_LEFT);\r\n                    paragraph.add(\"\\n\\nStudent Name: \" + studentName);\r\n                    paragraph.add(\"\\nStudent ID: \" + studentID);\r\n                    paragraph.add(\"\\nSemester Admitted: \" + semesterAdmitted);\r\n                    paragraph.add(\"\\nAnticipated Graduation: \" + anticipatedGrad);\r\n\r\n                    paragraph.add(\"\\n\\nIs Fast Track: \");\r\n                    if (fastTrack) {\r\n                        paragraph.add(\"Yes\");\r\n                    }\r\n                    else {\r\n                        paragraph.add(\"No\");\r\n\r\n                    }\r\n                    paragraph.add(\"\\nIs Thesis Masters: \");\r\n                    if (thesis) {\r\n                        paragraph.add(\"Yes\");\r\n                    }\r\n                    else {\r\n                        paragraph.add(\"No\");\r\n\r\n                    }\r\n\r\n                //    paragraph.setAlignment(Element.ALIGN_TOP);\r\n                    document.add(paragraph);\r\n\r\n                    document.add(Chunk.NEWLINE);\r\n\r\n\r\n\r\n                    for (int i = 0; i < table.getColumnCount(); i++) {\r\n                        pdfTable.addCell(new Phrase(table.getColumnName(i)));\r\n                    }\r\n                    for (int i = 0; i < table.getRowCount(); i++) {\r\n                        for (int j = 0; j < table.getColumnCount(); j++) {\r\n                            pdfTable.addCell(new Phrase(table.getValueAt(i, j).toString()));\r\n                        }\r\n                    }\r\n\r\n\r\n                    document.add(pdfTable);\r\n                    document.close();\r\n                    JOptionPane.showMessageDialog(SpreadsheetUI.this, \"File saved successfully!\");\r\n                } catch (Exception ex) {\r\n                    JOptionPane.showMessageDialog(SpreadsheetUI.this, \"Error: \" + ex.getMessage(), \"Error\", JOptionPane.ERROR_MESSAGE);\r\n                }\r\n            }\r\n        });\r\n\r\n\r\n\r\n        pack();\r\n        setLocationRelativeTo(null);\r\n        setVisible(true);\r\n    }\r\n\r\n    void addFields() {\r\n        addFields(\"\",\"\",\"\",false,false);\r\n    }\r\n\r\n    void addFields(String studentName, String studentID, String semesterAdmitted, boolean isFastTrack, boolean isThesis) {\r\n        //   System.out.println(\"ADDING FIELDS\");\r\n\r\n\r\n        this.studentID = studentID;\r\n        this.studentName = studentName;\r\n        this.semesterAdmitted = semesterAdmitted;\r\n        this.fastTrack = isFastTrack;\r\n        this.thesis = isThesis;\r\n        JPanel bottomPanelTwo = new JPanel(new GridBagLayout());\r\n        add(bottomPanelTwo, BorderLayout.SOUTH);\r\n        GridBagConstraints c = new GridBagConstraints();\r\n        c.insets = new Insets(5, 5, 5, 5);\r\n        c.anchor = GridBagConstraints.WEST;\r\n\r\n\r\n        // student name field\r\n        JLabel nameLabel = new JLabel(\"Student Name: \");\r\n        JTextField nameField = new JTextField(10);\r\n        c.gridx = 0;\r\n        c.gridy = 0;\r\n        bottomPanelTwo.add(nameLabel, c);\r\n        c.gridx = 1;\r\n        c.weightx = 1;\r\n        c.fill = GridBagConstraints.HORIZONTAL;\r\n        bottomPanelTwo.add(nameField, c);\r\n        c.weightx = 0;\r\n  //      c.fill = GridBagConstraints.NONE;\r\n        nameField.setText(studentName);\r\n\r\n        // student id field\r\n        JLabel IDLabel = new JLabel(\"Student ID:\");\r\n        JTextField IDField = new JTextField(10);\r\n        c.gridx = 0;\r\n        c.gridy = 1;\r\n        bottomPanelTwo.add(IDLabel, c);\r\n        c.gridx = 1;\r\n        c.weightx = 1;\r\n        c.fill = GridBagConstraints.HORIZONTAL;\r\n        bottomPanelTwo.add(IDField, c);\r\n        c.weightx = 0;\r\n        c.fill = GridBagConstraints.NONE;\r\n        IDField.setText(studentID);\r\n\r\n\r\n        //semester admitted field\r\n        JLabel SemesterAdmittedLabel = new JLabel(\"Semester Admitted to Program:\");\r\n        JTextField SemesterAdmittedField = new JTextField(10);\r\n        c.gridx = 0;\r\n        c.gridy = 2;\r\n        bottomPanelTwo.add(SemesterAdmittedLabel, c);\r\n        c.gridx = 1;\r\n        c.weightx = 1;\r\n        c.fill = GridBagConstraints.HORIZONTAL;\r\n        bottomPanelTwo.add(SemesterAdmittedField, c);\r\n        c.weightx = 0;\r\n        c.fill = GridBagConstraints.NONE;\r\n        SemesterAdmittedField.setText(semesterAdmitted);\r\n\r\n\r\n        //anticipated graduation field\r\n        JLabel graduationLabel = new JLabel(\"Anticipated Graduation:\");\r\n        JTextField graduationField = new JTextField(10);\r\n        c.gridx = 0;\r\n        c.gridy = 3;\r\n        bottomPanelTwo.add(graduationLabel, c);\r\n        c.gridx = 1;\r\n        c.weightx = 1;\r\n        c.fill = GridBagConstraints.HORIZONTAL;\r\n        bottomPanelTwo.add(graduationField, c);\r\n        c.weightx = 0;\r\n        c.fill = GridBagConstraints.NONE;\r\n\r\n\r\n\r\n        // Add checkbox\r\n        JCheckBox fastTrackCheckBox = new JCheckBox(\"Fast Track\");\r\n        c.gridx = 0;\r\n        c.gridy = 4;\r\n        bottomPanelTwo.add(fastTrackCheckBox, c);\r\n        if (isFastTrack) {\r\n            //   System.out.println(\"FAST TRACK\");\r\n            fastTrackCheckBox.setSelected(true);\r\n\r\n        }\r\n\r\n        JCheckBox thesisCheckBox = new JCheckBox(\"Thesis\");\r\n        c.gridx = 1;\r\n        bottomPanelTwo.add(thesisCheckBox, c);\r\n        if(isThesis) {\r\n            //       System.out.println(\"THESIS\");\r\n            thesisCheckBox.setSelected(true);\r\n        }\r\n\r\n    }\r\n\r\n    private class HeaderRenderer extends DefaultTableCellRenderer {\r\n        public HeaderRenderer() {\r\n            setHorizontalAlignment(JLabel.CENTER);\r\n            setOpaque(true);\r\n            setBackground(Color.lightGray);\r\n            setFont(getFont().deriveFont(Font.BOLD));\r\n        }\r\n\r\n        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {\r\n            setText(value.toString());\r\n            return this;\r\n        }\r\n    }\r\n\r\n//    private class HeaderEditor extends DefaultCellEditor {\r\n//        public HeaderEditor() {\r\n//            super(new JTextField());\r\n//            setClickCountToStart(1);\r\n//        }\r\n//\r\n//        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {\r\n//            JTextField editor = (JTextField) super.getTableCellEditorComponent(table, value, isSelected, row, column);\r\n//            editor.setFont(editor.getFont().deriveFont(Font.BOLD));\r\n//            editor.setBorder(BorderFactory.createLineBorder(Color.black));\r\n//            return editor;\r\n//        }\r\n//    }\r\n}\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/SpreadSheetUI.java b/src/main/java/SpreadSheetUI.java
+--- a/src/main/java/SpreadSheetUI.java	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ b/src/main/java/SpreadSheetUI.java	(date 1683269724897)
+@@ -8,13 +8,12 @@
+ import javax.swing.*;
+ import javax.swing.table.DefaultTableCellRenderer;
+ import javax.swing.table.DefaultTableModel;
++import javax.swing.table.TableCellRenderer;
+ import java.awt.*;
+ import java.awt.Font;
+-import java.awt.event.KeyAdapter;
+-import java.awt.event.KeyEvent;
++import java.awt.event.*;
+ import java.io.FileOutputStream;
+ import java.util.ArrayList;
+-import java.util.Arrays;
+ import java.util.HashMap;
+ import java.util.Map;
+ 
+@@ -29,8 +28,10 @@
+ 
+     int approvedElectivesRow;
+ 
+-    Map<String, Integer> courseMappings;
++    Map<String, Integer> coursePositionMappings;
++    Map<String,String> couseNameMappings;
+ 
++    private Student student;
+     private String studentName;
+     private String studentID;
+     private String semesterAdmitted;
+@@ -42,6 +43,11 @@
+ 
+     private int defaultRowHeight = 16;
+ 
++    public void setCourseNames() {
++
++    }
++
++    //Sets up the blank degree plan for each respective track
+     public void setupByTrack(String track) {
+         //Going to use a map to determine where each course listing is
+         //First int is the row
+@@ -49,102 +55,131 @@
+         String[] levelingCoursesCodes;
+         String[] trackElectivesCodes;
+ 
+-        courseMappings = new HashMap<>();
++        String[] coreCoursesNames;
++        String[] levelingCoursesNames;
++        String[] trackElectivesNames;
++
++        coursePositionMappings = new HashMap<>();
++        couseNameMappings = new HashMap<>();
++
+         ArrayList<String> approvedElectives = new ArrayList<>();
+         ArrayList<String> additionalElectives = new ArrayList<>();
+-        System.out.println("JIOGW$REIJOW$TIJOIKOJW#");
++
+         switch (track) {
+ 
+             case "Data Science":
+-                coreCoursesCodes = new String[]{"CS6313", "CS6350", "CS6363", "CS6375", "CS6360"}; // Add core courses for this track
+-                setupCores(coreCoursesCodes);
++                coreCoursesCodes = new String[]{"CS6313", "CS6350", "CS6363", "CS6375"}; // Add core courses for this track
++                coreCoursesNames = new String[]{"Statistical Methods for Data Sciences","Big Data Management and Analytics","Design and Analysis of Computer Algorithms","Machine Learning"};
++                setupCores(coreCoursesCodes,coreCoursesNames);
+ 
+                 trackElectivesCodes =new String[]{"CS6301", "CS6320", "CS6327", "CS6347", "CS6360"};
+-                setupTrackElectives(trackElectivesCodes);
++                trackElectivesNames = new String[]{"Social Network Analytics","Natural Language Processing","Video Analytics","Statistics for Machine Learning","Database Design"};
++                setupTrackElectives(trackElectivesCodes,trackElectivesNames);
+ 
+                 setupApprovedElectives();
+                 setupAdditionalElectives();
+ 
+-                levelingCoursesCodes =new String[]{"CS3341", "CS5333", "CS5343", "CS5303", "CS5348", "CS5330"};
+-                setupLeveling(levelingCoursesCodes);
++                levelingCoursesCodes =new String[]{"CS5303", "CS5330", "CS5333", "CS5343", "CS5348", "CS3341"};
++                levelingCoursesNames = new String[]{"Computer Science I","Computer Science II","Discrete Structures","Algorithm Analysis & Data Structures","Operating System Concepts","Probability & Statistics in CS"};
++                setupLeveling(levelingCoursesCodes,levelingCoursesNames);
+                 break;
+             // Add cases for other tracks and their respective core and elective courses
+             case "Systems":
+ 
+                 coreCoursesCodes = new String[]{"CS6304", "CS6363", "CS6378", "CS6396"};
+-                setupCores(coreCoursesCodes);
++                coreCoursesNames = new String[]{"Computer Architecture","Design and Analysis of Computer Algorithms","Advanced Operating Systems","Real-Time Systems"};
++                setupCores(coreCoursesCodes, coreCoursesNames);
+ 
+                 trackElectivesCodes = new String[]{"CS6349","CS6376","CS6380","CS6397","CS6399"};
+-                setupTrackElectives(trackElectivesCodes);
++                trackElectivesNames = new String[]{"Network Security","Parallel Processing","Parallel Processing","Synthesis and Opt. of High-Perf. Systems","Parallel Architectures and Systems"};
++                setupTrackElectives(trackElectivesCodes, trackElectivesNames);
+ 
+                 setupApprovedElectives();
+                 setupAdditionalElectives();
+ 
+                 levelingCoursesCodes = new String[]{"CS5303","CS5330","CS5333","CS5343","CS5348","CS5390"};
+-                setupLeveling(levelingCoursesCodes);
++                levelingCoursesNames = new String[]{"Computer Science I","Computer Science II","Discrete Structures","Algorithm Analysis & Data Structures","Operating System Concepts","Computer Networks **"};
++                setupLeveling(levelingCoursesCodes, levelingCoursesNames);
+                 break;
+             case "Interactive Computing":
+                 coreCoursesCodes = new String[]{"CS6326", "CS6363"};
+-                setupCores(coreCoursesCodes);
++                coreCoursesNames = new String[]{"Human Computer Interaction","Design and Analysis of Computer Algorithms"};
++
++                setupCores(coreCoursesCodes, coreCoursesNames);
+ 
+                 trackElectivesCodes = new String[]{"CS6323", "CS6328", "CS6331", "CS6334", "CS6366"};
+-                setupTrackElectives(trackElectivesCodes);
++                trackElectivesNames = new String[]{"Computer Animation and Gaming","Modeling and Simulation","Multimedia Systems","Virtual Reality","Computer Graphics"};
++                setupTrackElectives(trackElectivesCodes, trackElectivesNames);
+ 
+                 setupApprovedElectives();
+                 setupAdditionalElectives();
+ 
+                 levelingCoursesCodes = new String[]{"CS5303", "CS5330", "CS5333", "CS5343", "CS5348"};
+-                setupLeveling(levelingCoursesCodes);
++                levelingCoursesNames = new String[]{"Computer Science I","Computer Science II","Discrete Structures","Algorithm Analysis & Data Structures","Operating System Concepts"};
++                setupLeveling(levelingCoursesCodes, levelingCoursesNames);
+                 break;
+             case "Cyber Security":
+                 coreCoursesCodes = new String[]{"CS6324", "CS6363", "CS6378"};
+-                setupCores(coreCoursesCodes);
++                coreCoursesNames = new String[]{"Information Security","Design and Analysis of Computer Algorithms","Advanced Operating Systems"};
++
++                setupCores(coreCoursesCodes, coreCoursesNames);
+ 
+                 trackElectivesCodes = new String[]{"CS6332", "CS6348", "CS6349", "CS6377"};
+-                setupTrackElectives(trackElectivesCodes);
++                trackElectivesNames = new String[]{"System Security & Malicious Code Analysis","Data and Applications Security","Network Security","Introduction To Cryptography"};
++                setupTrackElectives(trackElectivesCodes, trackElectivesNames);
+ 
+                 setupApprovedElectives();
+                 setupAdditionalElectives();
+ 
+                 levelingCoursesCodes =new String[]{"CS5303", "CS5330", "CS5333", "CS5343", "CS5348", "CS5390"};
+-                setupLeveling(levelingCoursesCodes);
++                levelingCoursesNames = new String[]{"Computer Science I","Computer Science II","Discrete Structures","Algorithm Analysis & Data Structures","Operating System Concepts","Computer Networks"};
++                setupLeveling(levelingCoursesCodes, levelingCoursesNames);
+                 break;
+             case "Intelligent Systems":
+                 coreCoursesCodes = new String[]{"CS6320", "CS6363", "CS6364", "CS6375"};
+-                setupCores(coreCoursesCodes);
++                coreCoursesNames = new String[]{"Natural Language Processing","Design and Analysis of Computer Algorithms","Artificial Intelligence","Machine Learning"};
++                setupCores(coreCoursesCodes, coreCoursesNames);
+ 
+                 trackElectivesCodes = new String[]{"CS6360", "CS6378"};
+-                setupTrackElectives(trackElectivesCodes);
++                trackElectivesNames = new String[]{"Database Design","Advanced Operating Systems"};
++                setupTrackElectives(trackElectivesCodes, trackElectivesNames);
+ 
+                 setupApprovedElectives();
+                 setupAdditionalElectives();
+ 
+                 levelingCoursesCodes =new String[]{"CS5303", "CS5330", "CS5343", "CS5333", "CS5348"};
+-                setupLeveling(levelingCoursesCodes);
++                levelingCoursesNames = new String[]{"Computer Science I","Computer Science II","Discrete Structures","Algorithm Analysis & Data Structures","Operating System Concepts"};
++                setupLeveling(levelingCoursesCodes, levelingCoursesNames);
+                 break;
+ 
+             case "Networks and Telecommunications":
+                 coreCoursesCodes = new String[]{"CS6352", "CS6363", "CS6378", "CS6385", "CS6390"};
+-                setupCores(coreCoursesCodes);
++                coreCoursesNames = new String[]{"Perf. of Computer Systems and Networks","Design and Analysis of Computer Algorithms","Advanced Operating Systems","Algorithmic Aspects of Telecomm. Networks","Advanced Computer Networks"};
++                setupCores(coreCoursesCodes, coreCoursesNames);
+ 
+                 setupApprovedElectives();
+                 setupAdditionalElectives();
+ 
+-                levelingCoursesCodes =new String[]{"CS5303", "CS5330", "CS5343", "CS5348", "CS5390", "CS3341", "CS5333"};
+-                setupLeveling(levelingCoursesCodes);
++                levelingCoursesCodes =new String[]{"CS5303", "CS5330", "CS5333", "CS5343", "CS5348", "CS5390", "CS3341"};
++                levelingCoursesNames = new String[]{"Computer Science I","Computer Science II","Discrete Structures","Algorithm Analysis & Data Structures","Operating System Concepts","Computer Networks",""};
++                setupLeveling(levelingCoursesCodes, levelingCoursesNames);
+                 break;
+             case "Traditional Computer Science":
+                 coreCoursesCodes = new String[]{"CS6363", "CS6378", "CS6390"};
+-                setupCores(coreCoursesCodes);
++                coreCoursesNames = new String[]{"Design and Analysis of Computer Algorithms","Advanced Operating Systems","Advanced Computer Networks"};
++                setupCores(coreCoursesCodes, coreCoursesNames);
+ 
+                 trackElectivesCodes = new String[]{"CS6353", "CS6360", "CS6371"};
+-                setupTrackElectives(trackElectivesCodes);
++                trackElectivesNames = new String[]{"Compiler Construction","Database Design","Advanced Programming Languages"};
++                setupTrackElectives(trackElectivesCodes, trackElectivesNames);
+ 
+                 setupApprovedElectives();
+                 setupAdditionalElectives();
+ 
+                 levelingCoursesCodes =new String[]{"CS5303", "CS5330", "CS5333", "CS5343", "CS5348", "CS5349", "CS5390"};
+-                setupLeveling(levelingCoursesCodes);
++                levelingCoursesNames = new String[]{"Computer Science I","Computer Science II","Discrete Structures","Algorithm Analysis & Data Structures","Operating System Concepts","Automata Theory","Computer Networks"};
++                setupLeveling(levelingCoursesCodes, levelingCoursesNames);
++
+         }
+ 
+ 
+@@ -154,23 +189,29 @@
+ 
+ 
+ 
+-    private void setupCores(String[] cores) {
++    private void setupCores(String[] coreCoursesCodes, String[] coresNames) {
+         Object[] row = new Object[]{"","",""};
+         model.addRow(row);
+         model.setValueAt("Core Courses",rowCounter,0);
+         model.setValueAt("(15 Credit Hours)",rowCounter,1);
+         model.setValueAt("3.19 Grade Point Average Required",rowCounter,2);
+         rowCounter++;
+-        for (String course: cores) {
+-            courseMappings.put(course,rowCounter);
++        for (int i = 0;i < coresNames.length;i++) {
++            coursePositionMappings.put(coreCoursesCodes[i],rowCounter);
+ 
+             row = new Object[]{"","","","",""};
+             model.addRow(row);
+-            model.setValueAt(course,rowCounter,1);
++            model.setValueAt(coresNames[i],rowCounter,0);
++            model.setValueAt(coreCoursesCodes[i],rowCounter,1);
+             rowCounter++;
+         }
+     }
+ 
++    public void addCores(ArrayList<Course> cores) {
++        for (Course course: cores) {
++            addCourse(course);
++        }
++    }
+ 
+ 
+ 
+@@ -178,30 +219,26 @@
+ 
+ 
+ 
+-
+-    private void setupTrackElectives(String[] trackElectives) {
++    private void setupTrackElectives(String[] trackElectivesCodes, String[] trackElectives) {
+         Object[] row = new Object[]{""};
+         model.addRow(row);
+         model.setValueAt("of The Following Required",rowCounter,0);
+         rowCounter++;
+-        for (String course: trackElectives) {
+-            courseMappings.put(course,rowCounter);
+-
++        for (int i = 0;i < trackElectives.length;i++) {
++            coursePositionMappings.put(trackElectivesCodes[i],rowCounter);
+             row = new Object[]{"","","","",""};
+             model.addRow(row);
+-            model.setValueAt(course,rowCounter,1);
++            model.setValueAt(trackElectives[i],rowCounter,0);
++            model.setValueAt(trackElectivesCodes[i],rowCounter,1);
+             rowCounter++;
+         }
+     }
+ 
+ 
+     public void addTrackElectives(ArrayList<Course> trackElectives) {
+-        Object[] row = new Object[]{""};
+-        model.addRow(row);
+-        model.setValueAt("of The Following Required",rowCounter,0);
+-        rowCounter++;
++
+         for (Course course: trackElectives) {
+-
++            addCourse(course);
+         }
+ 
+     }
+@@ -214,6 +251,7 @@
+         model.setValueAt("(15* Credit Hours)",rowCounter,1);
+         model.setValueAt("3.0 Grade Point Average",rowCounter,2);
+         rowCounter++;
++        approvedElectivesRow = rowCounter;
+         for(int i = 0;i < 5;i++) {
+ 
+ 
+@@ -225,17 +263,28 @@
+ 
+     }
+ 
+-
++    //columns:
++    //0 = course name
++    //1 = course code
++    //2 = semester
++    //3 = transfer
++    //4 = grade
+     public void addApprovedElectives(ArrayList<Course> approvedElectives) {
+-//        Object[] row = new Object[]{ "", "", ""};
+-//
+-//        model.addRow(row);
+-//        model.setValueAt("FIVE APPROVED 6000 LEVEL ELECTIVES",rowCounter,0);
+-//        model.setValueAt("(15* Credit Hours)",rowCounter,1);
+-//        model.setValueAt("3.0 Grade Point Average",rowCounter,2);
+-//        rowCounter++;
+-        for (Course course: approvedElectives) {
+-            addCourse(course);
++
++        for (int i = 0;i < approvedElectives.size();i++) {
++
++            Course currentCourse = approvedElectives.get(i);
++
++            if(Integer.parseInt(currentCourse.getCourseCode().substring(2,3)) >= 6) {
++                model.setValueAt(currentCourse.getCourseName(),approvedElectivesRow+i,0);
++                model.setValueAt(currentCourse.getCourseCode(),approvedElectivesRow+i,1);
++                model.setValueAt(currentCourse.getSemester(),approvedElectivesRow+i,2);
++                model.setValueAt(currentCourse.getGrade(),approvedElectivesRow+i,4);
++            }
++            else {
++                addAdditionalElective(currentCourse);
++            }
++
+         }
+     }
+ 
+@@ -245,6 +294,7 @@
+         model.addRow(row);
+         model.setValueAt("Additional Electives (3 Credit Hours Minimum)",rowCounter,0);
+         rowCounter++;
++        additionalElectivesRow = rowCounter;
+         for (int i = 0;i < 3;i++) {
+             row = new Object[]{"","","","",""};
+             model.addRow(row);
+@@ -253,17 +303,20 @@
+     }
+ 
+ 
+-    public void addAdditionalElectives(ArrayList<Course> additionalElectives) {
++    public void addAdditionalElective(Course elective) {
+ //        Object[] row = new Object[]{""};
+ //        model.addRow(row);
+ //        model.setValueAt("Additional Electives (3 Credit Hours Minimum)",rowCounter,0);
+ //        rowCounter++;
+-        for (Course course: additionalElectives) {
+-            addCourse(course);
+-        }
++        model.setValueAt(elective.getCourseName(),additionalElectivesRow,0);
++        model.setValueAt(elective.getCourseCode(),additionalElectivesRow,1);
++        model.setValueAt(elective.getSemester(),additionalElectivesRow,2);
++        model.setValueAt(elective.getGrade(),additionalElectivesRow,4);
++        additionalElectivesRow++;
++
+     }
+ 
+-    private void setupLeveling(String[] levelingCourses) {
++    private void setupLeveling(String[] levelingCoursesCodes, String[] levelingCourses) {
+         Object[] row = new Object[]{"", "", "", "", "", ""};
+         model.addRow(row);
+         model.setValueAt("Admission Prerequisites",rowCounter,0);
+@@ -272,12 +325,13 @@
+         model.setValueAt("Waiver",rowCounter,3);
+         model.setValueAt("Grade",rowCounter,4);
+         rowCounter++;
+-        for (String course: levelingCourses) {
+-            courseMappings.put(course,rowCounter);
++        for (int i=0;i < levelingCourses.length;i++) {
++            coursePositionMappings.put(levelingCoursesCodes[i],rowCounter);
+ 
+             row = new Object[]{"","","","",""};
+             model.addRow(row);
+-            model.setValueAt(course,rowCounter,1);
++            model.setValueAt(levelingCourses[i],rowCounter,0);
++            model.setValueAt(levelingCoursesCodes[i],rowCounter,1);
+             rowCounter++;
+         }
+     }
+@@ -286,29 +340,19 @@
+ 
+     public void addCourse(Course course) {
+ 
+-
+ //      Columns:
+ //      0 = course name
+-//      1 = semester
+-//      3 = grade
++//      1 = course code
++//      2 = semester
++//      4 = grade
+ 
+-//        if(courseMappings.containsKey(course.getCourseCode())) {
+-//            model.setValueAt(course.courseName, courseMappings.get(course.getCourseCode()), 0);
+-//            model.setValueAt(course.getCourseCode(),courseMappings.get(course.getCourseCode()),1);
+-//            model.setValueAt(course.getSemester(), courseMappings.get(course.getCourseCode()), 2);
+-//            //     model.setValueAt("Course Transfer", rowCounter, 3);
+-//            model.setValueAt(course.getGrade(), courseMappings.get(course.getCourseCode()), 4);
+-//            rowCounter++;
+-//        }
++        String courseCode = course.getCourseCode();
+ 
+-        Object[] row = new Object[]{"", "", "", "", "", ""};
+-        model.addRow(row);
+-        model.setValueAt(course.getCourseName(),rowCounter,0);
+-        model.setValueAt(course.getCourseCode(),rowCounter,1);
+-        model.setValueAt(course.getSemester(), rowCounter, 2);
+-        //     model.setValueAt("Course Transfer", rowCounter, 3);
+-        model.setValueAt(course.getGrade(), rowCounter, 4);
+-        rowCounter++;
++        if(coursePositionMappings.containsKey(courseCode)) {
++            model.setValueAt(course.getSemester(),coursePositionMappings.get(courseCode),2);
++            model.setValueAt(course.getGrade(),coursePositionMappings.get(courseCode),4);
++        }
++
+ 
+     }
+     public void addCourse(String courseName,String courseCode,String semester, String grade) {
+@@ -366,16 +410,22 @@
+ 
+         JLabel titleLabel1 = new JLabel("Degree Plan", SwingConstants.CENTER);
+         titleLabel1.setFont(new Font("Arial", Font.BOLD, 24));
++
+         JLabel titleLabel2 = new JLabel("University of Texas at Dallas", SwingConstants.CENTER);
+         titleLabel2.setFont(new Font("Arial", Font.BOLD, 24));
++
++
+         JLabel titleLabel3 = new JLabel("Master of Computer Science",SwingConstants.CENTER);
+         titleLabel3.setFont(new Font("Arial", Font.BOLD,24));
+ 
+-        JPanel titlePanel = new JPanel(new GridLayout(3, 1));
++        JLabel trackLabel = new JLabel(track,SwingConstants.CENTER);
++        trackLabel.setFont(new Font("Arial", Font.BOLD,24));
++
++        JPanel titlePanel = new JPanel(new GridLayout(4, 1));
+         titlePanel.add(titleLabel1);
+         titlePanel.add(titleLabel2);
+         titlePanel.add(titleLabel3);
+-
++        titlePanel.add(trackLabel);
+         add(titlePanel, BorderLayout.NORTH);
+ 
+ 
+@@ -435,6 +485,11 @@
+ 
+ 
+ 
++
++
++
++
++
+         this.studentName =studentName;
+         this.studentID = studentID;
+         this.semesterAdmitted = semesterAdmitted;
+@@ -447,20 +502,92 @@
+         //adding separate fields for name, fast track, thesis, etc
+ 
+ 
+-        JPanel buttonPanel = new JPanel(new BorderLayout());
++
++        //Buttons
++
++//        JPanel buttonPanel = new JPanel(new BorderLayout());
++//        JButton addButton = new JButton("Add Row");
++//        JButton saveAsPdfButton = new JButton("Save as PDF");
++//        buttonPanel.add(addButton,BorderLayout.NORTH);
++//        buttonPanel.add(saveAsPdfButton, BorderLayout.NORTH);
++//
++//        //  buttonPanel.add(closeButton, BorderLayout.NORTH);
++//        add(buttonPanel, BorderLayout.EAST);
++
++        JPanel buttonPanel = new JPanel();
++        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
++
++
++        JButton addButton = new JButton("Add Row");
+         JButton saveAsPdfButton = new JButton("Save as PDF");
+-        buttonPanel.add(saveAsPdfButton, BorderLayout.CENTER);
+ 
+-        //  buttonPanel.add(closeButton, BorderLayout.NORTH);
++        buttonPanel.add(saveAsPdfButton);
++        buttonPanel.add(addButton);
+         add(buttonPanel, BorderLayout.EAST);
+ 
+ 
+ 
++        addButton.addActionListener(new ActionListener() {
++            public void actionPerformed(ActionEvent e) {
++                // create a dialog or frame to get input from the user
++                // for example:
++                Object[] row = {"", "", "", "", ""};
++                model.addRow(row);
++
++            }
++        });
++
++
++        table.addMouseListener(new MouseAdapter() {
++            @Override
++            public void mouseClicked(MouseEvent e) {
++                if (SwingUtilities.isRightMouseButton(e)) {
++                    int row = table.rowAtPoint(e.getPoint());
++                    if (row >= 0 && table.getSelectedRow() == row) {
++                        JPopupMenu popupMenu = new JPopupMenu();
++
++                        JMenuItem deleteMenuItem = new JMenuItem("Delete Row");
++                        deleteMenuItem.addActionListener((event) -> {
++                            model.removeRow(row);
++                        });
++
++                        JMenuItem headerMenuItem = new JMenuItem("Set as Header");
++                        headerMenuItem.addActionListener((event) -> {
++                            Object[] headerRow = {"","","","","oefkosfeos"};
++//                            for (int i = 0; i < model.getColumnCount(); i++) {
++//                                headerRow[i] = model.getValueAt(row, i);
++//                            }
++                            model.removeRow(row);
++                            model.insertRow(row, headerRow);
++                            table.setRowSelectionInterval(row, row);
++
++
++
++                        });
++
++                        popupMenu.add(deleteMenuItem);
++                        popupMenu.add(headerMenuItem);
++                        popupMenu.show(table, e.getX(), e.getY());
++                    }
++                }
++            }
++        });
++
++
+         saveAsPdfButton.addActionListener(e -> {
+             JFileChooser fileChooser = new JFileChooser();
+             int result = fileChooser.showSaveDialog(SpreadsheetUI.this);
+             if (result == JFileChooser.APPROVE_OPTION) {
+                 try {
++                    for (int rows = 0; rows < table.getRowCount(); rows++) {
++                        for (int cols = 0; cols < table.getColumnCount(); cols++) {
++                            Object cellValue = table.getValueAt(rows, cols);
++                            if (cellValue == null) {
++                                // assign default value or handle null value
++                                table.setValueAt("",rows,cols);
++                            }
++                        }
++                    }
+                     Document document = new Document();
+                     PdfWriter.getInstance(document, new FileOutputStream(fileChooser.getSelectedFile() + ".pdf"));
+                     document.open();
+@@ -471,6 +598,7 @@
+                     paragraph.add("\n");
+                     paragraph.add("University of Texas at Dallas");
+                     paragraph.add("\nMaster of Computer Science");
++                    paragraph.add("\n" + track );
+                     paragraph.setAlignment(Element.ALIGN_CENTER);
+                     document.add(paragraph);
+ 
+@@ -646,19 +774,19 @@
+         }
+     }
+ 
+-//    private class HeaderEditor extends DefaultCellEditor {
+-//        public HeaderEditor() {
+-//            super(new JTextField());
+-//            setClickCountToStart(1);
+-//        }
+-//
+-//        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+-//            JTextField editor = (JTextField) super.getTableCellEditorComponent(table, value, isSelected, row, column);
+-//            editor.setFont(editor.getFont().deriveFont(Font.BOLD));
+-//            editor.setBorder(BorderFactory.createLineBorder(Color.black));
+-//            return editor;
+-//        }
+-//    }
++    private class HeaderEditor extends DefaultCellEditor {
++        public HeaderEditor() {
++            super(new JTextField());
++            setClickCountToStart(1);
++        }
++
++        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
++            JTextField editor = (JTextField) super.getTableCellEditorComponent(table, value, isSelected, row, column);
++            editor.setFont(editor.getFont().deriveFont(Font.BOLD));
++            editor.setBorder(BorderFactory.createLineBorder(Color.black));
++            return editor;
++        }
++    }
+ }
+ 
+ 
+Index: Cap_Proj.iml
+===================================================================
+diff --git a/Cap_Proj.iml b/Cap_Proj.iml
+deleted file mode 100644
+--- a/Cap_Proj.iml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,29 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_15">
+-    <output url="file://$MODULE_DIR$/target/classes" />
+-    <output-test url="file://$MODULE_DIR$/target/test-classes" />
+-    <content url="file://$MODULE_DIR$">
+-      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+-      <excludeFolder url="file://$MODULE_DIR$/target" />
+-    </content>
+-    <orderEntry type="inheritedJdk" />
+-    <orderEntry type="sourceFolder" forTests="false" />
+-    <orderEntry type="library" name="Maven: com.itextpdf:itextpdf:5.5.13.2" level="project" />
+-    <orderEntry type="library" name="Maven: org.apache.pdfbox:pdfbox:2.0.27" level="project" />
+-    <orderEntry type="library" name="Maven: org.apache.pdfbox:fontbox:2.0.27" level="project" />
+-    <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.2" level="project" />
+-    <orderEntry type="library" name="Maven: org.apache.poi:poi:5.2.3" level="project" />
+-    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.15" level="project" />
+-    <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.4" level="project" />
+-    <orderEntry type="library" name="Maven: org.apache.commons:commons-math3:3.6.1" level="project" />
+-    <orderEntry type="library" name="Maven: commons-io:commons-io:2.11.0" level="project" />
+-    <orderEntry type="library" name="Maven: com.zaxxer:SparseBitSet:1.2" level="project" />
+-    <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.18.0" level="project" />
+-    <orderEntry type="library" name="Maven: org.apache.poi:poi-ooxml:5.2.3" level="project" />
+-    <orderEntry type="library" name="Maven: org.apache.poi:poi-ooxml-lite:5.2.3" level="project" />
+-    <orderEntry type="library" name="Maven: org.apache.xmlbeans:xmlbeans:5.1.1" level="project" />
+-    <orderEntry type="library" name="Maven: org.apache.commons:commons-compress:1.21" level="project" />
+-    <orderEntry type="library" name="Maven: com.github.virtuald:curvesapi:1.07" level="project" />
+-  </component>
+-</module>
+\ No newline at end of file
+Index: .idea/modules.xml
+===================================================================
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+deleted file mode 100644
+--- a/.idea/modules.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,8 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="ProjectModuleManager">
+-    <modules>
+-      <module fileurl="file://$PROJECT_DIR$/Cap_Proj.iml" filepath="$PROJECT_DIR$/Cap_Proj.iml" />
+-    </modules>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/libraries/Maven__commons_io_commons_io_2_11_0.xml
+===================================================================
+diff --git a/.idea/libraries/Maven__commons_io_commons_io_2_11_0.xml b/.idea/libraries/Maven__commons_io_commons_io_2_11_0.xml
+deleted file mode 100644
+--- a/.idea/libraries/Maven__commons_io_commons_io_2_11_0.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,13 +0,0 @@
+-<component name="libraryTable">
+-  <library name="Maven: commons-io:commons-io:2.11.0">
+-    <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/commons-io/commons-io/2.11.0/commons-io-2.11.0.jar!/" />
+-    </CLASSES>
+-    <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/commons-io/commons-io/2.11.0/commons-io-2.11.0-javadoc.jar!/" />
+-    </JAVADOC>
+-    <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/commons-io/commons-io/2.11.0/commons-io-2.11.0-sources.jar!/" />
+-    </SOURCES>
+-  </library>
+-</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__org_apache_commons_commons_math3_3_6_1.xml
+===================================================================
+diff --git a/.idea/libraries/Maven__org_apache_commons_commons_math3_3_6_1.xml b/.idea/libraries/Maven__org_apache_commons_commons_math3_3_6_1.xml
+deleted file mode 100644
+--- a/.idea/libraries/Maven__org_apache_commons_commons_math3_3_6_1.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,13 +0,0 @@
+-<component name="libraryTable">
+-  <library name="Maven: org.apache.commons:commons-math3:3.6.1">
+-    <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar!/" />
+-    </CLASSES>
+-    <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1-javadoc.jar!/" />
+-    </JAVADOC>
+-    <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1-sources.jar!/" />
+-    </SOURCES>
+-  </library>
+-</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__org_apache_pdfbox_pdfbox_2_0_27.xml
+===================================================================
+diff --git a/.idea/libraries/Maven__org_apache_pdfbox_pdfbox_2_0_27.xml b/.idea/libraries/Maven__org_apache_pdfbox_pdfbox_2_0_27.xml
+deleted file mode 100644
+--- a/.idea/libraries/Maven__org_apache_pdfbox_pdfbox_2_0_27.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,13 +0,0 @@
+-<component name="libraryTable">
+-  <library name="Maven: org.apache.pdfbox:pdfbox:2.0.27">
+-    <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/pdfbox/pdfbox/2.0.27/pdfbox-2.0.27.jar!/" />
+-    </CLASSES>
+-    <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/pdfbox/pdfbox/2.0.27/pdfbox-2.0.27-javadoc.jar!/" />
+-    </JAVADOC>
+-    <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/pdfbox/pdfbox/2.0.27/pdfbox-2.0.27-sources.jar!/" />
+-    </SOURCES>
+-  </library>
+-</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__org_apache_logging_log4j_log4j_api_2_18_0.xml
+===================================================================
+diff --git a/.idea/libraries/Maven__org_apache_logging_log4j_log4j_api_2_18_0.xml b/.idea/libraries/Maven__org_apache_logging_log4j_log4j_api_2_18_0.xml
+deleted file mode 100644
+--- a/.idea/libraries/Maven__org_apache_logging_log4j_log4j_api_2_18_0.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,13 +0,0 @@
+-<component name="libraryTable">
+-  <library name="Maven: org.apache.logging.log4j:log4j-api:2.18.0">
+-    <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/logging/log4j/log4j-api/2.18.0/log4j-api-2.18.0.jar!/" />
+-    </CLASSES>
+-    <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/logging/log4j/log4j-api/2.18.0/log4j-api-2.18.0-javadoc.jar!/" />
+-    </JAVADOC>
+-    <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/logging/log4j/log4j-api/2.18.0/log4j-api-2.18.0-sources.jar!/" />
+-    </SOURCES>
+-  </library>
+-</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__commons_codec_commons_codec_1_15.xml
+===================================================================
+diff --git a/.idea/libraries/Maven__commons_codec_commons_codec_1_15.xml b/.idea/libraries/Maven__commons_codec_commons_codec_1_15.xml
+deleted file mode 100644
+--- a/.idea/libraries/Maven__commons_codec_commons_codec_1_15.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,13 +0,0 @@
+-<component name="libraryTable">
+-  <library name="Maven: commons-codec:commons-codec:1.15">
+-    <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/commons-codec/commons-codec/1.15/commons-codec-1.15.jar!/" />
+-    </CLASSES>
+-    <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/commons-codec/commons-codec/1.15/commons-codec-1.15-javadoc.jar!/" />
+-    </JAVADOC>
+-    <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/commons-codec/commons-codec/1.15/commons-codec-1.15-sources.jar!/" />
+-    </SOURCES>
+-  </library>
+-</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__org_apache_poi_poi_ooxml_lite_5_2_3.xml
+===================================================================
+diff --git a/.idea/libraries/Maven__org_apache_poi_poi_ooxml_lite_5_2_3.xml b/.idea/libraries/Maven__org_apache_poi_poi_ooxml_lite_5_2_3.xml
+deleted file mode 100644
+--- a/.idea/libraries/Maven__org_apache_poi_poi_ooxml_lite_5_2_3.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,13 +0,0 @@
+-<component name="libraryTable">
+-  <library name="Maven: org.apache.poi:poi-ooxml-lite:5.2.3">
+-    <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/poi/poi-ooxml-lite/5.2.3/poi-ooxml-lite-5.2.3.jar!/" />
+-    </CLASSES>
+-    <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/poi/poi-ooxml-lite/5.2.3/poi-ooxml-lite-5.2.3-javadoc.jar!/" />
+-    </JAVADOC>
+-    <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/poi/poi-ooxml-lite/5.2.3/poi-ooxml-lite-5.2.3-sources.jar!/" />
+-    </SOURCES>
+-  </library>
+-</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__com_zaxxer_SparseBitSet_1_2.xml
+===================================================================
+diff --git a/.idea/libraries/Maven__com_zaxxer_SparseBitSet_1_2.xml b/.idea/libraries/Maven__com_zaxxer_SparseBitSet_1_2.xml
+deleted file mode 100644
+--- a/.idea/libraries/Maven__com_zaxxer_SparseBitSet_1_2.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,13 +0,0 @@
+-<component name="libraryTable">
+-  <library name="Maven: com.zaxxer:SparseBitSet:1.2">
+-    <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/com/zaxxer/SparseBitSet/1.2/SparseBitSet-1.2.jar!/" />
+-    </CLASSES>
+-    <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/com/zaxxer/SparseBitSet/1.2/SparseBitSet-1.2-javadoc.jar!/" />
+-    </JAVADOC>
+-    <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/com/zaxxer/SparseBitSet/1.2/SparseBitSet-1.2-sources.jar!/" />
+-    </SOURCES>
+-  </library>
+-</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__org_apache_commons_commons_compress_1_21.xml
+===================================================================
+diff --git a/.idea/libraries/Maven__org_apache_commons_commons_compress_1_21.xml b/.idea/libraries/Maven__org_apache_commons_commons_compress_1_21.xml
+deleted file mode 100644
+--- a/.idea/libraries/Maven__org_apache_commons_commons_compress_1_21.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,13 +0,0 @@
+-<component name="libraryTable">
+-  <library name="Maven: org.apache.commons:commons-compress:1.21">
+-    <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-compress/1.21/commons-compress-1.21.jar!/" />
+-    </CLASSES>
+-    <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-compress/1.21/commons-compress-1.21-javadoc.jar!/" />
+-    </JAVADOC>
+-    <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-compress/1.21/commons-compress-1.21-sources.jar!/" />
+-    </SOURCES>
+-  </library>
+-</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__com_itextpdf_itextpdf_5_5_13_2.xml
+===================================================================
+diff --git a/.idea/libraries/Maven__com_itextpdf_itextpdf_5_5_13_2.xml b/.idea/libraries/Maven__com_itextpdf_itextpdf_5_5_13_2.xml
+deleted file mode 100644
+--- a/.idea/libraries/Maven__com_itextpdf_itextpdf_5_5_13_2.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,13 +0,0 @@
+-<component name="libraryTable">
+-  <library name="Maven: com.itextpdf:itextpdf:5.5.13.2">
+-    <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/com/itextpdf/itextpdf/5.5.13.2/itextpdf-5.5.13.2.jar!/" />
+-    </CLASSES>
+-    <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/com/itextpdf/itextpdf/5.5.13.2/itextpdf-5.5.13.2-javadoc.jar!/" />
+-    </JAVADOC>
+-    <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/com/itextpdf/itextpdf/5.5.13.2/itextpdf-5.5.13.2-sources.jar!/" />
+-    </SOURCES>
+-  </library>
+-</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__org_apache_xmlbeans_xmlbeans_5_1_1.xml
+===================================================================
+diff --git a/.idea/libraries/Maven__org_apache_xmlbeans_xmlbeans_5_1_1.xml b/.idea/libraries/Maven__org_apache_xmlbeans_xmlbeans_5_1_1.xml
+deleted file mode 100644
+--- a/.idea/libraries/Maven__org_apache_xmlbeans_xmlbeans_5_1_1.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,13 +0,0 @@
+-<component name="libraryTable">
+-  <library name="Maven: org.apache.xmlbeans:xmlbeans:5.1.1">
+-    <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/xmlbeans/xmlbeans/5.1.1/xmlbeans-5.1.1.jar!/" />
+-    </CLASSES>
+-    <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/xmlbeans/xmlbeans/5.1.1/xmlbeans-5.1.1-javadoc.jar!/" />
+-    </JAVADOC>
+-    <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/xmlbeans/xmlbeans/5.1.1/xmlbeans-5.1.1-sources.jar!/" />
+-    </SOURCES>
+-  </library>
+-</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__com_github_virtuald_curvesapi_1_07.xml
+===================================================================
+diff --git a/.idea/libraries/Maven__com_github_virtuald_curvesapi_1_07.xml b/.idea/libraries/Maven__com_github_virtuald_curvesapi_1_07.xml
+deleted file mode 100644
+--- a/.idea/libraries/Maven__com_github_virtuald_curvesapi_1_07.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,13 +0,0 @@
+-<component name="libraryTable">
+-  <library name="Maven: com.github.virtuald:curvesapi:1.07">
+-    <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/com/github/virtuald/curvesapi/1.07/curvesapi-1.07.jar!/" />
+-    </CLASSES>
+-    <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/com/github/virtuald/curvesapi/1.07/curvesapi-1.07-javadoc.jar!/" />
+-    </JAVADOC>
+-    <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/com/github/virtuald/curvesapi/1.07/curvesapi-1.07-sources.jar!/" />
+-    </SOURCES>
+-  </library>
+-</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__org_apache_poi_poi_5_2_3.xml
+===================================================================
+diff --git a/.idea/libraries/Maven__org_apache_poi_poi_5_2_3.xml b/.idea/libraries/Maven__org_apache_poi_poi_5_2_3.xml
+deleted file mode 100644
+--- a/.idea/libraries/Maven__org_apache_poi_poi_5_2_3.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,13 +0,0 @@
+-<component name="libraryTable">
+-  <library name="Maven: org.apache.poi:poi:5.2.3">
+-    <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/poi/poi/5.2.3/poi-5.2.3.jar!/" />
+-    </CLASSES>
+-    <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/poi/poi/5.2.3/poi-5.2.3-javadoc.jar!/" />
+-    </JAVADOC>
+-    <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/poi/poi/5.2.3/poi-5.2.3-sources.jar!/" />
+-    </SOURCES>
+-  </library>
+-</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__org_apache_pdfbox_fontbox_2_0_27.xml
+===================================================================
+diff --git a/.idea/libraries/Maven__org_apache_pdfbox_fontbox_2_0_27.xml b/.idea/libraries/Maven__org_apache_pdfbox_fontbox_2_0_27.xml
+deleted file mode 100644
+--- a/.idea/libraries/Maven__org_apache_pdfbox_fontbox_2_0_27.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,13 +0,0 @@
+-<component name="libraryTable">
+-  <library name="Maven: org.apache.pdfbox:fontbox:2.0.27">
+-    <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/pdfbox/fontbox/2.0.27/fontbox-2.0.27.jar!/" />
+-    </CLASSES>
+-    <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/pdfbox/fontbox/2.0.27/fontbox-2.0.27-javadoc.jar!/" />
+-    </JAVADOC>
+-    <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/pdfbox/fontbox/2.0.27/fontbox-2.0.27-sources.jar!/" />
+-    </SOURCES>
+-  </library>
+-</component>
+\ No newline at end of file
+Index: .idea/.gitignore
+===================================================================
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+deleted file mode 100644
+--- a/.idea/.gitignore	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,8 +0,0 @@
+-# Default ignored files
+-/shelf/
+-/workspace.xml
+-# Editor-based HTTP Client requests
+-/httpRequests/
+-# Datasource local storage ignored files
+-/dataSources/
+-/dataSources.local.xml
+Index: .idea/libraries/Maven__org_apache_poi_poi_ooxml_5_2_3.xml
+===================================================================
+diff --git a/.idea/libraries/Maven__org_apache_poi_poi_ooxml_5_2_3.xml b/.idea/libraries/Maven__org_apache_poi_poi_ooxml_5_2_3.xml
+deleted file mode 100644
+--- a/.idea/libraries/Maven__org_apache_poi_poi_ooxml_5_2_3.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,13 +0,0 @@
+-<component name="libraryTable">
+-  <library name="Maven: org.apache.poi:poi-ooxml:5.2.3">
+-    <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/poi/poi-ooxml/5.2.3/poi-ooxml-5.2.3.jar!/" />
+-    </CLASSES>
+-    <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/poi/poi-ooxml/5.2.3/poi-ooxml-5.2.3-javadoc.jar!/" />
+-    </JAVADOC>
+-    <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/poi/poi-ooxml/5.2.3/poi-ooxml-5.2.3-sources.jar!/" />
+-    </SOURCES>
+-  </library>
+-</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__commons_logging_commons_logging_1_2.xml
+===================================================================
+diff --git a/.idea/libraries/Maven__commons_logging_commons_logging_1_2.xml b/.idea/libraries/Maven__commons_logging_commons_logging_1_2.xml
+deleted file mode 100644
+--- a/.idea/libraries/Maven__commons_logging_commons_logging_1_2.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,13 +0,0 @@
+-<component name="libraryTable">
+-  <library name="Maven: commons-logging:commons-logging:1.2">
+-    <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.2/commons-logging-1.2.jar!/" />
+-    </CLASSES>
+-    <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.2/commons-logging-1.2-javadoc.jar!/" />
+-    </JAVADOC>
+-    <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.2/commons-logging-1.2-sources.jar!/" />
+-    </SOURCES>
+-  </library>
+-</component>
+\ No newline at end of file
+Index: .idea/libraries/Maven__org_apache_commons_commons_collections4_4_4.xml
+===================================================================
+diff --git a/.idea/libraries/Maven__org_apache_commons_commons_collections4_4_4.xml b/.idea/libraries/Maven__org_apache_commons_commons_collections4_4_4.xml
+deleted file mode 100644
+--- a/.idea/libraries/Maven__org_apache_commons_commons_collections4_4_4.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ /dev/null	(revision 530c63c7402d820679860a56d6b0111964dc07de)
+@@ -1,13 +0,0 @@
+-<component name="libraryTable">
+-  <library name="Maven: org.apache.commons:commons-collections4:4.4">
+-    <CLASSES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar!/" />
+-    </CLASSES>
+-    <JAVADOC>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4-javadoc.jar!/" />
+-    </JAVADOC>
+-    <SOURCES>
+-      <root url="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4-sources.jar!/" />
+-    </SOURCES>
+-  </library>
+-</component>
+\ No newline at end of file
+Index: .idea/encodings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"Encoding\">\r\n    <file url=\"file://$PROJECT_DIR$/src/main/java\" charset=\"UTF-8\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/encodings.xml b/.idea/encodings.xml
+--- a/.idea/encodings.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ b/.idea/encodings.xml	(date 1683269724949)
+@@ -2,5 +2,6 @@
+ <project version="4">
+   <component name="Encoding">
+     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
++    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"CompilerConfiguration\">\r\n    <annotationProcessing>\r\n      <profile name=\"Maven default annotation processors profile\" enabled=\"true\">\r\n        <sourceOutputDir name=\"target/generated-sources/annotations\" />\r\n        <sourceTestOutputDir name=\"target/generated-test-sources/test-annotations\" />\r\n        <outputRelativeToContentRoot value=\"true\" />\r\n        <module name=\"Cap_Proj\" />\r\n      </profile>\r\n    </annotationProcessing>\r\n    <bytecodeTargetLevel>\r\n      <module name=\"Cap_Proj\" target=\"19\" />\r\n      <module name=\"CS-Project---Team-8\" target=\"19\" />\r\n    </bytecodeTargetLevel>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/compiler.xml b/.idea/compiler.xml
+--- a/.idea/compiler.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ b/.idea/compiler.xml	(date 1683269724957)
+@@ -9,9 +9,5 @@
+         <module name="Cap_Proj" />
+       </profile>
+     </annotationProcessing>
+-    <bytecodeTargetLevel>
+-      <module name="Cap_Proj" target="19" />
+-      <module name="CS-Project---Team-8" target="19" />
+-    </bytecodeTargetLevel>
+   </component>
+ </project>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"MavenProjectsManager\">\r\n    <option name=\"originalFiles\">\r\n      <list>\r\n        <option value=\"$PROJECT_DIR$/pom.xml\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_15\" default=\"true\" project-jdk-name=\"openjdk-19\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/out\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 530c63c7402d820679860a56d6b0111964dc07de)
++++ b/.idea/misc.xml	(date 1683269724967)
+@@ -1,5 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
++  <component name="ExternalStorageConfigurationManager" enabled="true" />
+   <component name="MavenProjectsManager">
+     <option name="originalFiles">
+       <list>
+@@ -7,7 +8,5 @@
+       </list>
+     </option>
+   </component>
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_15" default="true" project-jdk-name="openjdk-19" project-jdk-type="JavaSDK">
+-    <output url="file://$PROJECT_DIR$/out" />
+-  </component>
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_19" project-jdk-name="14" project-jdk-type="JavaSDK" />
+ </project>
+\ No newline at end of file
