@@ -89,6 +89,7 @@ public class PdfReader {
                 // Found a new semester
                 String year = yearMatcher.group(1);
                 String season = yearMatcher.group(2);
+                //   System.out.println(year + " " + season);
                 String semesterKey = year + "-" + (season.equals("Spring") ? "01" : season.equals("Summer") ? "02" : "03");
                 currentSemester = semesterKey;
                 coursesBySemester.put(currentSemester, new StringBuilder());
@@ -124,7 +125,7 @@ public class PdfReader {
                     }
                     String displaySeason = season.equals("01") ? "Spring" : season.equals("02") ? "Summer" : "Fall";
                     Course course = new Course(year, semester, courseCode, courseName, creditHours, earnedCreditHours, grade);
-                    System.out.printf("Course: %s - %s, Year: %s, Season: %s, Credit Hours: %.1f, Earned Credit Hours: %.1f, Grade: %s%n", courseCode, courseName, year, season, creditHours, earnedCreditHours, grade);
+                    System.out.printf("Course: %s - %s, Year: %s, Season: %s, Credit Hours: %.1f, Earned Credit Hours: %.1f, Grade: %s%n", courseCode, courseName, year, displaySeason, creditHours, earnedCreditHours, grade);
 
                     student.addCourse(course);
 

@@ -89,6 +89,7 @@ public class DegreePlanApp {
         c.gridx = 1;
         c.gridy = 0;
         trackComboBox = new JComboBox<>(new String[]{
+                " ",
                 "Cyber Security",
                 "Data Science",
                 "Intelligent Systems",
@@ -462,7 +463,6 @@ public class DegreePlanApp {
     }
 
 }
-
 
 
 

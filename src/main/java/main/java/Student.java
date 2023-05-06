@@ -6,15 +6,16 @@ public class Student implements Serializable {
     String studentID;
     String major;
     String semesterAdmittedToProgram;
+
+    private String track;
     boolean isFastTrack;
     boolean isThesisMasters;
     List<Course> courses;
     private List<Course> coreCourses = new ArrayList<>();
-    private String track;
+
     private List<Course> electiveCourses = new ArrayList<>();
     private List<Course> prerequisites = new ArrayList<>();
     private List<Course> levelingCourses = new ArrayList<>();
-
     public Student(String name, String studentID, String major, String semesterAdmittedToProgram, boolean isFastTrack, boolean isThesisMasters) {
         this.name = name;
         this.studentID = studentID;
@@ -26,21 +27,17 @@ public class Student implements Serializable {
 
 
     }
-
     void setFastTrack() {
         isFastTrack = true;
     }
-
     public void setThesisMasters() {
         isThesisMasters = true;
     }
-
-    public boolean getFastTrackCheck() {
+    public boolean getFastTrackCheck(){
         if (isFastTrack) return true;
         return false;
     }
-
-    public boolean getThesisMastersCheck() {
+    public boolean getThesisMastersCheck(){
         if (isThesisMasters) return true;
         return false;
     }
@@ -84,7 +81,6 @@ public class Student implements Serializable {
     public void setCourses(List<Course> courses) {
         this.courses = courses;
     }
-
     public double getNeededGPAInRemainingCourses(double currentGPA, int totalCourses, List<Course> remainingCourses) {
         double desiredTotalGradePoints = 3.0 * totalCourses;
         double currentTotalGradePoints = currentGPA * (totalCourses - remainingCourses.size());
@@ -104,40 +100,38 @@ public class Student implements Serializable {
         }
         return remainingCourses;
     }
+    public String getRemainingOverallGPAMessage(double desiredOverallGPA) {
+        List<Course> remainingCourses = new ArrayList<>();
+        remainingCourses.addAll(getRemainingCoreCourses());
+        remainingCourses.addAll(getRemainingElectiveCourses());
 
+        StringBuilder message = new StringBuilder();
 
-public String getRemainingOverallGPAMessage(double desiredOverallGPA) {
-    List<Course> remainingCourses = new ArrayList<>();
-    remainingCourses.addAll(getRemainingCoreCourses());
-    remainingCourses.addAll(getRemainingElectiveCourses());
+        if (!remainingCourses.isEmpty()) {
+            double currentOverallGPA = calculateOverallGPA();
+            int totalCourses = countCoursesWithValidGrades();
+            int remainingCoursesCount = remainingCourses.size();
+            double requiredRemainingGPA = (desiredOverallGPA * (totalCourses + remainingCoursesCount) - currentOverallGPA * totalCourses) / remainingCoursesCount;
 
-    StringBuilder message = new StringBuilder();
-
-    if (!remainingCourses.isEmpty()) {
-        double currentOverallGPA = calculateOverallGPA();
-        int totalCourses = countCoursesWithValidGrades();
-        int remainingCoursesCount = remainingCourses.size();
-        double requiredRemainingGPA = (desiredOverallGPA * (totalCourses + remainingCoursesCount) - currentOverallGPA * totalCourses) / remainingCoursesCount;
-
-        if (requiredRemainingGPA >= 2.00) {
-            if (remainingCoursesCount == 1) {
-                Course course = remainingCourses.get(0);
-                String requiredGrade = getRequiredGrade(requiredRemainingGPA, course);
-                message.append(String.format("To maintain a 3.0 overall GPA, The student needs >= %s in %s\n", requiredGrade, course.getCourseCode()));
+            if (requiredRemainingGPA >= 2.00) {
+                if (remainingCoursesCount == 1) {
+                    Course course = remainingCourses.get(0);
+                    String requiredGrade = getRequiredGrade(requiredRemainingGPA, course);
+                    message.append(String.format("To maintain a 3.0 overall GPA, The student needs >= %s in %s\n", requiredGrade, course.getCourseCode()));
+                } else {
+                    message.append(String.format("To maintain a 3.0 overall GPA, The student needs a GPA >= %.3f in:\n", requiredRemainingGPA));
+                    appendCourseList(remainingCourses, message);
+                }
             } else {
-                message.append(String.format("To maintain a 3.0 overall GPA, The student needs a GPA >= %.3f in:\n", requiredRemainingGPA));
+                message.append("The student must pass");
                 appendCourseList(remainingCourses, message);
             }
         } else {
-            message.append("The student must pass");
-            appendCourseList(remainingCourses, message);
+            message.append(String.format("All courses complete. Current overall GPA: %.3f\n", calculateOverallGPA()));
         }
-    } else {
-        message.append(String.format("All courses complete. Current overall GPA: %.3f\n", calculateOverallGPA()));
-    }
 
-    return message.toString();
-}
+        return message.toString();
+    }
 
 
     public int countCoursesWithValidGrades() {
@@ -154,65 +148,6 @@ public String getRemainingOverallGPAMessage(double desiredOverallGPA) {
         }
         return count;
     }
-
-    public String getRemainingCoursesMessage() {
-        List<Course> remainingCoreCourses = getRemainingCoreCourses();
-        List<Course> remainingElectiveCourses = getRemainingElectiveCourses();
-
-        double currentCoreCreditHours = getCurrentCoreCreditHours();
-        double currentCoreTotalGradePoints = getCurrentCoreTotalGradePoints();
-        double remainingCoreCreditHours = getRemainingCoreCreditHours(remainingCoreCourses);
-
-        double currentElectiveCreditHours = getCurrentElectiveCreditHours();
-        double currentElectiveTotalGradePoints = getCurrentElectiveTotalGradePoints();
-        double remainingElectiveCreditHours = getRemainingElectiveCreditHours(remainingElectiveCourses);
-
-        StringBuilder message = new StringBuilder();
-
-        if (!remainingCoreCourses.isEmpty()) {
-            double remainingCoreGPA = getRemainingGPA(remainingCoreCourses, 3.19);
-            if (remainingCoreGPA >= 2.00) {
-                double neededGPA = (3.19 * (currentCoreCreditHours + remainingCoreCreditHours) - currentCoreTotalGradePoints) / remainingCoreCreditHours;
-                if (remainingCoreCourses.size() == 1) {
-                    Course course = remainingCoreCourses.get(0);
-                    String requiredGrade = getRequiredGrade(remainingCoreGPA, course);
-                    message.append(String.format("To maintain a 3.19 core GPA,The student needs >= %s in %s\n", requiredGrade, course.getCourseCode()));
-                } else {
-                    message.append(String.format("To maintain a 3.0 core GPA,The student needs a GPA >= %.3f in\n", neededGPA));
-                    appendCourseList(remainingCoreCourses, message);
-                }
-            } else {
-                message.append("The student must pass");
-                appendCourseList(remainingCoreCourses, message);
-            }
-        } else {
-            message.append("Core complete.");
-        }
-
-        if (!remainingElectiveCourses.isEmpty()) {
-            double remainingElectiveGPA = getRemainingGPA(remainingElectiveCourses, 3.00);
-            if (remainingElectiveGPA >= 2.00) {
-                double neededGPA = (3.00 * (currentElectiveCreditHours + remainingElectiveCreditHours) - currentElectiveTotalGradePoints) / remainingElectiveCreditHours;
-                if (remainingElectiveCourses.size() == 1) {
-                    Course course = remainingElectiveCourses.get(0);
-                    String requiredGrade = getRequiredGrade(remainingElectiveGPA, course);
-                    message.append(String.format("To maintain a 3.0 elective GPA, the student needs >= %s in %s\n", requiredGrade, course.getCourseCode()));
-                } else {
-                    message.append(String.format("To maintain a 3.0 elective GPA, the student needs a GPA >= %.3f in:", neededGPA));
-                    appendCourseList(remainingElectiveCourses, message);
-                }
-            } else {
-                message.append("The student must pass");
-                appendCourseList(remainingElectiveCourses, message);
-            }
-        } else {
-            message.append("Electives complete.\n");
-        }
-
-        return message.toString();
-    }
-
-
 
 
     public double getCurrentCoreCreditHours() {
@@ -274,12 +209,62 @@ public String getRemainingOverallGPAMessage(double desiredOverallGPA) {
         }
         return creditHours;
     }
+    public String getRemainingCoursesMessage() {
+        List<Course> remainingCoreCourses = getRemainingCoreCourses();
+        List<Course> remainingElectiveCourses = getRemainingElectiveCourses();
 
+        double currentCoreCreditHours = getCurrentCoreCreditHours();
+        double currentCoreTotalGradePoints = getCurrentCoreTotalGradePoints();
+        double remainingCoreCreditHours = getRemainingCoreCreditHours(remainingCoreCourses);
 
+        double currentElectiveCreditHours = getCurrentElectiveCreditHours();
+        double currentElectiveTotalGradePoints = getCurrentElectiveTotalGradePoints();
+        double remainingElectiveCreditHours = getRemainingElectiveCreditHours(remainingElectiveCourses);
 
+        StringBuilder message = new StringBuilder();
 
+        if (!remainingCoreCourses.isEmpty()) {
+            double remainingCoreGPA = getRemainingGPA(remainingCoreCourses, 3.19);
+            if (remainingCoreGPA >= 2.00) {
+                double neededGPA = (3.19 * (currentCoreCreditHours + remainingCoreCreditHours) - currentCoreTotalGradePoints) / remainingCoreCreditHours;
+                if (remainingCoreCourses.size() == 1) {
+                    Course course = remainingCoreCourses.get(0);
+                    String requiredGrade = getRequiredGrade(remainingCoreGPA, course);
+                    message.append(String.format("To maintain a 3.19 core GPA,The student needs >= %s in %s\n", requiredGrade, course.getCourseCode()));
+                } else {
+                    message.append(String.format("To maintain a 3.0 core GPA,The student needs a GPA >= %.3f in\n", neededGPA));
+                    appendCourseList(remainingCoreCourses, message);
+                }
+            } else {
+                message.append("The student must pass");
+                appendCourseList(remainingCoreCourses, message);
+            }
+        } else {
+            message.append("Core complete.");
+        }
 
+        if (!remainingElectiveCourses.isEmpty()) {
+            double remainingElectiveGPA = getRemainingGPA(remainingElectiveCourses, 3.00);
+            if (remainingElectiveGPA >= 2.00) {
+                double neededGPA = (3.00 * (currentElectiveCreditHours + remainingElectiveCreditHours) - currentElectiveTotalGradePoints) / remainingElectiveCreditHours;
+                if (remainingElectiveCourses.size() == 1) {
+                    Course course = remainingElectiveCourses.get(0);
+                    String requiredGrade = getRequiredGrade(remainingElectiveGPA, course);
+                    message.append(String.format("To maintain a 3.0 elective GPA, the student needs >= %s in %s\n", requiredGrade, course.getCourseCode()));
+                } else {
+                    message.append(String.format("To maintain a 3.0 elective GPA, the student needs a GPA >= %.3f in:", neededGPA));
+                    appendCourseList(remainingElectiveCourses, message);
+                }
+            } else {
+                message.append("The student must pass");
+                appendCourseList(remainingElectiveCourses, message);
+            }
+        } else {
+            message.append("Electives complete.\n");
+        }
 
+        return message.toString();
+    }
 
 
     private void appendCourseList(List<Course> courses, StringBuilder message) {
@@ -312,7 +297,12 @@ public String getRemainingOverallGPAMessage(double desiredOverallGPA) {
         double remainingGPA = (totalCreditHours * targetGPA - totalEarnedCreditHours) / totalCreditHours;
         return remainingGPA;
     }
-
+    //    public void addCourse(Course course) {
+//        // Dont add course if its 5117
+//        if (!course.getCourseCode().equals("CSC5177")) {
+//            courses.add(course);
+//        }
+//    }
     public void addCourse(Course course) {
         String courseCode = course.getCourseCode();
 
@@ -360,6 +350,12 @@ public String getRemainingOverallGPAMessage(double desiredOverallGPA) {
         return remainingElectiveCourses;
     }
 
+    //    public void addPrereq(Course prereqs) {
+//        // Dont add course if its 5117
+//        if (!prereqs.getCourseCode().equals("CSC5177")) {
+//            courses.add(prereqs);
+//        }
+//    }
     public void applyAdditionalRules() {
         removeCsIppAssignment();
         handleElectiveCourses();
@@ -368,6 +364,9 @@ public String getRemainingOverallGPAMessage(double desiredOverallGPA) {
         return courses;
     }
 
+//    public List<Course> getPrerequisites(){
+//        return prerequisites;
+//    }
 
 
 
@@ -378,6 +377,7 @@ public String getRemainingOverallGPAMessage(double desiredOverallGPA) {
         List<Course> specialElectiveCourses = new ArrayList<>();
         Course highestGradeSpecialElective = null;
         Set<String> uniqueLevelingCourses = new HashSet<>();
+        this.track = track;
 
         switch (track) {
             case "Data Science":
@@ -425,7 +425,7 @@ public String getRemainingOverallGPAMessage(double desiredOverallGPA) {
                 } else if (uniqueLevelingCourses.add(fullCourseCode)) {
                     this.levelingCourses.add(course);
                 }
-            } else if (course.getCourseCode().startsWith("CS6") || course.getCourseCode().startsWith("CS7")|| course.getCourseCode().startsWith("SE7")|| course.getCourseCode().startsWith("SE6")) {
+            } else if (course.getCourseCode().startsWith("CS6") || course.getCourseCode().startsWith("CS7")) {
                 this.electiveCourses.add(course);
             }
         }
@@ -442,12 +442,13 @@ public String getRemainingOverallGPAMessage(double desiredOverallGPA) {
         }
     }
 
-    public List<Course> getCoreCourses() {
-        return coreCourses;
-    }
     public String getTrack() {
         return track;
     }
+    public List<Course> getCoreCourses() {
+        return coreCourses;
+    }
+
     public List<Course> getElectiveCourses() {
         return electiveCourses;
     }
@@ -466,7 +467,7 @@ public String getRemainingOverallGPAMessage(double desiredOverallGPA) {
         double totalCreditHours = 0;
         for (Course course : coreCourses) {
             String grade = course.getGrade();
-            if (!grade.equals("N/A") && !grade.equals("W") && !grade.equals("P") && !grade.equals("F")) {
+            if (!grade.equals("N/A")) {
                 double gradeValue = course.getGradeValue();
                 double creditHours = course.getCreditHours();
                 totalGradePoints += gradeValue * creditHours;
@@ -475,54 +476,29 @@ public String getRemainingOverallGPAMessage(double desiredOverallGPA) {
         }
         return totalCreditHours > 0 ? totalGradePoints / totalCreditHours : 0;
     }
-
-//    public double calculateOverallGPA() {
-//
-//        double totalPoints = 0;
-//        double totalEarnedCreditHours = 0;
-//
-//        for (Course course : this.courses) {
-//            String courseCode = course.getCourseCode();
-//            if (course.getGrade() != null && !course.getGrade().equals("NA") && !course.getGrade().equals("P") && !course.getGrade().equals("F") && Integer.parseInt(courseCode.substring(2, 4)) >= 50) {
-//                totalPoints += course.getGradeValue() * course.getEarnedCreditHours();
-//                totalEarnedCreditHours += course.getEarnedCreditHours();
-//            }
-//        }
-//
-//        return totalEarnedCreditHours > 0 ? totalPoints / totalEarnedCreditHours : 0;
-//    }
-
 
     public double calculateOverallGPA() {
-        double totalGradePoints = 0;
-        double totalCreditHours = 0;
-        List<Course> allCourses = new ArrayList<>();
-        allCourses.addAll(coreCourses);
-        allCourses.addAll(electiveCourses);
 
-        for (Course course : allCourses) {
-            String grade = course.getGrade();
-            if (!grade.equals("N/A") && !grade.equals("W") && !grade.equals("P") && !grade.equals("F")) {
-                double gradeValue = course.getGradeValue();
-                double creditHours = course.getCreditHours();
-                totalGradePoints += gradeValue * creditHours;
-                totalCreditHours += creditHours;
+        double totalPoints = 0;
+        double totalEarnedCreditHours = 0;
+
+        for (Course course : this.courses) {
+            String courseCode = course.getCourseCode();
+            if (course.getGrade() != null && !course.getGrade().equals("NA") && !course.getGrade().equals("P") && !course.getGrade().equals("F") && Integer.parseInt(courseCode.substring(2, 4)) >= 50) {
+                totalPoints += course.getGradeValue() * course.getEarnedCreditHours();
+                totalEarnedCreditHours += course.getEarnedCreditHours();
             }
         }
-        return totalCreditHours > 0 ? totalGradePoints / totalCreditHours : 0;
+
+        return totalEarnedCreditHours > 0 ? totalPoints / totalEarnedCreditHours : 0;
     }
-
-
-
-
-
 
     public double calculateElectiveGPA() {
         double totalGradePoints = 0;
         double totalCreditHours = 0;
         for (Course course : electiveCourses) {
             String grade = course.getGrade();
-            if (!grade.equals("N/A") && !grade.equals("W") && !grade.equals("P") && !grade.equals("F")) {
+            if (!grade.equals("N/A")) {
                 double gradeValue = course.getGradeValue();
                 double creditHours = course.getCreditHours();
                 totalGradePoints += gradeValue * creditHours;
@@ -560,22 +536,7 @@ public String getRemainingOverallGPAMessage(double desiredOverallGPA) {
 
         courses.removeAll(coursesToRemove);
     }
-    public String getCourseStatus(Course course) {
-        String courseCode = course.getCourseCode();
-        if (course.getEarnedCreditHours() > 0) {
-            return courseCode + ": Completed " + course.getSemester() + " " + course.getYear();
-        } else {
-            return courseCode + ": Not required for plan or electives";
-        }
-    }
-    public Course findCourseByCode(String courseCode) {
-        for (Course course : levelingCourses) {
-            if (course.getCourseCode().equals(courseCode)) {
-                return course;
-            }
-        }
-        return null;
-    }
+
     public void saveToFile(String filename) throws IOException {
         FileOutputStream fileOut = new FileOutputStream(filename + ".ser");
         ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -591,7 +552,7 @@ public String getRemainingOverallGPAMessage(double desiredOverallGPA) {
         in.close();
         fileIn.close();
         return student;
-  }
+    }
 }
 
 
