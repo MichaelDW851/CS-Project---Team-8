@@ -179,6 +179,21 @@ class SpreadsheetUI extends JFrame {
                 levelingCoursesCodes =new String[]{"CS5303", "CS5330", "CS5333", "CS5343", "CS5348", "CS5349", "CS5390"};
                 levelingCoursesNames = new String[]{"Computer Science I","Computer Science II","Discrete Structures","Algorithm Analysis & Data Structures","Operating System Concepts","Automata Theory","Computer Networks"};
                 setupLeveling(levelingCoursesCodes, levelingCoursesNames);
+            case " ":
+                coreCoursesCodes = new String[]{"SE6329", "SE6361", "SE6362","SE6367","SE6387",};
+                coreCoursesNames = new String[]{"Object-Oriented Software Engineering"," Advanced Requirements Engineering"," Advanced Software Architecture and Design","Software Testing, Validation and Verification","Advanced Software Engineering Project"};
+                setupCores(coreCoursesCodes, coreCoursesNames);
+
+                trackElectivesCodes = new String[]{"CS6320", "CS6360", "CS6371", "CS6371"};
+                trackElectivesNames = new String[]{"Compiler Construction","Database Design","Advanced Programming Languages"};
+                setupTrackElectives(trackElectivesCodes, trackElectivesNames);
+
+                setupApprovedElectives();
+                setupAdditionalElectives();
+
+                levelingCoursesCodes =new String[]{"CS5303", "CS5330", "CS5333", "CS5343", "CS5348", "CS5349", "CS5390"};
+                levelingCoursesNames = new String[]{"Computer Science I","Computer Science II","Discrete Structures","Algorithm Analysis & Data Structures","Operating System Concepts","Automata Theory","Computer Networks"};
+                setupLeveling(levelingCoursesCodes, levelingCoursesNames);
 
         }
 

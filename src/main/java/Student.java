@@ -1,4 +1,3 @@
-
 import java.io.*;
 import java.util.*;
 public class Student implements Serializable {
@@ -109,41 +108,130 @@ public class Student implements Serializable {
 
         if (!remainingCourses.isEmpty()) {
             double currentOverallGPA = calculateOverallGPA();
-            int totalCourses = coreCourses.size() + electiveCourses.size();
+            int totalCourses = countCoursesWithValidGrades();
             int remainingCoursesCount = remainingCourses.size();
             double requiredRemainingGPA = (desiredOverallGPA * (totalCourses + remainingCoursesCount) - currentOverallGPA * totalCourses) / remainingCoursesCount;
 
             if (requiredRemainingGPA >= 2.00) {
-                message.append(String.format("To maintain an overall GPA of %.2f, the student needs a GPA >= %.2f in the remaining courses\n", desiredOverallGPA, requiredRemainingGPA));
-
-                appendCourseList(remainingCourses, message);
+                if (remainingCoursesCount == 1) {
+                    Course course = remainingCourses.get(0);
+                    String requiredGrade = getRequiredGrade(requiredRemainingGPA, course);
+                    message.append(String.format("To maintain a 3.0 overall GPA, The student needs >= %s in %s\n", requiredGrade, course.getCourseCode()));
+                } else {
+                    message.append(String.format("To maintain a 3.0 overall GPA, The student needs a GPA >= %.3f in:\n", requiredRemainingGPA));
+                    appendCourseList(remainingCourses, message);
+                }
             } else {
-                message.append(String.format("To maintain an overall GPA of %.2f, the student must pass\n", desiredOverallGPA));
+                message.append("The student must pass");
                 appendCourseList(remainingCourses, message);
             }
         } else {
-            message.append(String.format("All courses complete. Current overall GPA: %.2f\n", calculateOverallGPA()));
+            message.append(String.format("All courses complete. Current overall GPA: %.3f\n", calculateOverallGPA()));
         }
 
         return message.toString();
     }
 
 
+    public int countCoursesWithValidGrades() {
+        int count = 0;
+        List<Course> allCourses = new ArrayList<>();
+        allCourses.addAll(coreCourses);
+        allCourses.addAll(electiveCourses);
+
+        for (Course course : allCourses) {
+            String grade = course.getGrade();
+            if (!grade.equals("N/A") && !grade.equals("W") && !grade.equals("P") && !grade.equals("F")) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+
+    public double getCurrentCoreCreditHours() {
+        double creditHours = 0;
+        for (Course course : coreCourses) {
+            String grade = course.getGrade();
+            if (!grade.equals("N/A") && !grade.equals("W") && !grade.equals("P") && !grade.equals("F")) {
+                creditHours += course.getCreditHours();
+            }
+        }
+        return creditHours;
+    }
+
+    public double getCurrentCoreTotalGradePoints() {
+        double totalGradePoints = 0;
+        for (Course course : coreCourses) {
+            String grade = course.getGrade();
+            if (!grade.equals("N/A") && !grade.equals("W") && !grade.equals("P") && !grade.equals("F")) {
+                totalGradePoints += course.getGradeValue() * course.getCreditHours();
+            }
+        }
+        return totalGradePoints;
+    }
+
+    public double getCurrentElectiveCreditHours() {
+        double creditHours = 0;
+        for (Course course : electiveCourses) {
+            String grade = course.getGrade();
+            if (!grade.equals("N/A") && !grade.equals("W") && !grade.equals("P") && !grade.equals("F")) {
+                creditHours += course.getCreditHours();
+            }
+        }
+        return creditHours;
+    }
+
+    public double getCurrentElectiveTotalGradePoints() {
+        double totalGradePoints = 0;
+        for (Course course : electiveCourses) {
+            String grade = course.getGrade();
+            if (!grade.equals("N/A") && !grade.equals("W") && !grade.equals("P") && !grade.equals("F")) {
+                totalGradePoints += course.getGradeValue() * course.getCreditHours();
+            }
+        }
+        return totalGradePoints;
+    }
+
+    public double getRemainingCoreCreditHours(List<Course> remainingCoreCourses) {
+        double creditHours = 0;
+        for (Course course : remainingCoreCourses) {
+            creditHours += course.getCreditHours();
+        }
+        return creditHours;
+    }
+
+    public double getRemainingElectiveCreditHours(List<Course> remainingElectiveCourses) {
+        double creditHours = 0;
+        for (Course course : remainingElectiveCourses) {
+            creditHours += course.getCreditHours();
+        }
+        return creditHours;
+    }
     public String getRemainingCoursesMessage() {
         List<Course> remainingCoreCourses = getRemainingCoreCourses();
         List<Course> remainingElectiveCourses = getRemainingElectiveCourses();
+
+        double currentCoreCreditHours = getCurrentCoreCreditHours();
+        double currentCoreTotalGradePoints = getCurrentCoreTotalGradePoints();
+        double remainingCoreCreditHours = getRemainingCoreCreditHours(remainingCoreCourses);
+
+        double currentElectiveCreditHours = getCurrentElectiveCreditHours();
+        double currentElectiveTotalGradePoints = getCurrentElectiveTotalGradePoints();
+        double remainingElectiveCreditHours = getRemainingElectiveCreditHours(remainingElectiveCourses);
 
         StringBuilder message = new StringBuilder();
 
         if (!remainingCoreCourses.isEmpty()) {
             double remainingCoreGPA = getRemainingGPA(remainingCoreCourses, 3.19);
             if (remainingCoreGPA >= 2.00) {
+                double neededGPA = (3.19 * (currentCoreCreditHours + remainingCoreCreditHours) - currentCoreTotalGradePoints) / remainingCoreCreditHours;
                 if (remainingCoreCourses.size() == 1) {
                     Course course = remainingCoreCourses.get(0);
                     String requiredGrade = getRequiredGrade(remainingCoreGPA, course);
-                    message.append(String.format("The student needs >= %s in %s\n", requiredGrade, course.getCourseCode()));
+                    message.append(String.format("To maintain a 3.19 core GPA,The student needs >= %s in %s\n", requiredGrade, course.getCourseCode()));
                 } else {
-                    message.append(String.format("The student needs a GPA >= %.2f in\n", remainingCoreGPA));
+                    message.append(String.format("To maintain a 3.0 core GPA,The student needs a GPA >= %.3f in\n", neededGPA));
                     appendCourseList(remainingCoreCourses, message);
                 }
             } else {
@@ -151,20 +239,24 @@ public class Student implements Serializable {
                 appendCourseList(remainingCoreCourses, message);
             }
         } else {
-            message.append("Core complete.\n");
+            message.append("Core complete.");
         }
 
         if (!remainingElectiveCourses.isEmpty()) {
             double remainingElectiveGPA = getRemainingGPA(remainingElectiveCourses, 3.00);
             if (remainingElectiveGPA >= 2.00) {
+                double neededGPA = (3.00 * (currentElectiveCreditHours + remainingElectiveCreditHours) - currentElectiveTotalGradePoints) / remainingElectiveCreditHours;
                 if (remainingElectiveCourses.size() == 1) {
                     Course course = remainingElectiveCourses.get(0);
                     String requiredGrade = getRequiredGrade(remainingElectiveGPA, course);
                     message.append(String.format("To maintain a 3.0 elective GPA, the student needs >= %s in %s\n", requiredGrade, course.getCourseCode()));
                 } else {
-                    message.append(String.format("To maintain a 3.0 elective GPA, the student needs a GPA >= %.2f in:", remainingElectiveGPA));
+                    message.append(String.format("To maintain a 3.0 elective GPA, the student needs a GPA >= %.3f in:", neededGPA));
                     appendCourseList(remainingElectiveCourses, message);
                 }
+            } else {
+                message.append("The student must pass");
+                appendCourseList(remainingElectiveCourses, message);
             }
         } else {
             message.append("Electives complete.\n");
@@ -172,6 +264,7 @@ public class Student implements Serializable {
 
         return message.toString();
     }
+
 
     private void appendCourseList(List<Course> courses, StringBuilder message) {
         for (int i = 0; i < courses.size(); i++) {
@@ -315,6 +408,9 @@ public class Student implements Serializable {
                 coreCourses = Arrays.asList("CS6320", "CS6363", "CS6364", "CS6375", "CS6360", "CS6378");
                 levelingCourses = Arrays.asList( "CS2340",  "CS5303","CS5333","CS5343","CS5348");
                 break;
+            case " ":
+                coreCourses = Arrays.asList("SE6329", "SE6361","CS6361", "SE6362", "SE6367", "SE6387", "SE6378");
+                levelingCourses = Arrays.asList( "CS2340",  "CS5303","CS5333","CS5343","CS5348");
         }
 
         for (Course course : this.courses) {
@@ -457,5 +553,3 @@ public class Student implements Serializable {
         return student;
     }
 }
-
-
