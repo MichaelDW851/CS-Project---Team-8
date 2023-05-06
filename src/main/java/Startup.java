@@ -22,7 +22,7 @@ public class Startup {
     private void initialize(){
 
         JFrame frame = new JFrame("File Selector");
-        JButton selectFileButton =new JButton("Click to select degree audit or student");
+        JButton selectFileButton =new JButton("Click to select transcript or student file");
         selectFileButton.setBounds(50,150,300,60);
         frame.add(selectFileButton);
         frame.setBounds(500,150,400,400);

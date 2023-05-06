@@ -6,20 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="6b7b8909-2ecc-4460-806b-430f05857073" name="Changes" comment="Fixed formatting some more">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/DegreePlanApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DegreePlanApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/SpreadsheetUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/SpreadsheetUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Student.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/DegreePlanApp$SaveStudentButtonListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DegreePlanApp$SaveStudentButtonListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/DegreePlanApp$SubmitButtonListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DegreePlanApp$SubmitButtonListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/DegreePlanApp.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DegreePlanApp.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderEditor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderEditor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderRenderer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderRenderer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Student.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Student.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/StudentSaving.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/StudentSaving.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,9 +23,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="nodejs_package_manager_path" value="npm" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.4229885"
+  }
+}]]></component>
   <component name="RunManager" selected="Application.DegreePlanApp">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
@@ -83,6 +73,10 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.DegreePlanApp" />
+      <item itemvalue="Application.Main" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.DegreePlanApp" />
