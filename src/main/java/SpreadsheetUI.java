@@ -8,7 +8,6 @@ import com.itextpdf.text.pdf.PdfPTable;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.Font;
 import java.awt.event.*;
@@ -38,8 +37,11 @@ class SpreadsheetUI extends JFrame {
     private boolean fastTrack = false;
     private boolean thesis = false;
 
+    private String track;
+
     private String anticipatedGrad;
     private int rowCounter = 0;
+
 
     private int defaultRowHeight = 16;
 
@@ -398,7 +400,7 @@ class SpreadsheetUI extends JFrame {
 
 
 
-    public SpreadsheetUI(String studentName,String studentID,String semesterAdmitted,boolean isFastTrack, boolean isThesis,String track) {
+    public SpreadsheetUI(Student student) {
 
         // Add a button to clear the selection
 
@@ -407,6 +409,12 @@ class SpreadsheetUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        studentName = student.getName();
+        studentID = student.getStudentID();
+        semesterAdmitted = student.getSemesterAdmittedToProgram();
+        track = student.getTrack();
+        fastTrack = student.getFastTrackCheck();
+        thesis = student.getThesisMastersCheck();
 
         JLabel titleLabel1 = new JLabel("Degree Plan", SwingConstants.CENTER);
         titleLabel1.setFont(new Font("Arial", Font.BOLD, 24));
@@ -489,12 +497,12 @@ class SpreadsheetUI extends JFrame {
 
 
 
-
-        this.studentName =studentName;
-        this.studentID = studentID;
-        this.semesterAdmitted = semesterAdmitted;
-        this.fastTrack = isFastTrack;
-        this.thesis = isThesis;
+//
+//        this.studentName =studentName;
+//        this.studentID = studentID;
+//        this.semesterAdmitted = semesterAdmitted;
+//        this.fastTrack = isFastTrack;
+//        this.thesis = isThesis;
         setupByTrack(track);
         addFields(studentName,studentID,semesterAdmitted,fastTrack,thesis);
 
@@ -518,13 +526,25 @@ class SpreadsheetUI extends JFrame {
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
 
+        JButton saveStudentButton = new JButton("Save Student");
         JButton addButton = new JButton("Add Row");
         JButton saveAsPdfButton = new JButton("Save as PDF");
 
+        buttonPanel.add(saveStudentButton);
         buttonPanel.add(saveAsPdfButton);
         buttonPanel.add(addButton);
         add(buttonPanel, BorderLayout.EAST);
 
+
+        saveStudentButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                StudentSaving saveStudent = new StudentSaving();
+
+                saveStudent.saveStudent(student); // Call the saveStudent() method from SavingStudent class
+                // Perform any additional operations after saving the student
+            }
+        });
 
 
         addButton.addActionListener(new ActionListener() {
