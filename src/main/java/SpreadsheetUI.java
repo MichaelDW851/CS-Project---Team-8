@@ -39,9 +39,9 @@ class SpreadsheetUI extends JFrame {
 
     private String track;
 
+
     private String anticipatedGrad;
     private int rowCounter = 0;
-
 
     private int defaultRowHeight = 16;
 
@@ -409,12 +409,14 @@ class SpreadsheetUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        studentName = student.getName();
-        studentID = student.getStudentID();
-        semesterAdmitted = student.getSemesterAdmittedToProgram();
-        track = student.getTrack();
-        fastTrack = student.getFastTrackCheck();
-        thesis = student.getThesisMastersCheck();
+        this.studentName = student.getName();
+        this.studentID = student.getStudentID();
+        this.semesterAdmitted = student.getSemesterAdmittedToProgram();
+        this.track = student.getTrack();
+        this.fastTrack = student.getFastTrackCheck();
+        this.thesis = student.getThesisMastersCheck();
+
+
 
         JLabel titleLabel1 = new JLabel("Degree Plan", SwingConstants.CENTER);
         titleLabel1.setFont(new Font("Arial", Font.BOLD, 24));
@@ -497,46 +499,30 @@ class SpreadsheetUI extends JFrame {
 
 
 
-//
-//        this.studentName =studentName;
-//        this.studentID = studentID;
-//        this.semesterAdmitted = semesterAdmitted;
-//        this.fastTrack = isFastTrack;
-//        this.thesis = isThesis;
         setupByTrack(track);
+        //add the fields for student info
         addFields(studentName,studentID,semesterAdmitted,fastTrack,thesis);
-
-
-        //adding separate fields for name, fast track, thesis, etc
-
 
 
         //Buttons
 
-//        JPanel buttonPanel = new JPanel(new BorderLayout());
-//        JButton addButton = new JButton("Add Row");
-//        JButton saveAsPdfButton = new JButton("Save as PDF");
-//        buttonPanel.add(addButton,BorderLayout.NORTH);
-//        buttonPanel.add(saveAsPdfButton, BorderLayout.NORTH);
-//
-//        //  buttonPanel.add(closeButton, BorderLayout.NORTH);
-//        add(buttonPanel, BorderLayout.EAST);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
 
-        JButton saveStudentButton = new JButton("Save Student");
+        JButton studentSaveButton = new JButton("Save Student");
         JButton addButton = new JButton("Add Row");
         JButton saveAsPdfButton = new JButton("Save as PDF");
 
-        buttonPanel.add(saveStudentButton);
+        buttonPanel.add(studentSaveButton);
         buttonPanel.add(saveAsPdfButton);
         buttonPanel.add(addButton);
         add(buttonPanel, BorderLayout.EAST);
 
 
-        saveStudentButton.addActionListener(new ActionListener() {
+
+        studentSaveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 StudentSaving saveStudent = new StudentSaving();
@@ -545,8 +531,6 @@ class SpreadsheetUI extends JFrame {
                 // Perform any additional operations after saving the student
             }
         });
-
-
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // create a dialog or frame to get input from the user
