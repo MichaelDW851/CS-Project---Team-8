@@ -59,7 +59,7 @@ public class Course {
         }
         System.out.println(this.semester);
     }
-
+//comment 62
     public String getCourseCode() {
         return courseCode;
     }
