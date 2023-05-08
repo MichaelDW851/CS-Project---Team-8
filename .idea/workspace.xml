@@ -4,54 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6b7b8909-2ecc-4460-806b-430f05857073" name="Changes" comment="Fixed formatting some more">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]/SpreadsheetUI$HeaderRenderer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]/SpreadsheetUI.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]/Startup.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]/StudentSaving.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]1/SpreadsheetUI$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]1/SpreadsheetUI$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]1/SpreadsheetUI$HeaderEditor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]1/SpreadsheetUI$HeaderRenderer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]1/SpreadsheetUI.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]1/Startup.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]1/StudentSaving.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]1/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]2/SpreadsheetUI$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]2/SpreadsheetUI$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]2/SpreadsheetUI$HeaderEditor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]2/SpreadsheetUI$HeaderRenderer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]2/SpreadsheetUI.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]2/Startup.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM__Changes_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_9_22_PM_[Changes]/GenerateDegreePlan.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_9_22_PM_[Changes]/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_9_22_PM_[Changes]/SpreadsheetUI$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_9_22_PM_[Changes]/SpreadsheetUI$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_9_22_PM_[Changes]/SpreadsheetUI$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_9_22_PM_[Changes]/SpreadsheetUI$HeaderEditor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_9_22_PM_[Changes]/SpreadsheetUI$HeaderRenderer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_9_22_PM_[Changes]/SpreadsheetUI.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_9_22_PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_9_22_PM__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/META-INF/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/Cap_Proj_jar/Cap_Proj.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Course.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/SpreadsheetUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/SpreadsheetUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/StudentSaving.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/StudentSaving.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderEditor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderEditor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderRenderer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderRenderer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/StudentSaving.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/StudentSaving.class" afterDir="false" />
+    <list default="true" id="6b7b8909-2ecc-4460-806b-430f05857073" name="Changes" comment="Added student saving">
+      <change beforePath="$PROJECT_DIR$/target/classes/Course.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Course.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -162,7 +116,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683343415099</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Added student saving">
+      <created>1683345784511</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1683345784511</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -181,6 +142,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Fixed formatting some more" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed formatting some more" />
+    <MESSAGE value="Added student saving" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added student saving" />
   </component>
 </project>
