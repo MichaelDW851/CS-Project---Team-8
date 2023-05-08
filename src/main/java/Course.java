@@ -64,41 +64,30 @@ public class Course {
         return courseCode;
     }
 
-    public void setCourseCode(String courseCode) {
-        this.courseCode = courseCode;
-    }
 
     public String getCourseName() {
         return courseName;
     }
 
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
-    }
+
 
     public double getCreditHours() {
         return creditHours;
     }
 
-    public void setCreditHours(double creditHours) {
-        this.creditHours = creditHours;
-    }
+
 
     public double getEarnedCreditHours() {
         return earnedCreditHours;
     }
 
-    public void setEarnedCreditHours(double earnedCreditHours) {
-        this.earnedCreditHours = earnedCreditHours;
-    }
+
 
     public String getGrade() {
         return grade;
     }
 
-    public void setGrade(String grade) {
-        this.grade = grade;
-    }
+
 
     @Override
     public String toString() {
