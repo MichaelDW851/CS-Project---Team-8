@@ -96,15 +96,15 @@ public class Course {
     public static String getLetterGradeFromValue(double gradeValue) {
         if (gradeValue >= 4.0) {
             return "A";
-        } else if (gradeValue >= 3.7) {
+        } else if (gradeValue >= 3.67) {
             return "A-";
-        } else if (gradeValue >= 3.3) {
+        } else if (gradeValue >= 3.33) {
             return "B+";
         } else if (gradeValue >= 3.0) {
             return "B";
-        } else if (gradeValue >= 2.7) {
+        } else if (gradeValue >= 2.67) {
             return "B-";
-        } else if (gradeValue >= 2.3) {
+        } else if (gradeValue >= 2.33) {
             return "C+";
         } else if (gradeValue >= 2.0) {
             return "C";

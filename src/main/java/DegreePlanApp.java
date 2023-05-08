@@ -353,6 +353,7 @@ public class DegreePlanApp {
             XWPFRun remainingCoursesListRun = remainingCoursesListParagraph.createRun();
             if (remainingMessageParts.length > 1) {
                 remainingCoursesListRun.setText(remainingMessageParts[1]);
+                remainingCoursesListRun.addBreak();
             }
             remainingCoursesListRun.setFontSize(12);
             remainingCoursesListRun.setBold(false);
