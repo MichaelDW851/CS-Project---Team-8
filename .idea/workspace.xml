@@ -4,8 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6b7b8909-2ecc-4460-806b-430f05857073" name="Changes" comment="Added student saving">
+    <list default="true" id="dbea1d32-e871-45f1-a684-9a1e34b37992" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/git_toolbox_prj.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]/SpreadsheetUI$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]/SpreadsheetUI$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]/SpreadsheetUI$HeaderEditor.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Course.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/GenerateDegreePlan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GenerateDegreePlan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/SpreadsheetUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/SpreadsheetUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/StudentSaving.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/StudentSaving.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/GenerateDegreePlan.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/GenerateDegreePlan.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Startup.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Startup.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,7 +158,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main_adrian" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>

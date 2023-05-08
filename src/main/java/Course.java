@@ -60,11 +60,7 @@ public class Course implements Serializable {
         }
         System.out.println(this.semester);
     }
-<<<<<<< HEAD
-//comment 62
-=======
-//comment test
->>>>>>> main
+
     public String getCourseCode() {
         return courseCode;
     }
@@ -100,7 +96,7 @@ public class Course implements Serializable {
     }
     public static String getLetterGradeFromValue(double gradeValue) {
         if (gradeValue >= 4.0) {
-            return "A";git
+            return "A";
         } else if (gradeValue >= 3.67) {
             return "A-";
         } else if (gradeValue >= 3.33) {

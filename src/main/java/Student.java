@@ -56,6 +56,9 @@ public class Student implements Serializable {
         return studentID;
     }
 
+    public String getSemesterAdmittedToProgram() {
+        return semesterAdmittedToProgram;
+    }
     public String getMajor() {
         return major;
     }
