@@ -4,61 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6b7b8909-2ecc-4460-806b-430f05857073" name="Changes" comment="comment 5/7">
+    <list default="true" id="6b7b8909-2ecc-4460-806b-430f05857073" name="Changes" comment="Added student saving">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Course.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/DegreePlanApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DegreePlanApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Student.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Course.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Course.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/DegreePlanApp$SaveStudentButtonListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DegreePlanApp$SaveStudentButtonListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/DegreePlanApp$SubmitButtonListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DegreePlanApp$SubmitButtonListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/DegreePlanApp.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DegreePlanApp.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderEditor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderEditor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderRenderer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderRenderer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Student.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Student.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="Michael" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="Final" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="GitToolBoxStore">
-    <option name="projectConfigVersion" value="5" />
-    <option name="recentBranches">
-      <RecentBranches>
-        <option name="branchesForRepo">
-          <list>
-            <RecentBranchesForRepo>
-              <option name="branches">
-                <list>
-                  <RecentBranch>
-                    <option name="branchName" value="main_adrian" />
-                    <option name="lastUsedInstant" value="1683417020" />
-                  </RecentBranch>
-                  <RecentBranch>
-                    <option name="branchName" value="main" />
-                    <option name="lastUsedInstant" value="1683417019" />
-                  </RecentBranch>
-                </list>
-              </option>
-              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
-            </RecentBranchesForRepo>
-          </list>
-        </option>
-      </RecentBranches>
-    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -68,32 +31,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "last_opened_file_path": "C:/Users/adria/Desktop/SDLKFLKDS",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "inlay.hints"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.DegreePlanApp">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="DegreePlanApp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="openjdk-20" />
+      <option name="ALTERNATIVE_JRE_PATH" value="openjdk-19" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="DegreePlanApp" />
-      <module name="MyNewProject" />
+      <module name="Cap_Proj" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -107,26 +57,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="CS-Project---Team-8" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="CS-Project---Team-8" />
-      <option name="filePath" />
+    <configuration name="StudentSaving" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="StudentSaving" />
+      <module name="Cap_Proj" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <list>
+      <item itemvalue="Application.StudentSaving" />
       <item itemvalue="Application.DegreePlanApp" />
       <item itemvalue="Application.Main" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.DegreePlanApp" />
+        <item itemvalue="Application.StudentSaving" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -166,26 +112,26 @@
       <option name="project" value="LOCAL" />
       <updated>1683271728274</updated>
     </task>
-    <task id="LOCAL-00004" summary="comment 5/6">
-      <created>1683417001488</created>
+    <task id="LOCAL-00004" summary="Fixed formatting some more">
+      <created>1683343403552</created>
       <option name="number" value="00004" />
       <option name="presentableId" value="LOCAL-00004" />
       <option name="project" value="LOCAL" />
-      <updated>1683417001488</updated>
+      <updated>1683343403552</updated>
     </task>
-    <task id="LOCAL-00005" summary="comment 5/6">
-      <created>1683417103586</created>
+    <task id="LOCAL-00005" summary="Fixed formatting some more">
+      <created>1683343415099</created>
       <option name="number" value="00005" />
       <option name="presentableId" value="LOCAL-00005" />
       <option name="project" value="LOCAL" />
-      <updated>1683417103586</updated>
+      <updated>1683343415099</updated>
     </task>
-    <task id="LOCAL-00006" summary="comment 5/7">
-      <created>1683505358644</created>
+    <task id="LOCAL-00006" summary="Added student saving">
+      <created>1683345784511</created>
       <option name="number" value="00006" />
       <option name="presentableId" value="LOCAL-00006" />
       <option name="project" value="LOCAL" />
-      <updated>1683505358644</updated>
+      <updated>1683345784511</updated>
     </task>
     <option name="localTasksCounter" value="7" />
     <servers />
@@ -206,8 +152,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Fixed formatting some more" />
-    <MESSAGE value="comment 5/6" />
-    <MESSAGE value="comment 5/7" />
-    <option name="LAST_COMMIT_MESSAGE" value="comment 5/7" />
+    <MESSAGE value="Added student saving" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added student saving" />
   </component>
 </project>

@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public class Course {
+public class Course implements Serializable {
     String year;
     String semester;
     String courseCode;
@@ -59,7 +60,11 @@ public class Course {
         }
         System.out.println(this.semester);
     }
+<<<<<<< HEAD
 //comment 62
+=======
+//comment test
+>>>>>>> main
     public String getCourseCode() {
         return courseCode;
     }
@@ -95,7 +100,7 @@ public class Course {
     }
     public static String getLetterGradeFromValue(double gradeValue) {
         if (gradeValue >= 4.0) {
-            return "A";
+            return "A";git
         } else if (gradeValue >= 3.67) {
             return "A-";
         } else if (gradeValue >= 3.33) {
