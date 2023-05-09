@@ -20,9 +20,6 @@ class SpreadsheetUI extends JFrame {
     private JTable table;
     private DefaultTableModel model;
     private JScrollPane scrollPane;
-    private JLabel titleLabel;
-    private JPanel topPanel;
-
     int additionalElectivesRow;
 
     int approvedElectivesRow;
@@ -40,14 +37,253 @@ class SpreadsheetUI extends JFrame {
     private String track;
 
 
-    private String anticipatedGrad;
+    private String anticipatedGrad = "";
     private int rowCounter = 0;
 
     private int defaultRowHeight = 16;
 
-    public void setCourseNames() {
+    public SpreadsheetUI(Student student) {
 
+        // Add a button to clear the selection
+
+
+
+        super("Degree Plan Editor");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        this.studentName = student.getName();
+        this.studentID = student.getStudentID();
+        this.semesterAdmitted = student.getSemesterAdmittedToProgram();
+        this.track = student.getTrack();
+        this.fastTrack = student.getFastTrackCheck();
+        this.thesis = student.getThesisMastersCheck();
+        if (track == ""  || track == " ") {
+            track = "Software Engineering";
+        }
+
+        System.out.println("Track: " + track);
+        JLabel titleLabel1 = new JLabel("Degree Plan", SwingConstants.CENTER);
+        titleLabel1.setFont(new Font("Arial", Font.BOLD, 24));
+
+        JLabel titleLabel2 = new JLabel("University of Texas at Dallas", SwingConstants.CENTER);
+        titleLabel2.setFont(new Font("Arial", Font.BOLD, 24));
+
+
+
+        JLabel titleLabel3 = new JLabel("Master of Computer Science",SwingConstants.CENTER);
+        if(track.equals("Software Engineering")) {
+            titleLabel3.setText("Master of Software Engineering");
+        }
+        titleLabel3.setFont(new Font("Arial", Font.BOLD,24));
+
+        JLabel trackLabel = new JLabel(track,SwingConstants.CENTER);
+        trackLabel.setFont(new Font("Arial", Font.BOLD,24));
+
+        JPanel titlePanel = new JPanel(new GridLayout(4, 1));
+        titlePanel.add(titleLabel1);
+        titlePanel.add(titleLabel2);
+        titlePanel.add(titleLabel3);
+        titlePanel.add(trackLabel);
+        add(titlePanel, BorderLayout.NORTH);
+
+
+
+
+
+
+
+
+        // Set up the table
+        model = new DefaultTableModel();
+        table = new JTable(model);
+        table.setRowHeight(20);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        scrollPane = new JScrollPane(table);
+        add(scrollPane, BorderLayout.CENTER);
+
+        // Add columns headers
+        String[] columnHeaders = new String[]{ "Course Title", "Course Number" ,"UTD Semester", "Transfer", "Grade"};
+        model.setColumnIdentifiers(columnHeaders);
+
+
+
+        // Set up header renderer and editor
+        table.getTableHeader().setDefaultRenderer(new HeaderRenderer());
+        table.setDefaultEditor(Object.class, new DefaultCellEditor(new JTextField()));
+
+
+        table.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    table.clearSelection();
+                }
+            }
+        });
+
+        // Set up the bottom panel with editable text fields for selected cells
+        JPanel bottomPanel = new JPanel(new GridLayout(1, 0));
+        add(bottomPanel, BorderLayout.SOUTH);
+        table.getSelectionModel().addListSelectionListener(e -> {
+            int[] selectedRows = table.getSelectedRows();
+            int[] selectedCols = table.getSelectedColumns();
+            bottomPanel.removeAll();
+            if (selectedRows.length == 1 && selectedCols.length == 1) {
+                JTextField field = new JTextField((String) table.getValueAt(selectedRows[0], selectedCols[0]));
+                field.addActionListener(e2 -> {
+                    table.setValueAt(field.getText(), selectedRows[0], selectedCols[0]);
+                });
+                bottomPanel.add(field);
+            } else {
+                bottomPanel.revalidate();
+                bottomPanel.repaint();
+            }
+        });
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+
+
+
+
+
+
+        setupByTrack(track);
+        //add the fields for student info
+        addFields(studentName,studentID,semesterAdmitted,fastTrack,thesis);
+
+
+        //Buttons
+
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+
+
+        JButton studentSaveButton = new JButton("Save Student");
+        JButton addButton = new JButton("Add Row");
+        JButton saveAsPdfButton = new JButton("Save as PDF");
+
+        buttonPanel.add(studentSaveButton);
+        buttonPanel.add(saveAsPdfButton);
+        buttonPanel.add(addButton);
+        add(buttonPanel, BorderLayout.EAST);
+
+
+
+        studentSaveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                StudentSaving saveStudent = new StudentSaving();
+
+                saveStudent.saveStudent(student); // Call the saveStudent() method from SavingStudent class
+                // Perform any additional operations after saving the student
+            }
+        });
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // create a dialog or frame to get input from the user
+                // for example:
+                Object[] row = {"", "", "", "", ""};
+                model.addRow(row);
+
+            }
+        });
+
+
+
+        saveAsPdfButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showSaveDialog(SpreadsheetUI.this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                try {
+                    for (int rows = 0; rows < table.getRowCount(); rows++) {
+                        for (int cols = 0; cols < table.getColumnCount(); cols++) {
+                            Object cellValue = table.getValueAt(rows, cols);
+                            if (cellValue == null) {
+                                // assign default value or handle null value
+                                table.setValueAt("",rows,cols);
+                            }
+                        }
+                    }
+                    Document document = new Document();
+                    PdfWriter.getInstance(document, new FileOutputStream(fileChooser.getSelectedFile() + ".pdf"));
+                    document.open();
+                    PdfPTable pdfTable = new PdfPTable(table.getColumnCount());
+                    pdfTable.setWidthPercentage(100);
+
+                    Paragraph paragraph = new Paragraph("Degree Plan");
+                    paragraph.add("\n");
+                    paragraph.add("University of Texas at Dallas");
+                    if(track.equals("Software Engineering")) {
+                        paragraph.add("\nMaster of Software Engineering");
+                    }
+                    else {
+                        paragraph.add("\nMaster of Computer Science");
+                    }
+                    paragraph.add("\n" + track );
+                    paragraph.setAlignment(Element.ALIGN_CENTER);
+                    document.add(paragraph);
+
+                    paragraph.clear();
+
+                    paragraph.setAlignment(Element.ALIGN_LEFT);
+                    paragraph.add("\n\nStudent Name: " + studentName);
+                    paragraph.add("\nStudent ID: " + studentID);
+                    paragraph.add("\nSemester Admitted: " + semesterAdmitted);
+                    paragraph.add("\nAnticipated Graduation: " + anticipatedGrad);
+
+                    paragraph.add("\n\nIs Fast Track: ");
+                    if (fastTrack) {
+                        paragraph.add("Yes");
+                    }
+                    else {
+                        paragraph.add("No");
+
+                    }
+                    paragraph.add("\nIs Thesis Masters: ");
+                    if (thesis) {
+                        paragraph.add("Yes");
+                    }
+                    else {
+                        paragraph.add("No");
+
+                    }
+
+                    //    paragraph.setAlignment(Element.ALIGN_TOP);
+                    document.add(paragraph);
+
+                    document.add(Chunk.NEWLINE);
+
+
+
+                    for (int i = 0; i < table.getColumnCount(); i++) {
+                        pdfTable.addCell(new Phrase(table.getColumnName(i)));
+                    }
+                    for (int i = 0; i < table.getRowCount(); i++) {
+                        for (int j = 0; j < table.getColumnCount(); j++) {
+                            pdfTable.addCell(new Phrase(table.getValueAt(i, j).toString()));
+                        }
+                    }
+
+
+                    document.add(pdfTable);
+                    document.close();
+                    JOptionPane.showMessageDialog(SpreadsheetUI.this, "File saved successfully!");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(SpreadsheetUI.this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+
+
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
+
+
+
 
     //Sets up the blank degree plan for each respective track
     public void setupByTrack(String track) {
@@ -64,8 +300,6 @@ class SpreadsheetUI extends JFrame {
         coursePositionMappings = new HashMap<>();
         couseNameMappings = new HashMap<>();
 
-        ArrayList<String> approvedElectives = new ArrayList<>();
-        ArrayList<String> additionalElectives = new ArrayList<>();
 
         switch (track) {
 
@@ -182,7 +416,7 @@ class SpreadsheetUI extends JFrame {
                 levelingCoursesNames = new String[]{"Computer Science I","Computer Science II","Discrete Structures","Algorithm Analysis & Data Structures","Operating System Concepts","Automata Theory","Computer Networks"};
                 setupLeveling(levelingCoursesCodes, levelingCoursesNames);
 
-            case " ":
+            case "Software Engineering":
                 coreCoursesCodes = new String[]{"SE6329", "SE6361", "SE6362","SE6367","SE6387",};
                 coreCoursesNames = new String[]{"Object-Oriented Software Engineering"," Advanced Requirements Engineering"," Advanced Software Architecture and Design","Software Testing, Validation and Verification","Advanced Software Engineering Project"};
                 setupCores(coreCoursesCodes, coreCoursesNames);
@@ -219,12 +453,6 @@ class SpreadsheetUI extends JFrame {
             model.setValueAt(coresNames[i],rowCounter,0);
             model.setValueAt(coreCoursesCodes[i],rowCounter,1);
             rowCounter++;
-        }
-    }
-
-    public void addCores(ArrayList<Course> cores) {
-        for (Course course: cores) {
-            addCourse(course);
         }
     }
 
@@ -315,14 +543,20 @@ class SpreadsheetUI extends JFrame {
             model.addRow(row);
             rowCounter++;
         }
+        row = new Object[]{""};
+        model.addRow(row);
+        model.setValueAt("Other Requirements",rowCounter,0);
+        rowCounter++;
+        for(int i = 0;i < 2;i++) {
+            row = new Object[]{"","","","",""};
+            model.addRow(row);
+            rowCounter++;
+        }
     }
 
 
     public void addAdditionalElective(Course elective) {
-//        Object[] row = new Object[]{""};
-//        model.addRow(row);
-//        model.setValueAt("Additional Electives (3 Credit Hours Minimum)",rowCounter,0);
-//        rowCounter++;
+
         model.setValueAt(elective.getCourseName(),additionalElectivesRow,0);
         model.setValueAt(elective.getCourseCode(),additionalElectivesRow,1);
         model.setValueAt(elective.getSemester(),additionalElectivesRow,2);
@@ -370,316 +604,19 @@ class SpreadsheetUI extends JFrame {
 
 
     }
-    public void addCourse(String courseName,String courseCode,String semester, String grade) {
 
 
-//      Columns:
-//      0 = course name
-//      1 = semester
-//      3 = grade
-
+    public void additionalRequirements() {
         Object[] row = new Object[]{"", "", "", "", "", ""};
         model.addRow(row);
-        model.setValueAt(courseName, rowCounter, 0);
-        model.setValueAt(courseCode,rowCounter,1);
-        model.setValueAt(semester, rowCounter, 2);
-        //  model.setValueAt("Course Transfer", rowCounter, 2);
-        model.setValueAt(grade, rowCounter, 4);
-        rowCounter++;
 
     }
 
-    public void addSpanningRow(String value) {
-        Object[] rowData = new Object[model.getColumnCount()];
-        for (int i = 0; i < rowData.length; i++) {
-            if (i == 0) {
-                // First column should span all columns
-                rowData[i] = value;
-            } else {
-                rowData[i] = "";
-            }
-        }
-        model.addRow(rowData);
-        int lastRow = model.getRowCount() - 1;
-        int lastCol = model.getColumnCount() - 1;
-        table.setRowHeight(lastRow,16 );
-        table.getCellRenderer(lastRow, 0).getTableCellRendererComponent(table, value, false, false, lastRow, 0);
-        for (int i = 1; i < rowData.length; i++) {
-            table.setValueAt("", lastRow, i);
-        }
-        table.setValueAt(value, lastRow, 0);
-    }
 
 
 
 
-    public SpreadsheetUI(Student student) {
 
-        // Add a button to clear the selection
-
-
-        super("Degree Plan Editor");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
-
-        this.studentName = student.getName();
-        this.studentID = student.getStudentID();
-        this.semesterAdmitted = student.getSemesterAdmittedToProgram();
-        this.track = student.getTrack();
-        this.fastTrack = student.getFastTrackCheck();
-        this.thesis = student.getThesisMastersCheck();
-
-
-
-        JLabel titleLabel1 = new JLabel("Degree Plan", SwingConstants.CENTER);
-        titleLabel1.setFont(new Font("Arial", Font.BOLD, 24));
-
-        JLabel titleLabel2 = new JLabel("University of Texas at Dallas", SwingConstants.CENTER);
-        titleLabel2.setFont(new Font("Arial", Font.BOLD, 24));
-
-
-        JLabel titleLabel3 = new JLabel("Master of Computer Science",SwingConstants.CENTER);
-        titleLabel3.setFont(new Font("Arial", Font.BOLD,24));
-
-        JLabel trackLabel = new JLabel(track,SwingConstants.CENTER);
-        trackLabel.setFont(new Font("Arial", Font.BOLD,24));
-
-        JPanel titlePanel = new JPanel(new GridLayout(4, 1));
-        titlePanel.add(titleLabel1);
-        titlePanel.add(titleLabel2);
-        titlePanel.add(titleLabel3);
-        titlePanel.add(trackLabel);
-        add(titlePanel, BorderLayout.NORTH);
-
-
-
-     //   JButton closeButton = new JButton("Finish Editing and Save");
-
-
-
-
-
-        // Set up the table
-        model = new DefaultTableModel();
-        table = new JTable(model);
-        table.setRowHeight(20);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        scrollPane = new JScrollPane(table);
-        add(scrollPane, BorderLayout.CENTER);
-
-        // Add columns
-        String[] columnHeaders = new String[]{ "Course Title", "Course Number" ,"UTD Semester", "Transfer", "Grade"};
-        model.setColumnIdentifiers(columnHeaders);
-
-
-
-        // Set up header renderer and editor
-        table.getTableHeader().setDefaultRenderer(new HeaderRenderer());
-        table.setDefaultEditor(Object.class, new DefaultCellEditor(new JTextField()));
-
-
-        table.addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    table.clearSelection();
-                }
-            }
-        });
-
-        // Set up the bottom panel with editable text fields for selected cells
-        JPanel bottomPanel = new JPanel(new GridLayout(1, 0));
-        add(bottomPanel, BorderLayout.SOUTH);
-        table.getSelectionModel().addListSelectionListener(e -> {
-            int[] selectedRows = table.getSelectedRows();
-            int[] selectedCols = table.getSelectedColumns();
-            bottomPanel.removeAll();
-            if (selectedRows.length == 1 && selectedCols.length == 1) {
-                JTextField field = new JTextField((String) table.getValueAt(selectedRows[0], selectedCols[0]));
-                field.addActionListener(e2 -> {
-                    table.setValueAt(field.getText(), selectedRows[0], selectedCols[0]);
-                });
-                bottomPanel.add(field);
-            } else {
-                bottomPanel.revalidate();
-                bottomPanel.repaint();
-            }
-        });
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-
-
-
-
-
-
-
-        setupByTrack(track);
-        //add the fields for student info
-        addFields(studentName,studentID,semesterAdmitted,fastTrack,thesis);
-
-
-        //Buttons
-
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
-
-
-        JButton studentSaveButton = new JButton("Save Student");
-        JButton addButton = new JButton("Add Row");
-        JButton saveAsPdfButton = new JButton("Save as PDF");
-
-        buttonPanel.add(studentSaveButton);
-        buttonPanel.add(saveAsPdfButton);
-        buttonPanel.add(addButton);
-        add(buttonPanel, BorderLayout.EAST);
-
-
-
-        studentSaveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                StudentSaving saveStudent = new StudentSaving();
-
-                saveStudent.saveStudent(student); // Call the saveStudent() method from SavingStudent class
-                // Perform any additional operations after saving the student
-            }
-        });
-        addButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // create a dialog or frame to get input from the user
-                // for example:
-                Object[] row = {"", "", "", "", ""};
-                model.addRow(row);
-
-            }
-        });
-
-
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    int row = table.rowAtPoint(e.getPoint());
-                    if (row >= 0 && table.getSelectedRow() == row) {
-                        JPopupMenu popupMenu = new JPopupMenu();
-
-                        JMenuItem deleteMenuItem = new JMenuItem("Delete Row");
-                        deleteMenuItem.addActionListener((event) -> {
-                            model.removeRow(row);
-                        });
-
-                        JMenuItem headerMenuItem = new JMenuItem("Set as Header");
-                        headerMenuItem.addActionListener((event) -> {
-                            Object[] headerRow = {"","","","","oefkosfeos"};
-//                            for (int i = 0; i < model.getColumnCount(); i++) {
-//                                headerRow[i] = model.getValueAt(row, i);
-//                            }
-                            model.removeRow(row);
-                            model.insertRow(row, headerRow);
-                            table.setRowSelectionInterval(row, row);
-
-
-
-                        });
-
-                        popupMenu.add(deleteMenuItem);
-                        popupMenu.add(headerMenuItem);
-                        popupMenu.show(table, e.getX(), e.getY());
-                    }
-                }
-            }
-        });
-
-
-        saveAsPdfButton.addActionListener(e -> {
-            JFileChooser fileChooser = new JFileChooser();
-            int result = fileChooser.showSaveDialog(SpreadsheetUI.this);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                try {
-                    for (int rows = 0; rows < table.getRowCount(); rows++) {
-                        for (int cols = 0; cols < table.getColumnCount(); cols++) {
-                            Object cellValue = table.getValueAt(rows, cols);
-                            if (cellValue == null) {
-                                // assign default value or handle null value
-                                table.setValueAt("",rows,cols);
-                            }
-                        }
-                    }
-                    Document document = new Document();
-                    PdfWriter.getInstance(document, new FileOutputStream(fileChooser.getSelectedFile() + ".pdf"));
-                    document.open();
-                    PdfPTable pdfTable = new PdfPTable(table.getColumnCount());
-                    pdfTable.setWidthPercentage(100);
-
-                    Paragraph paragraph = new Paragraph("Degree Plan");
-                    paragraph.add("\n");
-                    paragraph.add("University of Texas at Dallas");
-                    paragraph.add("\nMaster of Computer Science");
-                    paragraph.add("\n" + track );
-                    paragraph.setAlignment(Element.ALIGN_CENTER);
-                    document.add(paragraph);
-
-                    paragraph.clear();
-
-                    paragraph.setAlignment(Element.ALIGN_LEFT);
-                    paragraph.add("\n\nStudent Name: " + studentName);
-                    paragraph.add("\nStudent ID: " + studentID);
-                    paragraph.add("\nSemester Admitted: " + semesterAdmitted);
-                    paragraph.add("\nAnticipated Graduation: " + anticipatedGrad);
-
-                    paragraph.add("\n\nIs Fast Track: ");
-                    if (fastTrack) {
-                        paragraph.add("Yes");
-                    }
-                    else {
-                        paragraph.add("No");
-
-                    }
-                    paragraph.add("\nIs Thesis Masters: ");
-                    if (thesis) {
-                        paragraph.add("Yes");
-                    }
-                    else {
-                        paragraph.add("No");
-
-                    }
-
-                //    paragraph.setAlignment(Element.ALIGN_TOP);
-                    document.add(paragraph);
-
-                    document.add(Chunk.NEWLINE);
-
-
-
-                    for (int i = 0; i < table.getColumnCount(); i++) {
-                        pdfTable.addCell(new Phrase(table.getColumnName(i)));
-                    }
-                    for (int i = 0; i < table.getRowCount(); i++) {
-                        for (int j = 0; j < table.getColumnCount(); j++) {
-                            pdfTable.addCell(new Phrase(table.getValueAt(i, j).toString()));
-                        }
-                    }
-
-
-                    document.add(pdfTable);
-                    document.close();
-                    JOptionPane.showMessageDialog(SpreadsheetUI.this, "File saved successfully!");
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(SpreadsheetUI.this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-
-
-
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-    }
-
-    void addFields() {
-        addFields("","","",false,false);
-    }
 
     void addFields(String studentName, String studentID, String semesterAdmitted, boolean isFastTrack, boolean isThesis) {
         //   System.out.println("ADDING FIELDS");
@@ -708,7 +645,7 @@ class SpreadsheetUI extends JFrame {
         c.fill = GridBagConstraints.HORIZONTAL;
         bottomPanelTwo.add(nameField, c);
         c.weightx = 0;
-  //      c.fill = GridBagConstraints.NONE;
+        //      c.fill = GridBagConstraints.NONE;
         nameField.setText(studentName);
 
         // student id field
@@ -756,13 +693,12 @@ class SpreadsheetUI extends JFrame {
 
 
 
-        // Add checkbox
+        // Add checkboxes for fast track and thesis
         JCheckBox fastTrackCheckBox = new JCheckBox("Fast Track");
         c.gridx = 0;
         c.gridy = 4;
         bottomPanelTwo.add(fastTrackCheckBox, c);
         if (isFastTrack) {
-            //   System.out.println("FAST TRACK");
             fastTrackCheckBox.setSelected(true);
 
         }
@@ -771,10 +707,15 @@ class SpreadsheetUI extends JFrame {
         c.gridx = 1;
         bottomPanelTwo.add(thesisCheckBox, c);
         if(isThesis) {
-            //       System.out.println("THESIS");
             thesisCheckBox.setSelected(true);
         }
 
+    }
+
+    public void addCores(ArrayList<Course> cores) {
+        for (Course course : cores) {
+            addCourse(course);
+        }
     }
 
     private class HeaderRenderer extends DefaultTableCellRenderer {
@@ -791,19 +732,20 @@ class SpreadsheetUI extends JFrame {
         }
     }
 
-    private class HeaderEditor extends DefaultCellEditor {
-        public HeaderEditor() {
-            super(new JTextField());
-            setClickCountToStart(1);
-        }
-
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            JTextField editor = (JTextField) super.getTableCellEditorComponent(table, value, isSelected, row, column);
-            editor.setFont(editor.getFont().deriveFont(Font.BOLD));
-            editor.setBorder(BorderFactory.createLineBorder(Color.black));
-            return editor;
-        }
-    }
+//    private class HeaderEditor extends DefaultCellEditor {
+//        public HeaderEditor() {
+//            super(new JTextField());
+//            setClickCountToStart(1);
+//        }
+//
+//        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+//            JTextField editor = (JTextField) super.getTableCellEditorComponent(table, value, isSelected, row, column);
+//            editor.setFont(editor.getFont().deriveFont(Font.BOLD));
+//            editor.setBorder(BorderFactory.createLineBorder(Color.black));
+//            return editor;
+//        }
+//    }
 }
+
 
 

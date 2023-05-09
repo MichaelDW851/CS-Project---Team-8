@@ -69,10 +69,20 @@ public class Startup {
             }
             System.out.println("Exe = " + extension);
 
+//        System.out.println("File path: " + filePath);
+//        System.out.println("File type: " + extension);
+
+//        if(extension.equals("ser")) createStudentDegree();
+//        else if(extension.equals("pdf")){
+//            //parse pdf and create editable degree plan
+//        }else if(extension.equals("docx")) {
+//            //parse docx and create editable degree plan
+//        }
+//        else System.out.print("Incorrect file input.");
+
         }
         frame.setVisible(false);
 
-        //Need to add type of file check
 
     }
 
