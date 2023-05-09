@@ -66,7 +66,25 @@ public class Student implements Serializable {
     public List<Course> getCourses() {
         return courses;
     }
+    public String getTrack() {
+        return track;
+    }
 
+    public List<Course> getCoreCourses() {
+        return coreCourses;
+    }
+
+    public List<Course> getElectiveCourses() {
+        return electiveCourses;
+    }
+
+    public List<Course> getLevelingCourses() {
+        return levelingCourses;
+    }
+
+    public List<Course> getCourseList() {
+        return courses;
+    }
 
 
 //Method to print Outstanding requirements in the Audit report
@@ -355,18 +373,16 @@ public class Student implements Serializable {
         return remainingElectiveCourses;
     }
 
-    //this
+    //this method applies the additional rules that handle what was said in the specs
     public void applyAdditionalRules() {
         removeCsIppAssignment();
-        handleElectiveCourses();
-    }
-
-    public List<Course> getCourseList() {
-        return courses;
+        //handleElectiveCourses();
     }
 
 
-    //may be final if not, idk just know I changed it to final
+
+    //This method is extremely important, this method categorizes the cores,electives, and leveling courses
+    //Allows for easy maintenance of different tracks, as well if there are two classes (retaken a class), it takes the highest grade
     public void categorizeCoursesByTrack(String track, List<String> prerequisites) {
         List<String> coreCourses = new ArrayList<>();
         List<String> levelingCourses = new ArrayList<>();
@@ -412,69 +428,65 @@ public class Student implements Serializable {
 
         for (Course course : this.courses) {
             String fullCourseCode = course.getCourseCode();
-            String courseCodeWithoutWhitespace = course.getCourseCode().replaceAll("\\s+", "");
+            String courseCodeWithoutWhitespace = course.getCourseCode().replaceAll("\\s+", ""); //remove whitespace from code course
+            //check if course belongs to core coures list, the reason we get rid of whitespace is because for some reason it prints out CS####
             if (coreCourses.contains(courseCodeWithoutWhitespace)) {
                 this.coreCourses.add(course);
+              //check if the course belongs to the leveling course list or pre-reqs list
             } else if (levelingCourses.contains(courseCodeWithoutWhitespace) || prerequisites.contains(courseCodeWithoutWhitespace)) {
+                //check if the course is special elective course (5333,5343,5348) ONLY ONE CAN COUNT AS CORE COURSE so we add it to a list to deal with it
                 if (course.getCourseCode().equals("CS5333") || course.getCourseCode().equals("CS5343") || course.getCourseCode().equals("CS5348")) {
                     specialElectiveCourses.add(course);
+                //if the course doesnt go into the cores, we put it back
                 } else if (uniqueLevelingCourses.add(fullCourseCode)) {
                     this.levelingCourses.add(course);
                 }
+             //This deals with elective courses, only CS or SE courses level 6-7 count as electives
             } else if (course.getCourseCode().startsWith("CS6") || course.getCourseCode().startsWith("CS7")||course.getCourseCode().startsWith("SE6") || course.getCourseCode().startsWith("SE7"))  {
                 this.electiveCourses.add(course);
             }
         }
 
         if (!specialElectiveCourses.isEmpty()) {
+            //set first course as highest grade
             highestGradeSpecialElective = specialElectiveCourses.get(0);
+            //iterate through course and see which one has the highest grade, thats the one we set for cores and GPA calculation
             for (Course course : specialElectiveCourses) {
                 if (course.getGradeValue() > highestGradeSpecialElective.getGradeValue()) {
                     highestGradeSpecialElective = course;
                 }
             }
-            this.electiveCourses.add(highestGradeSpecialElective);
+            this.electiveCourses.add(highestGradeSpecialElective); //Add the highest grade course to the electiveCourses
             this.levelingCourses.remove(highestGradeSpecialElective); // Remove the highest grade course from levelingCourses
         }
     }
 
-    public String getTrack() {
-        return track;
-    }
-
-    public List<Course> getCoreCourses() {
-        return coreCourses;
-    }
-
-    public List<Course> getElectiveCourses() {
-        return electiveCourses;
-    }
-
-    public List<Course> getLevelingCourses() {
-        return levelingCourses;
-    }
-
-
-
+    //method to remove CSIpp, we never have to use it
     public void removeCsIppAssignment() {
         courses.removeIf(course -> course.getCourseCode().equals("5177") && course.getCourseName().equals("CS IPP ASSIGNMENT"));
     }
 
+
     public double calculateCoreGPA() {
+        //initialize gradepoints and credit hours
         double totalGradePoints = 0;
         double totalCreditHours = 0;
+        //Iterates thorugh all core courses and gets the grade value(GPA) and the credit hours for courses that are graded
         for (Course course : coreCourses) {
             String grade = course.getGrade();
-            if (!grade.equals("N/A")) {
+            if (!grade.equals("N/A") && !grade.equals("P") &&  !grade.equals("W") && !grade.equals("F")) {
                 double gradeValue = course.getGradeValue();
                 double creditHours = course.getCreditHours();
+                //Add the total grade points and credit hours
                 totalGradePoints += gradeValue * creditHours;
                 totalCreditHours += creditHours;
             }
         }
-        return totalCreditHours > 0 ? totalGradePoints / totalCreditHours : 0;
+        //calculate and return GPA for core courses
+        return totalGradePoints / totalCreditHours ;
     }
 
+    //Do the same as above but it uses all the courses not just core and electives
     public double calculateOverallGPA() {
 
         double totalPoints = 0;
@@ -488,57 +500,26 @@ public class Student implements Serializable {
             }
         }
 
-        return totalEarnedCreditHours > 0 ? totalPoints / totalEarnedCreditHours : 0;
+        return  totalPoints / totalEarnedCreditHours;
     }
 
+    //Do the same as above but it uses the electives courses only.
     public double calculateElectiveGPA() {
         double totalGradePoints = 0;
         double totalCreditHours = 0;
         for (Course course : electiveCourses) {
             String grade = course.getGrade();
-            if (!grade.equals("N/A")) {
+            if (!grade.equals("N/A") && !grade.equals("P") &&  !grade.equals("W") && !grade.equals("F")) {
                 double gradeValue = course.getGradeValue();
                 double creditHours = course.getCreditHours();
                 totalGradePoints += gradeValue * creditHours;
                 totalCreditHours += creditHours;
             }
         }
-        return totalCreditHours > 0 ? totalGradePoints / totalCreditHours : 0;
+        return  totalGradePoints / totalCreditHours ;
     }
 
-    //This handles these notes in specs
-//    If the student earned the same score in 2 or more of CS 5333, CS 5343, and CS 5348, use one with those with the
-//    higher score by choosing CS 5343 over CS 5333 and CS 5348 as the elective, choosing CS 5348 over CS 5333
-//    as the elective. And only one can be used as elective.
-    private void handleElectiveCourses() {
-        Course electiveCourse = null;
-        List<Course> coursesToRemove = new ArrayList<>();
 
-        for (Course course : courses) {
-            if (course.getCourseCode().equals("5333") || course.getCourseCode().equals("5343") || course.getCourseCode().equals("5348")) {
-                if (electiveCourse == null) {
-                    electiveCourse = course;
-                } else if (course.getGradeValue() > electiveCourse.getGradeValue()) {
-                    coursesToRemove.add(electiveCourse);
-                    electiveCourse = course;
-                } else if (course.getGradeValue() == electiveCourse.getGradeValue()) {
-                    if (course.getCourseCode().equals("5343")) {
-                        coursesToRemove.add(electiveCourse);
-                        electiveCourse = course;
-                    } else if (course.getCourseCode().equals("5348") && !electiveCourse.getCourseCode().equals("5343")) {
-                        coursesToRemove.add(electiveCourse);
-                        electiveCourse = course;
-                    } else {
-                        coursesToRemove.add(course);
-                    }
-                } else {
-                    coursesToRemove.add(course);
-                }
-            }
-        }
-
-        courses.removeAll(coursesToRemove);
-    }
 
     public void saveToFile(String filename) throws IOException {
         FileOutputStream fileOut = new FileOutputStream(filename + ".ser");

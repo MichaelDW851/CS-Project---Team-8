@@ -1,6 +1,7 @@
 import java.io.Serializable;
 
 public class Course implements Serializable {
+    //instance variables
     String year;
     String semester;
     String courseCode;
@@ -8,8 +9,9 @@ public class Course implements Serializable {
     double creditHours;
     double earnedCreditHours;
     String grade;
-
     String season;
+
+    //Constructor for Coures, will have all the information needed for course calculations and printing
     public Course(String year, String semester, String courseCode, String courseName, double creditHours, double earnedCreditHours, String grade) {
         this.year = year;
         setSemester(semester);
@@ -25,12 +27,35 @@ public class Course implements Serializable {
         this.courseCode = courseCode;
         this.courseName = courseName;
     }
+
+    //Setter and getter methods
     public String getYear() {
         return year;
     }
 
     public void setYear(String year) {
         this.year = year;
+    }
+
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public double getCreditHours() {
+        return creditHours;
+    }
+
+    public double getEarnedCreditHours() {
+        return earnedCreditHours;
+    }
+
+
+    public String getGrade() {
+        return grade;
     }
 
     public String getSemester() {
@@ -40,12 +65,18 @@ public class Course implements Serializable {
     public void setSemester(String semester) {
      //   this.semester = semester;
         System.out.println(semester);
-
+        //Split the input string into two parts at the - character
         String[] semesterParse = semester.split("-");
+
+        //Extracts the last two characters of the first part of the split string as the year
+        //the year IS the last two characters of the string
         String semesterYear = semesterParse[0].substring(semesterParse[0].length()-2);
+        //Extract second part
         String semesterCode = semesterParse[1];
+
         System.out.println(semesterYear);
         System.out.println(semesterCode);
+        //Determines the season based on semester code and set the semester as needed
         if(semesterCode.equals("01")) {
             this.semester = semesterYear + "S";
             System.out.println("Spring");
@@ -61,39 +92,13 @@ public class Course implements Serializable {
         System.out.println(this.semester);
     }
 
-    public String getCourseCode() {
-        return courseCode;
-    }
-
-
-    public String getCourseName() {
-        return courseName;
-    }
-
-
-
-    public double getCreditHours() {
-        return creditHours;
-    }
-
-
-
-    public double getEarnedCreditHours() {
-        return earnedCreditHours;
-    }
-
-
-
-    public String getGrade() {
-        return grade;
-    }
-
-
-
+    //This method is used to print in the terminal to assure we are getting ALL the right information
     @Override
     public String toString() {
         return "Course: " + courseCode + " - " + courseName + ", " + "Year: " + year + ", " + "Semester: " + semester + ", " + "Credit Hours: " + creditHours + ", " + "Earned Credit Hours: " + earnedCreditHours + ", " + "Grade: " + grade;
     }
+
+    //converts GPA to letter
     public static String getLetterGradeFromValue(double gradeValue) {
         if (gradeValue >= 4.0) {
             return "A";
@@ -121,6 +126,8 @@ public class Course implements Serializable {
             return "F";
         }
     }
+
+    //converts letter grade to grade value
     public double getGradeValue() {
         switch (grade) {
             case "A":
@@ -151,6 +158,5 @@ public class Course implements Serializable {
                 return 0.000;
         }
     }
-
 
 }

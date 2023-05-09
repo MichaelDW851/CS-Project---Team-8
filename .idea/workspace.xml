@@ -4,22 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dbea1d32-e871-45f1-a684-9a1e34b37992" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/git_toolbox_prj.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]/SpreadsheetUI$2.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]/SpreadsheetUI$3.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_5_2023_10_14_PM_[Changes]/SpreadsheetUI$HeaderEditor.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+    <list default="true" id="dbea1d32-e871-45f1-a684-9a1e34b37992" name="Changes" comment="comment 5/8">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Course.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/GenerateDegreePlan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GenerateDegreePlan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/SpreadsheetUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/SpreadsheetUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/StudentSaving.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/StudentSaving.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/GenerateDegreePlan.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/GenerateDegreePlan.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Startup.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Startup.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/DegreePlanApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DegreePlanApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/PdfReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/PdfReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Student.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Course.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Course.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/DegreePlanApp$SaveStudentButtonListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DegreePlanApp$SaveStudentButtonListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/DegreePlanApp$SubmitButtonListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DegreePlanApp$SubmitButtonListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/DegreePlanApp.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/DegreePlanApp.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderEditor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderEditor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderRenderer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderRenderer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Student.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Student.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +38,31 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="main_adrian" />
+                    <option name="lastUsedInstant" value="1683574304" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1683574263" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -54,10 +81,10 @@
 }</component>
   <component name="RunManager" selected="Application.DegreePlanApp">
     <configuration name="DegreePlanApp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="openjdk-19" />
+      <option name="ALTERNATIVE_JRE_PATH" value="openjdk-20" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="DegreePlanApp" />
-      <module name="Cap_Proj" />
+      <module name="MyNewProject" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -147,7 +174,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683345784511</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="5/8 - wtf going on">
+      <created>1683574252796</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1683574252796</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -179,6 +213,10 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Fixed formatting some more" />
     <MESSAGE value="Added student saving" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added student saving" />
+    <MESSAGE value="5/8 - wtf going on" />
+    <option name="LAST_COMMIT_MESSAGE" value="5/8 - wtf going on" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/MyNewProject$DegreePlanApp.ic" NAME="DegreePlanApp Coverage Results" MODIFIED="1683593723910" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
