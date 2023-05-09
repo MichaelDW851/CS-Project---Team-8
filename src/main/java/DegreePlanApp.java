@@ -89,6 +89,7 @@ public class DegreePlanApp {
         c.gridx = 1;
         c.gridy = 0;
         trackComboBox = new JComboBox<>(new String[]{
+                " ",
                 "Cyber Security",
                 "Data Science",
                 "Intelligent Systems",
@@ -280,15 +281,17 @@ public class DegreePlanApp {
             List<Course> coreCourses = student.getCoreCourses();
             for (int i = 0; i < coreCourses.size(); i++) {
                 Course course = coreCourses.get(i);
+                //(?<=\\D) positive lookbehind assertion, matches a position in the string immediately preceeded by a non-digit
+                //(?=\\d) mathches a position in the string immediately followed by a digit
                 String[] courseCodeParts = course.getCourseCode().split("(?<=\\D)(?=\\d)");
                 coreCoursesRun.setText(courseCodeParts[0] + " " + courseCodeParts[1]);
                 if (i < coreCourses.size() - 1) {
-                    coreCoursesRun.setText(", ");
+                    coreCoursesRun.setText(", "); // add a coma between courses
                 }
             }
             // coreCoursesRun.addBreak();
 
-            // Elective Courses
+            // Elective Courses, same thing as core courses
             XWPFParagraph electiveCoursesParagraph = document.createParagraph();
             XWPFRun electiveCoursesRun = electiveCoursesParagraph.createRun();
             electiveCoursesRun.setFontSize(12);
@@ -304,18 +307,18 @@ public class DegreePlanApp {
             }
             electiveCoursesRun.addBreak();
 
-
-// Leveling Courses and Pre-requisites
+//
+ //Leveling Courses and Pre-requisites
             XWPFParagraph levelingCoursesParagraph = document.createParagraph();
             XWPFRun levelingCoursesRun = levelingCoursesParagraph.createRun();
             levelingCoursesRun.setFontSize(12);
             levelingCoursesRun.setText("Leveling Courses and Pre-requisites from Admissions Letter:");
             levelingCoursesRun.addBreak();
-
+            //Create a hashset to store unique courses, and add pre-reqs and leveling courses to it
             HashSet<String> uniqueCourses = new HashSet<>();
             for (String courseCode : prerequisites) {
                 if (!courseCode.startsWith("CS")) {
-                    courseCode = "CS" + courseCode;
+                    courseCode = "CS" + courseCode; //sometimes they didnt have a CS for somereason so we added it
                 }
                 uniqueCourses.add(courseCode);
             }
@@ -326,6 +329,7 @@ public class DegreePlanApp {
                 }
                 uniqueCourses.add(courseCode);
             }
+            //Loop through unique courses and display them in the paragraph
             for (String courseCode : uniqueCourses) {
                 levelingCoursesRun = levelingCoursesParagraph.createRun();
                 levelingCoursesRun.setFontSize(12);
@@ -333,25 +337,30 @@ public class DegreePlanApp {
                 levelingCoursesRun.addBreak();
             }
 
-
 // Outstanding Requirements
             XWPFParagraph outstandingRequirementsParagraph = document.createParagraph();
             XWPFRun outstandingRequirementsRun = outstandingRequirementsParagraph.createRun();
             outstandingRequirementsRun.setFontSize(12);
             outstandingRequirementsRun.setText("Outstanding Requirements:");
-            // outstandingRequirementsRun.addBreak();
 
+            //Split the remaining courses message into two parts at the colon
+            //(?<=) mathces a postion immediately preceded by a colon.
             String[] remainingMessageParts = student.getRemainingCoursesMessage().split("(?<=:)");
+            //create a new pargraph for displaying the first part
             XWPFParagraph remainingCoursesParagraph = document.createParagraph();
+            //create a new run to display first part of remaining courses
             XWPFRun remainingCoursesRun = remainingCoursesParagraph.createRun();
             remainingCoursesRun.setText(remainingMessageParts[0]);
             remainingCoursesRun.setFontSize(12);
             remainingCoursesRun.setBold(false);
-
+            //create new paragraph for displaying the first part of remaining courses message
             XWPFParagraph remainingCoursesListParagraph = document.createParagraph();
+            //create new run for for displaying second part
             XWPFRun remainingCoursesListRun = remainingCoursesListParagraph.createRun();
+            //if there is a second part to remaining courses, display it and add line break
             if (remainingMessageParts.length > 1) {
                 remainingCoursesListRun.setText(remainingMessageParts[1]);
+                remainingCoursesListRun.addBreak();
             }
             remainingCoursesListRun.setFontSize(12);
             remainingCoursesListRun.setBold(false);
@@ -359,7 +368,9 @@ public class DegreePlanApp {
 
 
             double desiredOverallGPA = 3.0;
+            //Get remaining overall GPA message
             String overallGPAMessage = student.getRemainingOverallGPAMessage(desiredOverallGPA);
+            //split at  the colon
             String[] overallGPAMessageParts = overallGPAMessage.split("(?<=:)");
             XWPFParagraph overallGPAParagraph = document.createParagraph();
             XWPFRun overallGPARun = overallGPAParagraph.createRun();
@@ -371,6 +382,8 @@ public class DegreePlanApp {
             XWPFParagraph overallGPAListParagraph = document.createParagraph();
             XWPFRun overallGPAListRun = overallGPAListParagraph.createRun();
 
+            //If there is a second part to remaining overall GPA message, display it
+            //otherwise, empty string
             if (overallGPAMessageParts.length > 1) {
                 overallGPAListRun.setText(overallGPAMessageParts[1]);
             } else {
@@ -383,16 +396,20 @@ public class DegreePlanApp {
 
             //Save the document
             JFileChooser fileChooser = new JFileChooser();
+            //create a filter for the save dialog to only show .docx files
             FileNameExtensionFilter filter = new FileNameExtensionFilter("Word Document (*.docx)", "docx");
             fileChooser.setFileFilter(filter);
-
+            //show the save dialog
             int userSelection = fileChooser.showSaveDialog(frame);
-
+            //if user selected a file and clicked save
             if (userSelection == JFileChooser.APPROVE_OPTION) {
+                //save selected file
                 File fileToSave = fileChooser.getSelectedFile();
+                //if file doesnt end in docx, add it
                 if (!fileToSave.getAbsolutePath().endsWith(".docx")) {
                     fileToSave = new File(fileToSave.getAbsolutePath() + ".docx");
                 }
+                //write document to selected file
                 document.write(new FileOutputStream(fileToSave));
             }
         } catch (IOException e) {
