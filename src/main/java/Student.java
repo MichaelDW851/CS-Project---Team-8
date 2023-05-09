@@ -503,7 +503,7 @@ public class Student implements Serializable {
         return  totalPoints / totalEarnedCreditHours;
     }
 
-    //Do the same as above but it uses the electives courses only.
+    //Do the same as above but it uses the electives courses only
     public double calculateElectiveGPA() {
         double totalGradePoints = 0;
         double totalCreditHours = 0;
