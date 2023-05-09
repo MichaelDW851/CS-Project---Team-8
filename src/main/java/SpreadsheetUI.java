@@ -24,6 +24,9 @@ class SpreadsheetUI extends JFrame {
 
     int approvedElectivesRow;
 
+
+
+
     Map<String, Integer> coursePositionMappings;
     Map<String,String> couseNameMappings;
 
@@ -42,6 +45,9 @@ class SpreadsheetUI extends JFrame {
 
     private int defaultRowHeight = 16;
 
+
+    private JLabel graduationLabel;
+    private JTextField graduationField;
     public SpreadsheetUI(Student student) {
 
         // Add a button to clear the selection
@@ -194,6 +200,7 @@ class SpreadsheetUI extends JFrame {
         saveAsPdfButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             int result = fileChooser.showSaveDialog(SpreadsheetUI.this);
+            anticipatedGrad = graduationField.getText();
             if (result == JFileChooser.APPROVE_OPTION) {
                 try {
                     for (int rows = 0; rows < table.getRowCount(); rows++) {
@@ -264,6 +271,7 @@ class SpreadsheetUI extends JFrame {
                             pdfTable.addCell(new Phrase(table.getValueAt(i, j).toString()));
                         }
                     }
+
 
 
                     document.add(pdfTable);
@@ -679,8 +687,8 @@ class SpreadsheetUI extends JFrame {
 
 
         //anticipated graduation field
-        JLabel graduationLabel = new JLabel("Anticipated Graduation:");
-        JTextField graduationField = new JTextField(10);
+        graduationLabel = new JLabel("Anticipated Graduation:");
+        graduationField = new JTextField(10);
         c.gridx = 0;
         c.gridy = 3;
         bottomPanelTwo.add(graduationLabel, c);
