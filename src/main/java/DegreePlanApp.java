@@ -29,7 +29,7 @@ public class DegreePlanApp {
 
     private DegreePlanApp window;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         DegreePlanApp degreePlanApp = new DegreePlanApp();
         degreePlanApp.initialize();
 
@@ -47,8 +47,7 @@ public class DegreePlanApp {
     }
 
     //On startup
-    public void initialize(){
-        window = new DegreePlanApp();
+    public void initialize() throws InterruptedException {
         Startup start = new Startup();
         // get filepath from startup
         try {
@@ -58,10 +57,12 @@ public class DegreePlanApp {
             e.printStackTrace();
         }
 
-        //OpenOptions();
-        options();
-
-
+        if (selectedTranscriptFile != null) { // user has selected a file
+            options();
+        } else { // user has clicked the cancel button
+            JOptionPane.showMessageDialog(null, "No file was selected. Please select a transcript file to continue.");
+            initialize(); // call initialize() again to prompt the user to select a file
+        }
     }
 
     private void options() {
