@@ -4,9 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="65500619-490a-49db-bc5e-64963b325911" name="Default Changelist" comment="Got it to read in anticipated graduation semester and print it onto the degree plan pdf">
+    <list default="true" id="65500619-490a-49db-bc5e-64963b325911" name="Default Changelist" comment="Minor tweaks to how student info is read and printed on pdf">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/SpreadsheetUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/SpreadsheetUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/DegreePlanApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DegreePlanApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderRenderer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderRenderer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,6 +59,7 @@
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -123,7 +129,7 @@
       <workItem from="1683665420560" duration="889000" />
       <workItem from="1683666355622" duration="109000" />
       <workItem from="1683674170906" duration="1858000" />
-      <workItem from="1683682956503" duration="405000" />
+      <workItem from="1683682956503" duration="2509000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed formatting some more">
       <created>1683269831035</created>
@@ -181,7 +187,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683675144025</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Minor tweaks to how student info is read and printed on pdf">
+      <created>1683683575854</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1683683575854</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -203,6 +216,7 @@
     <MESSAGE value="Added student saving" />
     <MESSAGE value="Fixed for software engineering" />
     <MESSAGE value="Got it to read in anticipated graduation semester and print it onto the degree plan pdf" />
-    <option name="LAST_COMMIT_MESSAGE" value="Got it to read in anticipated graduation semester and print it onto the degree plan pdf" />
+    <MESSAGE value="Minor tweaks to how student info is read and printed on pdf" />
+    <option name="LAST_COMMIT_MESSAGE" value="Minor tweaks to how student info is read and printed on pdf" />
   </component>
 </project>
