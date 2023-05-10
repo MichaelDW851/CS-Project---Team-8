@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="65500619-490a-49db-bc5e-64963b325911" name="Default Changelist" comment="Fixed for software engineering">
+    <list default="true" id="65500619-490a-49db-bc5e-64963b325911" name="Default Changelist" comment="Got it to read in anticipated graduation semester and print it onto the degree plan pdf">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/SpreadsheetUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/SpreadsheetUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderRenderer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI$HeaderRenderer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SpreadsheetUI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SpreadsheetUI.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +31,14 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -44,21 +47,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="aspect.path.notification.shown" value="true" />
-    <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
   <component name="RunManager" selected="Application.DegreePlanApp">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="DegreePlanApp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="openjdk-19" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="DegreePlanApp" />
-      <module name="CS-Project---Team-8" />
+      <module name="Cap_Proj" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -79,17 +94,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+    <list>
+      <item itemvalue="Application.DegreePlanApp" />
+      <item itemvalue="Application.Main" />
+      <item itemvalue="Application.StudentSaving" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.DegreePlanApp" />
@@ -113,7 +122,8 @@
       <workItem from="1683271884919" duration="345000" />
       <workItem from="1683665420560" duration="889000" />
       <workItem from="1683666355622" duration="109000" />
-      <workItem from="1683674170906" duration="667000" />
+      <workItem from="1683674170906" duration="1858000" />
+      <workItem from="1683682956503" duration="405000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed formatting some more">
       <created>1683269831035</created>
@@ -164,7 +174,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683666303487</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Got it to read in anticipated graduation semester and print it onto the degree plan pdf">
+      <created>1683675144017</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1683675144025</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -180,12 +197,12 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Fixed formatting some more" />
     <MESSAGE value="Added student saving" />
     <MESSAGE value="Fixed for software engineering" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed for software engineering" />
+    <MESSAGE value="Got it to read in anticipated graduation semester and print it onto the degree plan pdf" />
+    <option name="LAST_COMMIT_MESSAGE" value="Got it to read in anticipated graduation semester and print it onto the degree plan pdf" />
   </component>
 </project>

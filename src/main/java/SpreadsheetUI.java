@@ -43,11 +43,15 @@ class SpreadsheetUI extends JFrame {
     private String anticipatedGrad = "";
     private int rowCounter = 0;
 
-    private int defaultRowHeight = 16;
 
 
-    private JLabel graduationLabel;
+
     private JTextField graduationField;
+    private JTextField nameField;
+    private JTextField IDField;
+    private JTextField SemesterAdmittedField;
+
+
     public SpreadsheetUI(Student student) {
 
         // Add a button to clear the selection
@@ -196,11 +200,13 @@ class SpreadsheetUI extends JFrame {
         });
 
 
-
         saveAsPdfButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             int result = fileChooser.showSaveDialog(SpreadsheetUI.this);
             anticipatedGrad = graduationField.getText();
+            studentName = nameField.getText();
+            studentID = IDField.getText();
+            semesterAdmitted = SemesterAdmittedField.getText();
             if (result == JFileChooser.APPROVE_OPTION) {
                 try {
                     for (int rows = 0; rows < table.getRowCount(); rows++) {
@@ -644,7 +650,7 @@ class SpreadsheetUI extends JFrame {
 
         // student name field
         JLabel nameLabel = new JLabel("Student Name: ");
-        JTextField nameField = new JTextField(10);
+        nameField = new JTextField(10);
         c.gridx = 0;
         c.gridy = 0;
         bottomPanelTwo.add(nameLabel, c);
@@ -658,7 +664,7 @@ class SpreadsheetUI extends JFrame {
 
         // student id field
         JLabel IDLabel = new JLabel("Student ID:");
-        JTextField IDField = new JTextField(10);
+        IDField = new JTextField(10);
         c.gridx = 0;
         c.gridy = 1;
         bottomPanelTwo.add(IDLabel, c);
@@ -673,7 +679,7 @@ class SpreadsheetUI extends JFrame {
 
         //semester admitted field
         JLabel SemesterAdmittedLabel = new JLabel("Semester Admitted to Program:");
-        JTextField SemesterAdmittedField = new JTextField(10);
+        SemesterAdmittedField = new JTextField(10);
         c.gridx = 0;
         c.gridy = 2;
         bottomPanelTwo.add(SemesterAdmittedLabel, c);
@@ -687,7 +693,7 @@ class SpreadsheetUI extends JFrame {
 
 
         //anticipated graduation field
-        graduationLabel = new JLabel("Anticipated Graduation:");
+        JLabel graduationLabel = new JLabel("Anticipated Graduation:");
         graduationField = new JTextField(10);
         c.gridx = 0;
         c.gridy = 3;
