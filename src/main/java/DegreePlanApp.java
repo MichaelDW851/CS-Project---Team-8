@@ -46,9 +46,7 @@ public class DegreePlanApp {
         options();
     }
 
-    //On startup
-    public void initialize(){
-        window = new DegreePlanApp();
+    public void initialize() throws InterruptedException {
         Startup start = new Startup();
         // get filepath from startup
         try {
@@ -58,11 +56,14 @@ public class DegreePlanApp {
             e.printStackTrace();
         }
 
-        //OpenOptions();
-        options();
+        if (selectedTranscriptFile != null) { // user has selected a file
+            options();
+        } else { // user has clicked the cancel button
+            JOptionPane.showMessageDialog(null, "No file was selected. Please select a transcript file to continue.");
+            initialize(); // call initialize() again to prompt the user to select a file
+        }
+    } 
 
-
-    }
 
     private void options() {
 
